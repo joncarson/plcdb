@@ -1,0 +1,41 @@
+﻿<Window x:Class="plcdb.Views.MainWindow"
+		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+		xmlns:viewModels="clr-namespace:plcdb.ViewModels"
+        xmlns:converters="clr-namespace:plcdb.Converters"
+        xmlns:views="clr-namespace:plcdb.Views"
+        Title="PLC-db"
+        WindowStartupLocation="CenterScreen"
+        >
+    <Window.Resources>
+        <viewModels:MainWindowViewModel x:Key="Windows1ViewModel" />
+        <converters:IsBiggerThanConverter x:Key="IsBiggerThanConverter" />
+    </Window.Resources>
+    <Grid DataContext="{StaticResource Windows1ViewModel}">
+        
+        <DockPanel LastChildFill="True">
+            <Menu DockPanel.Dock="Top">
+                <MenuItem Header="_File">
+                    <MenuItem Header="_Open"/>
+                    <MenuItem Header="_Close"/>
+                    <MenuItem Header="_Save"/>
+                </MenuItem>
+            </Menu>
+            <TabControl>
+                <TabItem Header="db config">
+                    <views:DatabaseConfigTab></views:DatabaseConfigTab>
+                </TabItem>
+                <TabItem Header="plc config">
+                    <views:ControllerConfigTab></views:ControllerConfigTab>
+                </TabItem>
+                <TabItem Header="query mapping"></TabItem>
+                
+            </TabControl>
+        </DockPanel>
+
+        
+    </Grid>
+</Window>

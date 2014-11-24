@@ -1,0 +1,25 @@
+﻿<UserControl x:Class="plcdb.Views.DatabaseConfigTab"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="500">
+    <DockPanel LastChildFill="True">
+        <Button DockPanel.Dock="Bottom" HorizontalAlignment="Right" Margin="10 10 10 10">Add New</Button>
+        <DataGrid DockPanel.Dock="Top" CanUserAddRows="True" CanUserDeleteRows="True" CanUserSortColumns="True">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Name" Width="100"></DataGridTextColumn>
+                <DataGridTextColumn Header="Connection String" Width="*"></DataGridTextColumn>
+                <DataGridTemplateColumn Header="Edit" Width="100">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button>Edit</Button>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+        
+    </DockPanel>
+</UserControl>
