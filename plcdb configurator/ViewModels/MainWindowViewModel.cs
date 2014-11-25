@@ -2,7 +2,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using plcdb.Helpers;
-using plcdb.Models;
+using plcdb_lib.Models;
 
 namespace plcdb.ViewModels
 {
@@ -11,96 +11,43 @@ namespace plcdb.ViewModels
         #region Properties
 
         #region MyDateTime
-
-        private DateTime _myDateTime;
-        public DateTime MyDateTime
+        private Model _activeModel;
+        public Model ActiveModel
         {
-            get { return _myDateTime; }
+            get { return _activeModel; }
             set
             {
-                if (_myDateTime != value)
+                if (_activeModel != value)
                 {
-                    _myDateTime = value;
-                    RaisePropertyChanged(() => MyDateTime);
+                    _activeModel = value;
+                    RaisePropertyChanged(() => ActiveModel);
                 }
             }
         }
 
         #endregion
 
-        #region PersonsCollection
-
-        private ObservableCollection<Query> _personsCollection;
-        public ObservableCollection<Query> PersonsCollection
-        {
-            get { return _personsCollection; }
-            set
-            {
-                if (_personsCollection != value)
-                {
-                    _personsCollection = value;
-                    RaisePropertyChanged(() => PersonsCollection);
-                }
-            }
-        }
-
-        #endregion
-
+    
         #endregion
 
         #region Commands
 
-        public ICommand RefreshDateCommand { get { return new DelegateCommand(OnRefreshDate); } }
-        public ICommand RefreshPersonsCommand { get { return new DelegateCommand(OnRefreshPersons); } }
-        public ICommand DoNothingCommand { get { return new DelegateCommand(OnDoNothing, CanExecuteDoNothing); } }
-
+        //public ICommand RefreshDateCommand { get { return new DelegateCommand(OnRefreshDate); } }
+        
         #endregion
 
         #region Ctor
         public MainWindowViewModel()
         {
-            RandomizeData();
+            
         }
         #endregion
 
         #region Command Handlers
 
-        private void OnRefreshDate()
-        {
-            MyDateTime = DateTime.Now;
-        }
-
-        private void OnRefreshPersons()
-        {
-            RandomizeData();
-        }
-
-        private void OnDoNothing()
-        {
-        }
-
-        private bool CanExecuteDoNothing()
-        {
-            return true;
-        }
-
+       
         #endregion
 
-        private void RandomizeData()
-        {
-            PersonsCollection = new ObservableCollection<Query>();
-
-            for (var i = 0; i < 10; i++)
-            {
-                PersonsCollection.Add(new Query(
-                    RandomHelper.RandomString(10, true),
-                    RandomHelper.RandomInt(1, 43),
-                    RandomHelper.RandomBool(),
-                    RandomHelper.RandomNumber(50, 180, 1),
-                    RandomHelper.RandomDate(new DateTime(1980, 1, 1), DateTime.Now),
-                    RandomHelper.RandomColor()
-                    ));
-            }
-        }
+       
     }
 }

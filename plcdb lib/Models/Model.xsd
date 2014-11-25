@@ -1,0 +1,114 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="Model" targetNamespace="http://tempuri.org/Model.xsd" xmlns:mstns="http://tempuri.org/Model.xsd" xmlns="http://tempuri.org/Model.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="Model" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="Model" msprop:Generator_UserDSName="Model">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="Controllers" msprop:Generator_TableClassName="ControllersDataTable" msprop:Generator_TableVarName="tableControllers" msprop:Generator_TablePropName="Controllers" msprop:Generator_RowDeletingName="ControllersRowDeleting" msprop:Generator_RowChangingName="ControllersRowChanging" msprop:Generator_RowEvHandlerName="ControllersRowChangeEventHandler" msprop:Generator_RowDeletedName="ControllersRowDeleted" msprop:Generator_UserTableName="Controllers" msprop:Generator_RowChangedName="ControllersRowChanged" msprop:Generator_RowEvArgName="ControllersRowChangeEvent" msprop:Generator_RowClassName="ControllersRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Name" msprop:Generator_ColumnVarNameInTable="columnName" msprop:Generator_ColumnPropNameInRow="Name" msprop:Generator_ColumnPropNameInTable="NameColumn" msprop:Generator_UserColumnName="Name" type="xs:string" minOccurs="0" />
+              <xs:element name="Type" msprop:Generator_ColumnVarNameInTable="columnType" msprop:Generator_ColumnPropNameInRow="Type" msprop:Generator_ColumnPropNameInTable="TypeColumn" msprop:Generator_UserColumnName="Type" type="xs:string" minOccurs="0" />
+              <xs:element name="Address" msprop:Generator_ColumnVarNameInTable="columnAddress" msprop:Generator_ColumnPropNameInRow="Address" msprop:Generator_ColumnPropNameInTable="AddressColumn" msprop:Generator_UserColumnName="Address" type="xs:string" minOccurs="0" />
+              <xs:element name="PK" msdata:AutoIncrement="true" msdata:AutoIncrementSeed="-1" msdata:AutoIncrementStep="-1" msprop:Generator_ColumnVarNameInTable="columnPK" msprop:Generator_ColumnPropNameInRow="PK" msprop:Generator_ColumnPropNameInTable="PKColumn" msprop:Generator_UserColumnName="PK" type="xs:long" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Tags" msprop:Generator_TableClassName="TagsDataTable" msprop:Generator_TableVarName="tableTags" msprop:Generator_TablePropName="Tags" msprop:Generator_RowDeletingName="TagsRowDeleting" msprop:Generator_RowChangingName="TagsRowChanging" msprop:Generator_RowEvHandlerName="TagsRowChangeEventHandler" msprop:Generator_RowDeletedName="TagsRowDeleted" msprop:Generator_UserTableName="Tags" msprop:Generator_RowChangedName="TagsRowChanged" msprop:Generator_RowEvArgName="TagsRowChangeEvent" msprop:Generator_RowClassName="TagsRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Name" msprop:Generator_ColumnVarNameInTable="columnName" msprop:Generator_ColumnPropNameInRow="Name" msprop:Generator_ColumnPropNameInTable="NameColumn" msprop:Generator_UserColumnName="Name" type="xs:string" minOccurs="0" />
+              <xs:element name="Controller" msprop:Generator_ColumnVarNameInTable="columnController" msprop:Generator_ColumnPropNameInRow="Controller" msprop:Generator_ColumnPropNameInTable="ControllerColumn" msprop:Generator_UserColumnName="Controller" type="xs:long" minOccurs="0" />
+              <xs:element name="Address" msprop:Generator_ColumnVarNameInTable="columnAddress" msprop:Generator_ColumnPropNameInRow="Address" msprop:Generator_ColumnPropNameInTable="AddressColumn" msprop:Generator_UserColumnName="Address" type="xs:string" minOccurs="0" />
+              <xs:element name="DataType" msdata:DataType="System.Type, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msprop:Generator_ColumnVarNameInTable="columnDataType" msprop:Generator_ColumnPropNameInRow="DataType" msprop:Generator_ColumnPropNameInTable="DataTypeColumn" msprop:Generator_UserColumnName="DataType" type="xs:string" minOccurs="0" />
+              <xs:element name="PK" msdata:AutoIncrement="true" msdata:AutoIncrementSeed="-1" msdata:AutoIncrementStep="-1" msprop:Generator_ColumnVarNameInTable="columnPK" msprop:Generator_ColumnPropNameInRow="PK" msprop:Generator_ColumnPropNameInTable="PKColumn" msprop:Generator_UserColumnName="PK" type="xs:long" />
+              <xs:element name="CurrentValue" msdata:DataType="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" msprop:Generator_ColumnVarNameInTable="columnCurrentValue" msprop:Generator_ColumnPropNameInRow="CurrentValue" msprop:Generator_ColumnPropNameInTable="CurrentValueColumn" msprop:Generator_UserColumnName="CurrentValue" type="xs:anyType" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Databases" msprop:Generator_TableClassName="DatabasesDataTable" msprop:Generator_TableVarName="tableDatabases" msprop:Generator_TablePropName="Databases" msprop:Generator_RowDeletingName="DatabasesRowDeleting" msprop:Generator_RowChangingName="DatabasesRowChanging" msprop:Generator_RowEvHandlerName="DatabasesRowChangeEventHandler" msprop:Generator_RowDeletedName="DatabasesRowDeleted" msprop:Generator_UserTableName="Databases" msprop:Generator_RowChangedName="DatabasesRowChanged" msprop:Generator_RowEvArgName="DatabasesRowChangeEvent" msprop:Generator_RowClassName="DatabasesRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Name" msprop:Generator_ColumnVarNameInTable="columnName" msprop:Generator_ColumnPropNameInRow="Name" msprop:Generator_ColumnPropNameInTable="NameColumn" msprop:Generator_UserColumnName="Name" type="xs:string" minOccurs="0" />
+              <xs:element name="ConnectionString" msprop:Generator_ColumnVarNameInTable="columnConnectionString" msprop:Generator_ColumnPropNameInRow="ConnectionString" msprop:Generator_ColumnPropNameInTable="ConnectionStringColumn" msprop:Generator_UserColumnName="ConnectionString" type="xs:string" minOccurs="0" />
+              <xs:element name="PK" msdata:AutoIncrement="true" msdata:AutoIncrementSeed="-1" msdata:AutoIncrementStep="-1" msprop:Generator_ColumnVarNameInTable="columnPK" msprop:Generator_ColumnPropNameInRow="PK" msprop:Generator_ColumnPropNameInTable="PKColumn" msprop:Generator_UserColumnName="PK" type="xs:long" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Queries" msprop:Generator_TableClassName="QueriesDataTable" msprop:Generator_TableVarName="tableQueries" msprop:Generator_TablePropName="Queries" msprop:Generator_RowDeletingName="QueriesRowDeleting" msprop:Generator_RowChangingName="QueriesRowChanging" msprop:Generator_RowEvHandlerName="QueriesRowChangeEventHandler" msprop:Generator_RowDeletedName="QueriesRowDeleted" msprop:Generator_UserTableName="Queries" msprop:Generator_RowChangedName="QueriesRowChanged" msprop:Generator_RowEvArgName="QueriesRowChangeEvent" msprop:Generator_RowClassName="QueriesRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="PK" msdata:AutoIncrement="true" msdata:AutoIncrementSeed="-1" msdata:AutoIncrementStep="-1" msprop:Generator_ColumnVarNameInTable="columnPK" msprop:Generator_ColumnPropNameInRow="PK" msprop:Generator_ColumnPropNameInTable="PKColumn" msprop:Generator_UserColumnName="PK" type="xs:long" />
+              <xs:element name="QueryType" msprop:Generator_ColumnVarNameInTable="columnQueryType" msprop:Generator_ColumnPropNameInRow="QueryType" msprop:Generator_ColumnPropNameInTable="QueryTypeColumn" msprop:Generator_UserColumnName="QueryType" type="xs:string" minOccurs="0" />
+              <xs:element name="QueryText" msprop:Generator_ColumnVarNameInTable="columnQueryText" msprop:Generator_ColumnPropNameInRow="QueryText" msprop:Generator_ColumnPropNameInTable="QueryTextColumn" msprop:Generator_UserColumnName="QueryText" type="xs:string" minOccurs="0" />
+              <xs:element name="RefreshRate" msprop:Generator_ColumnVarNameInTable="columnRefreshRate" msprop:Generator_ColumnPropNameInRow="RefreshRate" msprop:Generator_ColumnPropNameInTable="RefreshRateColumn" msprop:Generator_UserColumnName="RefreshRate" type="xs:long" minOccurs="0" />
+              <xs:element name="TriggerTag" msprop:Generator_ColumnVarNameInTable="columnTriggerTag" msprop:Generator_ColumnPropNameInRow="TriggerTag" msprop:Generator_ColumnPropNameInTable="TriggerTagColumn" msprop:Generator_UserColumnName="TriggerTag" type="xs:long" minOccurs="0" />
+              <xs:element name="Database" msprop:Generator_ColumnVarNameInTable="columnDatabase" msprop:Generator_ColumnPropNameInRow="Database" msprop:Generator_ColumnPropNameInTable="DatabaseColumn" msprop:Generator_UserColumnName="Database" type="xs:long" minOccurs="0" />
+              <xs:element name="SelectType" msprop:Generator_ColumnVarNameInTable="columnSelectType" msprop:Generator_ColumnPropNameInRow="SelectType" msprop:Generator_ColumnPropNameInTable="SelectTypeColumn" msprop:Generator_UserColumnName="SelectType" type="xs:string" minOccurs="0" />
+              <xs:element name="MaxRows" msprop:Generator_ColumnVarNameInTable="columnMaxRows" msprop:Generator_ColumnPropNameInRow="MaxRows" msprop:Generator_ColumnPropNameInTable="MaxRowsColumn" msprop:Generator_UserColumnName="MaxRows" type="xs:long" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="QueryTagMappings" msprop:Generator_TableClassName="QueryTagMappingsDataTable" msprop:Generator_TableVarName="tableQueryTagMappings" msprop:Generator_TablePropName="QueryTagMappings" msprop:Generator_RowDeletingName="QueryTagMappingsRowDeleting" msprop:Generator_RowChangingName="QueryTagMappingsRowChanging" msprop:Generator_RowEvHandlerName="QueryTagMappingsRowChangeEventHandler" msprop:Generator_RowDeletedName="QueryTagMappingsRowDeleted" msprop:Generator_UserTableName="QueryTagMappings" msprop:Generator_RowChangedName="QueryTagMappingsRowChanged" msprop:Generator_RowEvArgName="QueryTagMappingsRowChangeEvent" msprop:Generator_RowClassName="QueryTagMappingsRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="PK" msdata:AutoIncrement="true" msdata:AutoIncrementSeed="-1" msdata:AutoIncrementStep="-1" msprop:Generator_ColumnVarNameInTable="columnPK" msprop:Generator_ColumnPropNameInRow="PK" msprop:Generator_ColumnPropNameInTable="PKColumn" msprop:Generator_UserColumnName="PK" type="xs:long" />
+              <xs:element name="Query" msprop:Generator_ColumnVarNameInTable="columnQuery" msprop:Generator_ColumnPropNameInRow="Query" msprop:Generator_ColumnPropNameInTable="QueryColumn" msprop:Generator_UserColumnName="Query" type="xs:long" minOccurs="0" />
+              <xs:element name="ColumnName" msprop:Generator_ColumnVarNameInTable="columnColumnName" msprop:Generator_ColumnPropNameInRow="ColumnName" msprop:Generator_ColumnPropNameInTable="ColumnNameColumn" msprop:Generator_UserColumnName="ColumnName" type="xs:string" minOccurs="0" />
+              <xs:element name="Tag" msprop:Generator_ColumnVarNameInTable="columnTag" msprop:Generator_ColumnPropNameInRow="Tag" msprop:Generator_ColumnPropNameInTable="TagColumn" msprop:Generator_UserColumnName="Tag" type="xs:long" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+    <xs:unique name="Constraint1" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//mstns:Controllers" />
+      <xs:field xpath="mstns:PK" />
+    </xs:unique>
+    <xs:unique name="Tags_Constraint1" msdata:ConstraintName="Constraint1" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//mstns:Tags" />
+      <xs:field xpath="mstns:PK" />
+    </xs:unique>
+    <xs:unique name="Databases_Constraint1" msdata:ConstraintName="Constraint1" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//mstns:Databases" />
+      <xs:field xpath="mstns:PK" />
+    </xs:unique>
+    <xs:unique name="Queries_Constraint1" msdata:ConstraintName="Constraint1" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//mstns:Queries" />
+      <xs:field xpath="mstns:PK" />
+    </xs:unique>
+    <xs:unique name="QueryTagMappings_Constraint1" msdata:ConstraintName="Constraint1" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//mstns:QueryTagMappings" />
+      <xs:field xpath="mstns:PK" />
+    </xs:unique>
+    <xs:keyref name="FK_Tags_QueryTagMappings" refer="Tags_Constraint1" msprop:rel_Generator_UserChildTable="QueryTagMappings" msprop:rel_Generator_ChildPropName="GetQueryTagMappingsRows" msprop:rel_Generator_UserRelationName="FK_Tags_QueryTagMappings" msprop:rel_Generator_ParentPropName="TagsRow" msprop:rel_Generator_RelationVarName="relationFK_Tags_QueryTagMappings" msprop:rel_Generator_UserParentTable="Tags">
+      <xs:selector xpath=".//mstns:QueryTagMappings" />
+      <xs:field xpath="mstns:Tag" />
+    </xs:keyref>
+    <xs:keyref name="FK_Queries_QueryTagMappings" refer="Queries_Constraint1" msprop:rel_Generator_UserChildTable="QueryTagMappings" msprop:rel_Generator_ChildPropName="GetQueryTagMappingsRows" msprop:rel_Generator_UserRelationName="FK_Queries_QueryTagMappings" msprop:rel_Generator_ParentPropName="QueriesRow" msprop:rel_Generator_RelationVarName="relationFK_Queries_QueryTagMappings" msprop:rel_Generator_UserParentTable="Queries">
+      <xs:selector xpath=".//mstns:QueryTagMappings" />
+      <xs:field xpath="mstns:Query" />
+    </xs:keyref>
+    <xs:keyref name="FK_Databases_Queries" refer="Databases_Constraint1" msprop:rel_Generator_UserChildTable="Queries" msprop:rel_Generator_ChildPropName="GetQueriesRows" msprop:rel_Generator_UserRelationName="FK_Databases_Queries" msprop:rel_Generator_ParentPropName="DatabasesRow" msprop:rel_Generator_RelationVarName="relationFK_Databases_Queries" msprop:rel_Generator_UserParentTable="Databases">
+      <xs:selector xpath=".//mstns:Queries" />
+      <xs:field xpath="mstns:Database" />
+    </xs:keyref>
+    <xs:keyref name="FK_Controllers_Tags" refer="Constraint1" msprop:rel_Generator_UserChildTable="Tags" msprop:rel_Generator_ChildPropName="GetTagsRows" msprop:rel_Generator_UserRelationName="FK_Controllers_Tags" msprop:rel_Generator_ParentPropName="ControllersRow" msprop:rel_Generator_RelationVarName="relationFK_Controllers_Tags" msprop:rel_Generator_UserParentTable="Controllers">
+      <xs:selector xpath=".//mstns:Tags" />
+      <xs:field xpath="mstns:Controller" />
+    </xs:keyref>
+  </xs:element>
+  <xs:annotation>
+    <xs:appinfo>
+      <msdata:Relationship name="Queries_Tags" msdata:parent="Queries" msdata:child="Tags" msdata:parentkey="TriggerTag" msdata:childkey="PK" msprop:Generator_UserChildTable="Tags" msprop:Generator_ChildPropName="GetTagsRows" msprop:Generator_UserRelationName="Queries_Tags" msprop:Generator_RelationVarName="relationQueries_Tags" msprop:Generator_UserParentTable="Queries" msprop:Generator_ParentPropName="QueriesRow" />
+    </xs:appinfo>
+  </xs:annotation>
+</xs:schema>

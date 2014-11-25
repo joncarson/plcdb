@@ -74,15 +74,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\NewQueryPopup.xaml">
+    <Page Include="Views\QueryConfigPopup.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\NewDatabasePopup.xaml">
+    <Page Include="Views\DatabaseConfigPopup.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\NewControllerPopup.xaml">
+    <Page Include="Views\ControllerConfigPopup.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -105,22 +105,19 @@
     <Compile Include="Converters\IsBiggerThanConverter.cs" />
     <Compile Include="Helpers\DelegateCommand.cs" />
     <Compile Include="Helpers\NotificationObject.cs" />
-    <Compile Include="Helpers\RandomHelper.cs" />
-    <Compile Include="Models\Controller.cs" />
-    <Compile Include="Models\Query.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="Views\ControllerConfigTab.xaml.cs">
       <DependentUpon>ControllerConfigTab.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\NewQueryPopup.xaml.cs">
-      <DependentUpon>NewQueryPopup.xaml</DependentUpon>
+    <Compile Include="Views\QueryConfigPopup.xaml.cs">
+      <DependentUpon>QueryConfigPopup.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\NewDatabasePopup.xaml.cs">
-      <DependentUpon>NewDatabasePopup.xaml</DependentUpon>
+    <Compile Include="Views\DatabaseConfigPopup.xaml.cs">
+      <DependentUpon>DatabaseConfigPopup.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\NewControllerPopup.xaml.cs">
-      <DependentUpon>NewControllerPopup.xaml</DependentUpon>
+    <Compile Include="Views\ControllerConfigPopup.xaml.cs">
+      <DependentUpon>ControllerConfigPopup.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\QueryConfigTab.xaml.cs">
       <DependentUpon>QueryConfigTab.xaml</DependentUpon>

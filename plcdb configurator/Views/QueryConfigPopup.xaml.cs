@@ -17,9 +17,9 @@ namespace plcdb.Views
     /// <summary>
     /// Interaction logic for NewControllerPopup.xaml
     /// </summary>
-    public partial class NewControllerPopup : Window
+    public partial class QueryConfigPopup : Window
     {
-        public NewControllerPopup()
+        public QueryConfigPopup()
         {
             InitializeComponent();
         }
