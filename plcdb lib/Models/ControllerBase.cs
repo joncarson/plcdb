@@ -8,6 +8,7 @@ namespace plcdb_lib.Models.Controllers
 {
     public abstract class ControllerBase
     {
+        public abstract String CONTROLLER_TYPE { get; }
         public abstract object read(Model.TagsRow t);
         public  Model.TagsDataTable read_all(Model.TagsDataTable set)
         {
@@ -30,6 +31,27 @@ namespace plcdb_lib.Models.Controllers
                 }
             }
             return success;
+        }
+
+        public abstract Model.TagsDataTable browse_tags();
+    }
+
+    public class AddressNotFoundException : Exception
+    {
+        public AddressNotFoundException() :  base("Read failed. Address not found in PLC.")
+        {
+            
+        }
+
+        public AddressNotFoundException(string message)
+            : base(message)
+        {
+        }
+
+        public AddressNotFoundException(string message,
+          Exception innerException)
+            : base(message, innerException)
+        {
         }
     }
 }

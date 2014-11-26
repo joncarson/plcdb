@@ -50,6 +50,7 @@
     </Compile>
     <Compile Include="Models\ControllerBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Simulator\Simulator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Models\Model.xsc">

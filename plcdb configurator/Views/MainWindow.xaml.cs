@@ -1,5 +1,8 @@
-﻿using System.Diagnostics;
+﻿using Microsoft.Win32;
+using plcdb.ViewModels;
+using System.Diagnostics;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Navigation;
 
 namespace plcdb.Views
@@ -14,10 +17,47 @@ namespace plcdb.Views
             InitializeComponent();
         }
 
-        private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
+        private void OpenCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri));
-            e.Handled = true;
+            Open();//Implementation of open file
         }
+        private void SaveAsCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            Save();//Implementation of saveAs
+        }
+        private void ExitCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            Exit();//Implementation of exit
+        }
+
+        private void Open()
+        {
+            OpenFileDialog dlg = new OpenFileDialog();
+            bool result = (bool)dlg.ShowDialog();
+            if (result)
+            {
+                MainWindowViewModel vm = this.DataContext as MainWindowViewModel;
+                vm.ActiveModelPath = dlg.FileName;
+                vm.OnLoadModel();
+            }
+        }
+
+        private void Save()
+        {
+            SaveFileDialog dlg = new SaveFileDialog();
+            bool result = (bool)dlg.ShowDialog();
+            if (result)
+            {
+                MainWindowViewModel vm = this.DataContext as MainWindowViewModel;
+                vm.ActiveModelPath = dlg.FileName;
+                vm.OnSaveModel();
+            }
+        }
+
+        private void Exit()
+        {
+            this.Close();
+        }
+
     }
 }

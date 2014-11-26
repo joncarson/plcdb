@@ -1,4 +1,6 @@
-﻿using System;
+﻿using plcdb.ViewModels;
+using plcdb_lib.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +25,32 @@ namespace plcdb.Views
         public ControllerConfigTab()
         {
             InitializeComponent();
+        }
+
+        private void btnAddNewController_Click(object sender, RoutedEventArgs e)
+        {
+            ControllerConfigPopup popup = new ControllerConfigPopup();
+            var vm = this.DataContext as MainWindowViewModel;
+            Model.ControllersRow NewRow = vm.ActiveModel.Controllers.NewControllersRow();
+            NewRow.Name = "New Controller";
+            NewRow.Address = "";
+            NewRow.Type = "";
+            vm.ActiveModel.Controllers.AddControllersRow(NewRow);
+            popup.DataContext = new ControllerPopupViewModel()
+            {
+                CurrentController = NewRow,
+            };
+            popup.ShowDialog();
+        }
+
+        private void btnEdit_Click(object sender, RoutedEventArgs e)
+        {
+            ControllerConfigPopup popup = new ControllerConfigPopup();
+            popup.DataContext = new ControllerPopupViewModel()
+            {
+                CurrentController = (Model.ControllersRow)((System.Data.DataRowView)ControllerGrid.SelectedValue).Row
+            };
+            popup.ShowDialog();
         }
     }
 }

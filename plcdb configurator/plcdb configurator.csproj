@@ -102,10 +102,12 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Converters\NegateBooleanConverter.cs" />
     <Compile Include="Converters\IsBiggerThanConverter.cs" />
     <Compile Include="Helpers\DelegateCommand.cs" />
-    <Compile Include="Helpers\NotificationObject.cs" />
-    <Compile Include="ViewModels\BaseViewModel.cs" />
+    <Compile Include="Helpers\BaseViewModel.cs" />
+    <Compile Include="ViewModels\ControllerPopupViewModel.cs" />
+    <Compile Include="ViewModels\DatabasePopupViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="Views\ControllerConfigTab.xaml.cs">
       <DependentUpon>ControllerConfigTab.xaml</DependentUpon>

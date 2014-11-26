@@ -10,8 +10,8 @@ namespace plcdb.ViewModels
     {
         #region Properties
 
-        #region MyDateTime
-        private Model _activeModel;
+        #region ActiveModel
+        private Model _activeModel = new Model();
         public Model ActiveModel
         {
             get { return _activeModel; }
@@ -27,7 +27,22 @@ namespace plcdb.ViewModels
 
         #endregion
 
-    
+        #region ActiveModelPath
+        private String _activeModelPath;
+        public String ActiveModelPath
+        {
+            get { return _activeModelPath; }
+            set
+            {
+                if (_activeModelPath != value)
+                {
+                    _activeModelPath = value;
+                    RaisePropertyChanged(() => ActiveModelPath);
+                }
+            }
+        }
+        #endregion
+
         #endregion
 
         #region Commands
@@ -44,8 +59,16 @@ namespace plcdb.ViewModels
         #endregion
 
         #region Command Handlers
+        public void OnLoadModel()
+        {
+            ActiveModel = ActiveModel.Open(ActiveModelPath);
+        }
 
-       
+        public void OnSaveModel()
+        {
+            ActiveModel.Save(ActiveModelPath);
+        }
+
         #endregion
 
        

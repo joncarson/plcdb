@@ -9,19 +9,27 @@
         xmlns:views="clr-namespace:plcdb.Views"
         Title="PLC-db"
         WindowStartupLocation="CenterScreen"
+        DataContext="{StaticResource MainWindowViewModel}"
         >
     <Window.Resources>
-        <viewModels:MainWindowViewModel x:Key="Windows1ViewModel" />
-        <converters:IsBiggerThanConverter x:Key="IsBiggerThanConverter" />
     </Window.Resources>
-    <Grid DataContext="{StaticResource Windows1ViewModel}">
+    <Window.CommandBindings>
+        <CommandBinding Command="Open" Executed="OpenCommandBinding_Executed"></CommandBinding>
+        <CommandBinding Command="Save" Executed="SaveAsCommandBinding_Executed"></CommandBinding>
+        <CommandBinding Command="Close"  Executed="ExitCommandBinding_Executed"></CommandBinding>
+    </Window.CommandBindings>
+    <Window.InputBindings>
+        <KeyBinding Key="O" Modifiers="Control" Command="Open"></KeyBinding>
+        <KeyBinding Key="S" Modifiers="Control" Command="Save"></KeyBinding>
+    </Window.InputBindings>
+    <Grid>
         
         <DockPanel LastChildFill="True">
             <Menu DockPanel.Dock="Top">
                 <MenuItem Header="_File">
-                    <MenuItem Header="_Open"/>
-                    <MenuItem Header="_Close"/>
-                    <MenuItem Header="_Save"/>
+                    <MenuItem x:Name="miOpen" Header="_Open" Command="Open" InputGestureText="Ctrl+O"/>
+                    <MenuItem x:Name="miSave" Header="_Save" Command="Save" InputGestureText="Ctrl+S"/>
+                    <MenuItem x:Name="miExit" Header="E_xit" Command="Close" InputGestureText="Alt+F4"/>
                 </MenuItem>
             </Menu>
             <TabControl>

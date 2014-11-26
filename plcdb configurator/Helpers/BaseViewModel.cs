@@ -1,10 +1,11 @@
-﻿using System;
+using plcdb.Helpers;
+using System;
 using System.ComponentModel;
 using System.Linq.Expressions;
 
-namespace plcdb.Helpers
+namespace plcdb.ViewModels
 {
-    public class NotificationObject : INotifyPropertyChanged
+    public class BaseViewModel : INotifyPropertyChanged
     {
         protected void RaisePropertyChanged<T>(Expression<Func<T>> action)
         {

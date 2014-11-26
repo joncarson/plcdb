@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Xml.Serialization;
 namespace plcdb_lib.Models
 {
@@ -17,22 +18,43 @@ namespace plcdb_lib.Models
             {
                 return new Model();
             }
-
-            XmlSerializer Xml = new XmlSerializer(typeof(Model));
             FileStream Str = new FileStream(path, FileMode.Open);
-            return (Model)Xml.Deserialize(Str);
+            try
+            {
+                this.Clear();
+                this.ReadXml(Str, System.Data.XmlReadMode.IgnoreSchema);
+            }
+            catch (Exception e)
+            {
+            }
+            finally
+            {
+                Str.Close();
+            }
+            this.AcceptChanges();
+            return this;
         }
 
         public void Save(string path)
         {
+            this.AcceptChanges();
             if (!path.EndsWith(FILE_EXTENSION))
             {
                 path += FILE_EXTENSION;
             }
-
-            XmlSerializer Xml = new XmlSerializer(typeof(Model));
+            
             FileStream Str = new FileStream(path, FileMode.OpenOrCreate);
-            Xml.Serialize(Str, this);
+            try
+            {
+                this.WriteXml(Str, System.Data.XmlWriteMode.IgnoreSchema);
+            }
+            catch (Exception e)
+            {
+            }
+            finally
+            {
+                Str.Close();
+            }
         }
     }
 }
