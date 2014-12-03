@@ -74,6 +74,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Views\TagBrowserPopup.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\QueryConfigPopup.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -102,15 +106,25 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Converters\PKToTagConverter.cs" />
+    <Compile Include="Converters\StringToTagConverter.cs" />
+    <Compile Include="Converters\PKToNameConverter.cs" />
+    <Compile Include="Converters\BoolToHiddenConverter.cs" />
     <Compile Include="Converters\NegateBooleanConverter.cs" />
     <Compile Include="Converters\IsBiggerThanConverter.cs" />
+    <Compile Include="Converters\StringToTagValidator.cs" />
     <Compile Include="Helpers\DelegateCommand.cs" />
     <Compile Include="Helpers\BaseViewModel.cs" />
     <Compile Include="ViewModels\ControllerPopupViewModel.cs" />
+    <Compile Include="ViewModels\TagBrowserViewModel.cs" />
+    <Compile Include="ViewModels\QueryPopupViewModel.cs" />
     <Compile Include="ViewModels\DatabasePopupViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="Views\ControllerConfigTab.xaml.cs">
       <DependentUpon>ControllerConfigTab.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\TagBrowserPopup.xaml.cs">
+      <DependentUpon>TagBrowserPopup.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\QueryConfigPopup.xaml.cs">
       <DependentUpon>QueryConfigPopup.xaml</DependentUpon>

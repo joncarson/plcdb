@@ -1,10 +1,19 @@
 ﻿<Window x:Class="plcdb.Views.QueryConfigPopup"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="New Query" Height="500" Width="700">
-    
+        Title="Edit Query" Height="500" Width="700"
+        xmlns:valueConverters="clr-namespace:plcdb.Converters">
+   
+    <Window.Resources>
+        <ResourceDictionary>
+            <valueConverters:StringToTagConverter x:Key="StringToTagConverter" />
+        </ResourceDictionary>
+    </Window.Resources>
         <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -15,23 +24,38 @@
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" MinWidth="100"/>
         </Grid.ColumnDefinitions>
-            
-        <Label Grid.Row="0" Grid.Column="0" Margin="5">Type: </Label>
-        <ComboBox Grid.Row="0" Grid.Column="1" Margin="5" Width="100" HorizontalAlignment="Left">
-            <ComboBoxItem>SELECT</ComboBoxItem>
-            <ComboBoxItem>UPDATE</ComboBoxItem>
-            <ComboBoxItem>INSERT</ComboBoxItem>
-            <ComboBoxItem>DELETE</ComboBoxItem>
+        <Label Grid.Row="0" Grid.Column="0" Margin="5">Name:</Label>
+        <TextBox Grid.Row="0" Grid.Column="1" Margin="5" Width="200" HorizontalAlignment="Left" Text="{Binding Name}"></TextBox>
+        <Label Grid.Row="1" Grid.Column="0" Margin="5">Database:</Label>
+        <ComboBox Grid.Row="1" Grid.Column="1" Margin="5" Width="200" HorizontalAlignment="Left" SelectedItem="{Binding Database}" ItemsSource="{Binding AvailableDatabases}">
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <Label Content="{Binding Name}"></Label>
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
         </ComboBox>
-        <Label Grid.Row="1" Grid.Column="0" Margin="5">Trigger Tag:</Label>
-        <DockPanel Grid.Row="1" Grid.Column="1" LastChildFill="True">
-            <Button DockPanel.Dock="Right" Margin="0 5 5 5">...</Button>
-            <TextBox DockPanel.Dock="Left" Margin="5" Width="Auto"></TextBox>
+        <Label Grid.Row="2" Grid.Column="0" Margin="5">Type: </Label>
+        <ComboBox Grid.Row="2" Grid.Column="1" Margin="5,0,0,5" Width="100" HorizontalAlignment="Left" ItemsSource="{Binding AvailableQueryTypes}" SelectedItem="{Binding QueryType}" Height="26" VerticalAlignment="Bottom">
+        </ComboBox>
+        <Label Grid.Row="3" Grid.Column="0" Margin="5">Trigger Tag:</Label>
+        <DockPanel Grid.Row="3" Grid.Column="1" LastChildFill="True">
+            <Button x:Name="btnTriggerTag" DockPanel.Dock="Right" Margin="0 5 5 5" Click="btnTagBrowse_Click">...</Button>
+            <TextBox DockPanel.Dock="Left" Margin="5" Width="Auto">
+                <TextBox.Text>
+                    <Binding Path="TriggerTag" Converter="{StaticResource StringToTagConverter}">
+                        <Binding.ValidationRules>
+                            <valueConverters:StringToTagValidator/>
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
         </DockPanel>
         
-        <Label Grid.Row="2" Grid.Column="0" Margin="5">Trigger Refresh Rate (ms):</Label>
-        <TextBox Grid.Row="2" Grid.Column="1" Margin="5" Width="50" HorizontalAlignment="Left"></TextBox>
-        <GroupBox Grid.Row="3" Grid.ColumnSpan="2"  Header="Query Parameters" Margin="5">
+        <Label Grid.Row="4" Grid.Column="0" Margin="5">Refresh Rate (ms):</Label>
+        <TextBox Grid.Row="4" Grid.Column="1" Margin="5" Width="50" HorizontalAlignment="Left" Text="{Binding RefreshRate}"></TextBox>
+        <Label Grid.Row="5" Grid.Column="0">Query string:</Label>
+        <TextBox Grid.Row="5" Grid.Column="1" Margin="5 0 5 0" Text="{Binding QueryText}"></TextBox>
+        <GroupBox Grid.Row="6" Grid.ColumnSpan="2"  Header="Query Parameters" Margin="5">
             <TabControl  TabStripPlacement="Bottom" BorderThickness="0">
             <TabItem Header="opc" Visibility="Collapsed">
                 <Grid>
@@ -45,16 +69,14 @@
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    <Label Grid.Row="0" Grid.Column="0">Query string:</Label>
-                    <TextBox Grid.Row="0" Grid.Column="1" Margin="5 0 5 0"></TextBox>
                     <Label Grid.Row="1" Grid.Column="0">Result type:</Label>
-                    <ComboBox Grid.Row="1" Grid.Column="1" Margin="5" Width="100" HorizontalAlignment="Left">
+                    <ComboBox Grid.Row="1" Grid.Column="1" Margin="5" Width="100" HorizontalAlignment="Left" SelectedItem="{Binding MappingType}">
                         <ComboBoxItem>Single Row</ComboBoxItem>
                         <ComboBoxItem>Multi Row (array)</ComboBoxItem>
                         <ComboBoxItem>Multi Row (tag within query)</ComboBoxItem>
                     </ComboBox>
                     <Label Grid.Row="2" Grid.Column="0">Max results:</Label>
-                    <TextBox Grid.Row="2" Grid.Column="1" Margin="5 0 5 0" Width="50" HorizontalAlignment="Left"></TextBox>
+                    <TextBox Grid.Row="2" Grid.Column="1" Margin="5 0 5 0" Width="50" HorizontalAlignment="Left" Text="{Binding MaxRows}"></TextBox>
                     <DataGrid Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Margin="5">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Column" MinWidth="100"></DataGridTextColumn>
@@ -68,9 +90,9 @@
             </TabItem>
         </TabControl>
         </GroupBox>
-        <StackPanel Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button Grid.Row="2" Grid.Column="1" HorizontalAlignment="Right" Margin="5">Save</Button>
-            <Button Grid.Row="2" Grid.Column="1" HorizontalAlignment="Right" Margin="5">Cancel</Button>
+        <StackPanel Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button HorizontalAlignment="Right" Margin="5" Command="{Binding SaveCommand}" Click="btnSave_Click">Save</Button>
+            <Button HorizontalAlignment="Right" Margin="5" Command="{Binding CancelCommand}" Click="btnCancel_Click">Cancel</Button>
         </StackPanel>
     </Grid>
     

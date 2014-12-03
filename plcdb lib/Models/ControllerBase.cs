@@ -8,24 +8,24 @@ namespace plcdb_lib.Models.Controllers
 {
     public abstract class ControllerBase
     {
-        public abstract String CONTROLLER_TYPE { get; }
-        public abstract object read(Model.TagsRow t);
-        public  Model.TagsDataTable read_all(Model.TagsDataTable set)
+        public abstract String Name { get; }
+        public abstract object Read(Model.TagsRow t);
+        public  Model.TagsDataTable ReadAll(Model.TagsDataTable set)
         {
             foreach (Model.TagsRow t in set.Rows)
             {
-                t.CurrentValue = Convert.ChangeType(this.read(t), t.DataType);
+                t.CurrentValue = Convert.ChangeType(this.Read(t), t.DataType);
             }
             return set;
         }
 
-        public abstract bool write(Model.TagsRow t, object val);
-        public bool write_all(Model.TagsDataTable set)
+        public abstract bool Write(Model.TagsRow t, object val);
+        public bool WriteAll(Model.TagsDataTable set)
         {
             var success = true;
             foreach (Model.TagsRow t in set.Rows)
             {
-                if (!this.write(t, t.CurrentValue))
+                if (!this.Write(t, t.CurrentValue))
                 {
                     success = false;
                 }
@@ -33,7 +33,15 @@ namespace plcdb_lib.Models.Controllers
             return success;
         }
 
-        public abstract Model.TagsDataTable browse_tags();
+        public abstract Model.TagsDataTable BrowseTags();
+
+        protected ControllerBase(Model.ControllersRow args)
+        {
+        }
+
+        protected ControllerBase()
+        {
+        }
     }
 
     public class AddressNotFoundException : Exception

@@ -108,6 +108,7 @@ namespace plcdb.ViewModels
                 SqlConnectionStringBuilder b = GetSqlConnection();
                 b.IntegratedSecurity = value;
                 CurrentDatabase.ConnectionString = b.ToString();
+                RaisePropertyChanged(() => UseWindowsAuthentication);
             }
         }
 

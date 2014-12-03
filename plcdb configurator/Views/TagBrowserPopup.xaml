@@ -1,0 +1,46 @@
+﻿<Window x:Class="plcdb.Views.TagBrowserPopup"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Tag Browser" Height="500" Width="500"
+        ShowInTaskbar="False"
+        WindowStartupLocation="CenterScreen"
+        xmlns:valueConverters="clr-namespace:plcdb.Converters"
+        >
+    <Window.Resources>
+        <ResourceDictionary>
+            <valueConverters:BoolToHiddenConverter x:Key="BoolToHiddenConverter" />
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Label Grid.Row="0" Grid.Column="0" Margin="5">Controller:</Label>
+        <ComboBox Grid.Row="0" Grid.Column="1" Margin="5" SelectedItem="{Binding CurrentController}" ItemsSource="{Binding AvailableControllers}">
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <Label Content="{Binding Name}"></Label>
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
+        <ListBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="5" SelectedItem="{Binding CurrentTag}" ItemsSource="{Binding AvailableTags}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Label Content="{Binding Address}"></Label>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button x:Name="btnSave"   Grid.Row="2" Grid.Column="1" HorizontalAlignment="Right" Margin="5" Click="btnSave_Click" Command="{Binding SaveCommand}" IsCancel="True" >Save</Button>
+            <Button x:Name="btnCancel" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Right" Margin="5" Click="btnCancel_Click" Command="{Binding CancelCommand}" IsCancel="True">Cancel</Button>
+        </StackPanel>
+            
+    </Grid>
+    
+</Window>

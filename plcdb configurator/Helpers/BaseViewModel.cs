@@ -1,4 +1,5 @@
 using plcdb.Helpers;
+using plcdb_lib.Models;
 using System;
 using System.ComponentModel;
 using System.Linq.Expressions;
@@ -7,6 +8,7 @@ namespace plcdb.ViewModels
 {
     public class BaseViewModel : INotifyPropertyChanged
     {
+        
         protected void RaisePropertyChanged<T>(Expression<Func<T>> action)
         {
             var propertyName = GetPropertyName(action);

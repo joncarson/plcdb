@@ -4,9 +4,14 @@
         Title="Edit Database" Height="300" Width="300"
         ShowInTaskbar="False"
         WindowStartupLocation="CenterScreen"
+        xmlns:valueConverters="clr-namespace:plcdb.Converters"
         >
-       
-        <Grid>
+    <Window.Resources>
+        <ResourceDictionary>
+            <valueConverters:BoolToHiddenConverter x:Key="BoolToHiddenConverter" />
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -26,13 +31,12 @@
         <Label Grid.Row="1" Grid.Column="0" Margin="5">Server/IP: </Label>
         <TextBox Grid.Row="1" Grid.Column="1" Margin="5" Text="{Binding Server}"/>
         <Label Grid.Row="2" Grid.Column="0" Margin="5">Database Catalog:</Label>
-        <ComboBox Grid.Row="2" Grid.Column="1" Margin="5" Text="{Binding Catalog}"/>
-        <RadioButton Grid.Row="3" GroupName="SecurityType" Content="Windows Authentication" Margin="5"></RadioButton>
-        <RadioButton Grid.Row="4" GroupName="SecurityType" Content="SQL Authentication" Margin="5"></RadioButton>
-        <Label Grid.Row="5" Grid.Column="0" Margin="5">Username:</Label>
-        <TextBox Grid.Row="5" Grid.Column="1" Margin="5" Text="{Binding Username}"/>
-        <Label Grid.Row="6" Grid.Column="0" Margin="5">Password:</Label>
-        <TextBox Grid.Row="6" Grid.Column="1" Margin="5" Text="{Binding Password}"/>
+        <ComboBox Grid.Row="2" Grid.Column="1" Margin="5" Text="{Binding Catalog}" IsEditable="True" />
+        <CheckBox Grid.Row="3" Content="Windows Authentication" IsChecked="{Binding UseWindowsAuthentication}" Margin="5"></CheckBox>
+        <Label Grid.Row="5" Grid.Column="0" Margin="5" Visibility="{Binding UseWindowsAuthentication, Mode=OneWay, Converter={StaticResource BoolToHiddenConverter}}">Username:</Label>
+        <TextBox Grid.Row="5" Grid.Column="1" Margin="5" Visibility="{Binding UseWindowsAuthentication, Mode=OneWay, Converter={StaticResource BoolToHiddenConverter}}" Text="{Binding Username}"/>
+        <Label Grid.Row="6" Grid.Column="0" Margin="5" Visibility="{Binding UseWindowsAuthentication, Mode=OneWay, Converter={StaticResource BoolToHiddenConverter}}">Password:</Label>
+        <TextBox Grid.Row="6" Grid.Column="1" Margin="5" Text="{Binding Password}" Visibility="{Binding UseWindowsAuthentication, Mode=OneWay, Converter={StaticResource BoolToHiddenConverter}}"/>
         <StackPanel Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right">
             <Button x:Name="btnSave"   Grid.Row="2" Grid.Column="1" HorizontalAlignment="Right" Margin="5" Click="btnSave_Click" Command="{Binding SaveCommand}" IsCancel="True" >Save</Button>
             <Button x:Name="btnCancel" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Right" Margin="5" Click="btnCancel_Click" Command="{Binding CancelCommand}" IsCancel="True">Cancel</Button>

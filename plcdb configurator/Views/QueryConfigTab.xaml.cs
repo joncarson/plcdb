@@ -1,4 +1,6 @@
-﻿using System;
+﻿using plcdb.ViewModels;
+using plcdb_lib.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +25,37 @@ namespace plcdb.Views
         public QueryConfigTab()
         {
             InitializeComponent();
+        }
+
+        private void btnAdd_Click(object sender, RoutedEventArgs e)
+        {
+            QueryConfigPopup popup = new QueryConfigPopup();
+            var vm = this.DataContext as MainWindowViewModel;
+            Model.QueriesRow NewRow = vm.ActiveModel.Queries.NewQueriesRow();
+            NewRow.Name = "New Query";
+            NewRow.MappingType = "";
+            NewRow.MaxRows = 1;
+            NewRow.QueryText = "";
+            NewRow.QueryType = "";
+            NewRow.RefreshRate = 5000;
+            vm.ActiveModel.Queries.AddQueriesRow(NewRow);
+            
+
+            popup.DataContext = new QueryPopupViewModel()
+            {
+                CurrentQuery = NewRow,
+            };
+            popup.ShowDialog();
+        }
+
+        private void btnEdit_Click(object sender, RoutedEventArgs e)
+        {
+            QueryConfigPopup popup = new QueryConfigPopup();
+            popup.DataContext = new QueryPopupViewModel()
+            {
+                CurrentQuery = (Model.QueriesRow)((System.Data.DataRowView)QueriesGrid.SelectedValue).Row
+            };
+            popup.ShowDialog();
         }
     }
 }

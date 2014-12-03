@@ -5,6 +5,7 @@ using plcdb.Helpers;
 using plcdb_lib.Models;
 using System.Data.SqlClient;
 using System.Collections.Generic;
+using plcdb_lib.Models.Controllers;
 
 namespace plcdb.ViewModels
 {
@@ -12,15 +13,14 @@ namespace plcdb.ViewModels
     {
         #region Properties
 
-        private IEnumerable<String> _availableControllerTypes;
-        public IEnumerable<String> AvailableControllerTypes
+        private IEnumerable<Type> _availableControllerTypes;
+        public IEnumerable<Type> AvailableControllerTypes
         {
             get
             {
                 if (_availableControllerTypes == null)
                 {
-                    _availableControllerTypes = new List<String>();
-                    ((List<String>)_availableControllerTypes).Add("Simulator");
+                    _availableControllerTypes = Model.GetAllControllerTypes();
                 }
                 return _availableControllerTypes;
             }
@@ -59,7 +59,7 @@ namespace plcdb.ViewModels
                 {
                     Name = "";
                     Address = "";
-                    ControllerType = "";
+                    ControllerType = null;
                 }
             }
         }
@@ -95,10 +95,11 @@ namespace plcdb.ViewModels
         #endregion
 
         #region ControllerType
-        public String ControllerType
+        public Type ControllerType
         {
             get
             {
+                if (CurrentController.IsTypeNull()) return null;
                 return CurrentController.Type;
             }
             set

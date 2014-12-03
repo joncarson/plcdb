@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace plcdb.Properties {
+namespace plcdb_service.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
@@ -23,15 +23,12 @@ namespace plcdb.Properties {
             }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string LastOpenedFile {
+        public string ConfigFile {
             get {
-                return ((string)(this["LastOpenedFile"]));
-            }
-            set {
-                this["LastOpenedFile"] = value;
+                return ((string)(this["ConfigFile"]));
             }
         }
     }

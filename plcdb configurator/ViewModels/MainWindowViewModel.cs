@@ -28,15 +28,19 @@ namespace plcdb.ViewModels
         #endregion
 
         #region ActiveModelPath
-        private String _activeModelPath;
         public String ActiveModelPath
         {
-            get { return _activeModelPath; }
+            get
+            {
+                return Properties.Settings.Default.LastOpenedFile;
+                
+            }
             set
             {
-                if (_activeModelPath != value)
+                if (Properties.Settings.Default.LastOpenedFile != value)
                 {
-                    _activeModelPath = value;
+                    Properties.Settings.Default.LastOpenedFile = value;
+                    Properties.Settings.Default.Save();
                     RaisePropertyChanged(() => ActiveModelPath);
                 }
             }

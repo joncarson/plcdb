@@ -1,6 +1,6 @@
 ﻿namespace plcdb_service
 {
-    partial class Service1
+    partial class plcdb
     {
         /// <summary> 
         /// Required designer variable.

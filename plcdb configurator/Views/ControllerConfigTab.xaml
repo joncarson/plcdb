@@ -10,8 +10,8 @@
         <DataGrid x:Name="ControllerGrid" DockPanel.Dock="Top" AutoGenerateColumns="False" ItemsSource="{Binding ActiveModel.Controllers}" CanUserAddRows="False" CanUserDeleteRows="False" CanUserSortColumns="True">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*"></DataGridTextColumn>
-                <DataGridTextColumn Header="DNS/IP Address" Binding="{Binding Address}" Width="100"></DataGridTextColumn>
-                <DataGridTextColumn Header="Type" Width="100" Binding="{Binding Type}"></DataGridTextColumn>
+                <DataGridTextColumn Header="DNS/IP Address" Binding="{Binding Address}" Width="200"></DataGridTextColumn>
+                <DataGridTextColumn Header="Type" Width="150" Binding="{Binding Type.Name}"></DataGridTextColumn>
                 <DataGridTemplateColumn Header="Edit" Width="100">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>

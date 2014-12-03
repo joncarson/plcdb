@@ -10,13 +10,15 @@
         Title="PLC-db"
         WindowStartupLocation="CenterScreen"
         DataContext="{StaticResource MainWindowViewModel}"
+        Loaded="Window_Loaded_1"
         >
     <Window.Resources>
     </Window.Resources>
     <Window.CommandBindings>
         <CommandBinding Command="Open" Executed="OpenCommandBinding_Executed"></CommandBinding>
         <CommandBinding Command="Save" Executed="SaveAsCommandBinding_Executed"></CommandBinding>
-        <CommandBinding Command="Close"  Executed="ExitCommandBinding_Executed"></CommandBinding>
+        <CommandBinding Command="Close"  Executed="CloseCommandBinding_Executed"></CommandBinding>
+        <CommandBinding Command="Stop"  Executed="ExitCommandBinding_Executed"></CommandBinding>
     </Window.CommandBindings>
     <Window.InputBindings>
         <KeyBinding Key="O" Modifiers="Control" Command="Open"></KeyBinding>
@@ -29,7 +31,8 @@
                 <MenuItem Header="_File">
                     <MenuItem x:Name="miOpen" Header="_Open" Command="Open" InputGestureText="Ctrl+O"/>
                     <MenuItem x:Name="miSave" Header="_Save" Command="Save" InputGestureText="Ctrl+S"/>
-                    <MenuItem x:Name="miExit" Header="E_xit" Command="Close" InputGestureText="Alt+F4"/>
+                    <MenuItem x:Name="miClose" Header="_Close" Command="Close"/>
+                    <MenuItem x:Name="miExit" Header="E_xit" Command="Stop" InputGestureText="Alt+F4"/>
                 </MenuItem>
             </Menu>
             <TabControl>
@@ -39,7 +42,9 @@
                 <TabItem Header="plc config">
                     <views:ControllerConfigTab></views:ControllerConfigTab>
                 </TabItem>
-                <TabItem Header="query mapping"></TabItem>
+                <TabItem Header="query mapping">
+                    <views:QueryConfigTab></views:QueryConfigTab>
+                </TabItem>
                 
             </TabControl>
         </DockPanel>

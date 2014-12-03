@@ -36,13 +36,13 @@ namespace plcdb_lib.Models {
         
         private global::System.Data.DataRelation relationFK_Controllers_Tags;
         
-        private global::System.Data.DataRelation relationFK_Databases_Queries;
+        private global::System.Data.DataRelation relationQueries_Tags;
         
-        private global::System.Data.DataRelation relationFK_Tags_QueryTagMappings;
+        private global::System.Data.DataRelation relationFK_Databases_Queries;
         
         private global::System.Data.DataRelation relationFK_Queries_QueryTagMappings;
         
-        private global::System.Data.DataRelation relationQueries_Tags;
+        private global::System.Data.DataRelation relationFK_Tags_QueryTagMappings;
         
         private global::System.Data.SchemaSerializationMode _schemaSerializationMode = global::System.Data.SchemaSerializationMode.IncludeSchema;
         
@@ -301,10 +301,10 @@ namespace plcdb_lib.Models {
                 }
             }
             this.relationFK_Controllers_Tags = this.Relations["FK_Controllers_Tags"];
-            this.relationFK_Databases_Queries = this.Relations["FK_Databases_Queries"];
-            this.relationFK_Tags_QueryTagMappings = this.Relations["FK_Tags_QueryTagMappings"];
-            this.relationFK_Queries_QueryTagMappings = this.Relations["FK_Queries_QueryTagMappings"];
             this.relationQueries_Tags = this.Relations["Queries_Tags"];
+            this.relationFK_Databases_Queries = this.Relations["FK_Databases_Queries"];
+            this.relationFK_Queries_QueryTagMappings = this.Relations["FK_Queries_QueryTagMappings"];
+            this.relationFK_Tags_QueryTagMappings = this.Relations["FK_Tags_QueryTagMappings"];
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -333,17 +333,17 @@ namespace plcdb_lib.Models {
             fkc.AcceptRejectRule = global::System.Data.AcceptRejectRule.None;
             fkc.DeleteRule = global::System.Data.Rule.Cascade;
             fkc.UpdateRule = global::System.Data.Rule.Cascade;
+            fkc = new global::System.Data.ForeignKeyConstraint("Queries_Tags", new global::System.Data.DataColumn[] {
+                        this.tableTags.PKColumn}, new global::System.Data.DataColumn[] {
+                        this.tableQueries.TriggerTagColumn});
+            this.tableQueries.Constraints.Add(fkc);
+            fkc.AcceptRejectRule = global::System.Data.AcceptRejectRule.None;
+            fkc.DeleteRule = global::System.Data.Rule.SetNull;
+            fkc.UpdateRule = global::System.Data.Rule.Cascade;
             fkc = new global::System.Data.ForeignKeyConstraint("FK_Databases_Queries", new global::System.Data.DataColumn[] {
                         this.tableDatabases.PKColumn}, new global::System.Data.DataColumn[] {
                         this.tableQueries.DatabaseColumn});
             this.tableQueries.Constraints.Add(fkc);
-            fkc.AcceptRejectRule = global::System.Data.AcceptRejectRule.None;
-            fkc.DeleteRule = global::System.Data.Rule.Cascade;
-            fkc.UpdateRule = global::System.Data.Rule.Cascade;
-            fkc = new global::System.Data.ForeignKeyConstraint("FK_Tags_QueryTagMappings", new global::System.Data.DataColumn[] {
-                        this.tableTags.PKColumn}, new global::System.Data.DataColumn[] {
-                        this.tableQueryTagMappings.TagColumn});
-            this.tableQueryTagMappings.Constraints.Add(fkc);
             fkc.AcceptRejectRule = global::System.Data.AcceptRejectRule.None;
             fkc.DeleteRule = global::System.Data.Rule.Cascade;
             fkc.UpdateRule = global::System.Data.Rule.Cascade;
@@ -354,26 +354,33 @@ namespace plcdb_lib.Models {
             fkc.AcceptRejectRule = global::System.Data.AcceptRejectRule.None;
             fkc.DeleteRule = global::System.Data.Rule.Cascade;
             fkc.UpdateRule = global::System.Data.Rule.Cascade;
+            fkc = new global::System.Data.ForeignKeyConstraint("FK_Tags_QueryTagMappings", new global::System.Data.DataColumn[] {
+                        this.tableTags.PKColumn}, new global::System.Data.DataColumn[] {
+                        this.tableQueryTagMappings.TagColumn});
+            this.tableQueryTagMappings.Constraints.Add(fkc);
+            fkc.AcceptRejectRule = global::System.Data.AcceptRejectRule.None;
+            fkc.DeleteRule = global::System.Data.Rule.Cascade;
+            fkc.UpdateRule = global::System.Data.Rule.Cascade;
             this.relationFK_Controllers_Tags = new global::System.Data.DataRelation("FK_Controllers_Tags", new global::System.Data.DataColumn[] {
                         this.tableControllers.PKColumn}, new global::System.Data.DataColumn[] {
                         this.tableTags.ControllerColumn}, false);
             this.Relations.Add(this.relationFK_Controllers_Tags);
+            this.relationQueries_Tags = new global::System.Data.DataRelation("Queries_Tags", new global::System.Data.DataColumn[] {
+                        this.tableTags.PKColumn}, new global::System.Data.DataColumn[] {
+                        this.tableQueries.TriggerTagColumn}, false);
+            this.Relations.Add(this.relationQueries_Tags);
             this.relationFK_Databases_Queries = new global::System.Data.DataRelation("FK_Databases_Queries", new global::System.Data.DataColumn[] {
                         this.tableDatabases.PKColumn}, new global::System.Data.DataColumn[] {
                         this.tableQueries.DatabaseColumn}, false);
             this.Relations.Add(this.relationFK_Databases_Queries);
-            this.relationFK_Tags_QueryTagMappings = new global::System.Data.DataRelation("FK_Tags_QueryTagMappings", new global::System.Data.DataColumn[] {
-                        this.tableTags.PKColumn}, new global::System.Data.DataColumn[] {
-                        this.tableQueryTagMappings.TagColumn}, false);
-            this.Relations.Add(this.relationFK_Tags_QueryTagMappings);
             this.relationFK_Queries_QueryTagMappings = new global::System.Data.DataRelation("FK_Queries_QueryTagMappings", new global::System.Data.DataColumn[] {
                         this.tableQueries.PKColumn}, new global::System.Data.DataColumn[] {
                         this.tableQueryTagMappings.QueryColumn}, false);
             this.Relations.Add(this.relationFK_Queries_QueryTagMappings);
-            this.relationQueries_Tags = new global::System.Data.DataRelation("Queries_Tags", new global::System.Data.DataColumn[] {
-                        this.tableQueries.TriggerTagColumn}, new global::System.Data.DataColumn[] {
-                        this.tableTags.PKColumn}, false);
-            this.Relations.Add(this.relationQueries_Tags);
+            this.relationFK_Tags_QueryTagMappings = new global::System.Data.DataRelation("FK_Tags_QueryTagMappings", new global::System.Data.DataColumn[] {
+                        this.tableTags.PKColumn}, new global::System.Data.DataColumn[] {
+                        this.tableQueryTagMappings.TagColumn}, false);
+            this.Relations.Add(this.relationFK_Tags_QueryTagMappings);
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -593,7 +600,7 @@ namespace plcdb_lib.Models {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public ControllersRow AddControllersRow(string Name, string Type, string Address) {
+            public ControllersRow AddControllersRow(string Name, System.Type Type, string Address) {
                 ControllersRow rowControllersRow = ((ControllersRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         Name,
@@ -640,7 +647,7 @@ namespace plcdb_lib.Models {
             private void InitClass() {
                 this.columnName = new global::System.Data.DataColumn("Name", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnName);
-                this.columnType = new global::System.Data.DataColumn("Type", typeof(string), null, global::System.Data.MappingType.Element);
+                this.columnType = new global::System.Data.DataColumn("Type", typeof(global::System.Type), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnType);
                 this.columnAddress = new global::System.Data.DataColumn("Address", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnAddress);
@@ -648,6 +655,8 @@ namespace plcdb_lib.Models {
                 base.Columns.Add(this.columnPK);
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
                                 this.columnPK}, true));
+                this.columnName.DefaultValue = ((string)(""));
+                this.columnAddress.DefaultValue = ((string)(""));
                 this.columnPK.AutoIncrement = true;
                 this.columnPK.AutoIncrementSeed = -1;
                 this.columnPK.AutoIncrementStep = -1;
@@ -982,6 +991,8 @@ namespace plcdb_lib.Models {
                 base.Columns.Add(this.columnCurrentValue);
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
                                 this.columnPK}, true));
+                this.columnName.DefaultValue = ((string)(""));
+                this.columnAddress.DefaultValue = ((string)(""));
                 this.columnPK.AutoIncrement = true;
                 this.columnPK.AutoIncrementSeed = -1;
                 this.columnPK.AutoIncrementStep = -1;
@@ -1271,6 +1282,8 @@ namespace plcdb_lib.Models {
                 base.Columns.Add(this.columnPK);
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
                                 this.columnPK}, true));
+                this.columnName.DefaultValue = ((string)(""));
+                this.columnConnectionString.DefaultValue = ((string)(""));
                 this.columnPK.AutoIncrement = true;
                 this.columnPK.AutoIncrementSeed = -1;
                 this.columnPK.AutoIncrementStep = -1;
@@ -1421,9 +1434,11 @@ namespace plcdb_lib.Models {
             
             private global::System.Data.DataColumn columnDatabase;
             
-            private global::System.Data.DataColumn columnSelectType;
+            private global::System.Data.DataColumn columnMappingType;
             
             private global::System.Data.DataColumn columnMaxRows;
+            
+            private global::System.Data.DataColumn columnName;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
@@ -1508,9 +1523,9 @@ namespace plcdb_lib.Models {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn SelectTypeColumn {
+            public global::System.Data.DataColumn MappingTypeColumn {
                 get {
-                    return this.columnSelectType;
+                    return this.columnMappingType;
                 }
             }
             
@@ -1519,6 +1534,14 @@ namespace plcdb_lib.Models {
             public global::System.Data.DataColumn MaxRowsColumn {
                 get {
                     return this.columnMaxRows;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn NameColumn {
+                get {
+                    return this.columnName;
                 }
             }
             
@@ -1559,17 +1582,21 @@ namespace plcdb_lib.Models {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public QueriesRow AddQueriesRow(string QueryType, string QueryText, long RefreshRate, long TriggerTag, DatabasesRow parentDatabasesRowByFK_Databases_Queries, string SelectType, long MaxRows) {
+            public QueriesRow AddQueriesRow(string QueryType, string QueryText, long RefreshRate, TagsRow parentTagsRowByQueries_Tags, DatabasesRow parentDatabasesRowByFK_Databases_Queries, string MappingType, long MaxRows, string Name) {
                 QueriesRow rowQueriesRow = ((QueriesRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         null,
                         QueryType,
                         QueryText,
                         RefreshRate,
-                        TriggerTag,
                         null,
-                        SelectType,
-                        MaxRows};
+                        null,
+                        MappingType,
+                        MaxRows,
+                        Name};
+                if ((parentTagsRowByQueries_Tags != null)) {
+                    columnValuesArray[4] = parentTagsRowByQueries_Tags[4];
+                }
                 if ((parentDatabasesRowByFK_Databases_Queries != null)) {
                     columnValuesArray[5] = parentDatabasesRowByFK_Databases_Queries[2];
                 }
@@ -1608,8 +1635,9 @@ namespace plcdb_lib.Models {
                 this.columnRefreshRate = base.Columns["RefreshRate"];
                 this.columnTriggerTag = base.Columns["TriggerTag"];
                 this.columnDatabase = base.Columns["Database"];
-                this.columnSelectType = base.Columns["SelectType"];
+                this.columnMappingType = base.Columns["MappingType"];
                 this.columnMaxRows = base.Columns["MaxRows"];
+                this.columnName = base.Columns["Name"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -1627,10 +1655,12 @@ namespace plcdb_lib.Models {
                 base.Columns.Add(this.columnTriggerTag);
                 this.columnDatabase = new global::System.Data.DataColumn("Database", typeof(long), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnDatabase);
-                this.columnSelectType = new global::System.Data.DataColumn("SelectType", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnSelectType);
+                this.columnMappingType = new global::System.Data.DataColumn("MappingType", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnMappingType);
                 this.columnMaxRows = new global::System.Data.DataColumn("MaxRows", typeof(long), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnMaxRows);
+                this.columnName = new global::System.Data.DataColumn("Name", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnName);
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
                                 this.columnPK}, true));
                 this.columnPK.AutoIncrement = true;
@@ -1638,6 +1668,12 @@ namespace plcdb_lib.Models {
                 this.columnPK.AutoIncrementStep = -1;
                 this.columnPK.AllowDBNull = false;
                 this.columnPK.Unique = true;
+                this.columnQueryType.DefaultValue = ((string)("SELECT"));
+                this.columnQueryText.DefaultValue = ((string)(""));
+                this.columnRefreshRate.DefaultValue = ((long)(5000));
+                this.columnMappingType.DefaultValue = ((string)(""));
+                this.columnMaxRows.DefaultValue = ((long)(1));
+                this.columnName.DefaultValue = ((string)(""));
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -1947,6 +1983,7 @@ namespace plcdb_lib.Models {
                 this.columnPK.AutoIncrementStep = -1;
                 this.columnPK.AllowDBNull = false;
                 this.columnPK.Unique = true;
+                this.columnColumnName.DefaultValue = ((string)(""));
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -2105,10 +2142,10 @@ namespace plcdb_lib.Models {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public string Type {
+            public System.Type Type {
                 get {
                     try {
-                        return ((string)(this[this.tableControllers.TypeColumn]));
+                        return ((global::System.Type)(this[this.tableControllers.TypeColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
                         throw new global::System.Data.StrongTypingException("The value for column \'Type\' in table \'Controllers\' is DBNull.", e);
@@ -2312,17 +2349,6 @@ namespace plcdb_lib.Models {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public QueriesRow QueriesRow {
-                get {
-                    return ((QueriesRow)(this.GetParentRow(this.Table.ParentRelations["Queries_Tags"])));
-                }
-                set {
-                    this.SetParentRow(value, this.Table.ParentRelations["Queries_Tags"]);
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public bool IsNameNull() {
                 return this.IsNull(this.tableTags.NameColumn);
             }
@@ -2389,6 +2415,17 @@ namespace plcdb_lib.Models {
                 }
                 else {
                     return ((QueryTagMappingsRow[])(base.GetChildRows(this.Table.ChildRelations["FK_Tags_QueryTagMappings"])));
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public QueriesRow[] GetQueriesRows() {
+                if ((this.Table.ChildRelations["Queries_Tags"] == null)) {
+                    return new QueriesRow[0];
+                }
+                else {
+                    return ((QueriesRow[])(base.GetChildRows(this.Table.ChildRelations["Queries_Tags"])));
                 }
             }
         }
@@ -2593,17 +2630,17 @@ namespace plcdb_lib.Models {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public string SelectType {
+            public string MappingType {
                 get {
                     try {
-                        return ((string)(this[this.tableQueries.SelectTypeColumn]));
+                        return ((string)(this[this.tableQueries.MappingTypeColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'SelectType\' in table \'Queries\' is DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("The value for column \'MappingType\' in table \'Queries\' is DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tableQueries.SelectTypeColumn] = value;
+                    this[this.tableQueries.MappingTypeColumn] = value;
                 }
             }
             
@@ -2620,6 +2657,33 @@ namespace plcdb_lib.Models {
                 }
                 set {
                     this[this.tableQueries.MaxRowsColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public string Name {
+                get {
+                    try {
+                        return ((string)(this[this.tableQueries.NameColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'Name\' in table \'Queries\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableQueries.NameColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public TagsRow TagsRow {
+                get {
+                    return ((TagsRow)(this.GetParentRow(this.Table.ParentRelations["Queries_Tags"])));
+                }
+                set {
+                    this.SetParentRow(value, this.Table.ParentRelations["Queries_Tags"]);
                 }
             }
             
@@ -2696,14 +2760,14 @@ namespace plcdb_lib.Models {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsSelectTypeNull() {
-                return this.IsNull(this.tableQueries.SelectTypeColumn);
+            public bool IsMappingTypeNull() {
+                return this.IsNull(this.tableQueries.MappingTypeColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetSelectTypeNull() {
-                this[this.tableQueries.SelectTypeColumn] = global::System.Convert.DBNull;
+            public void SetMappingTypeNull() {
+                this[this.tableQueries.MappingTypeColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -2720,23 +2784,24 @@ namespace plcdb_lib.Models {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsNameNull() {
+                return this.IsNull(this.tableQueries.NameColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetNameNull() {
+                this[this.tableQueries.NameColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public QueryTagMappingsRow[] GetQueryTagMappingsRows() {
                 if ((this.Table.ChildRelations["FK_Queries_QueryTagMappings"] == null)) {
                     return new QueryTagMappingsRow[0];
                 }
                 else {
                     return ((QueryTagMappingsRow[])(base.GetChildRows(this.Table.ChildRelations["FK_Queries_QueryTagMappings"])));
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public TagsRow[] GetTagsRows() {
-                if ((this.Table.ChildRelations["Queries_Tags"] == null)) {
-                    return new TagsRow[0];
-                }
-                else {
-                    return ((TagsRow[])(base.GetChildRows(this.Table.ChildRelations["Queries_Tags"])));
                 }
             }
         }
@@ -2816,23 +2881,23 @@ namespace plcdb_lib.Models {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public TagsRow TagsRow {
-                get {
-                    return ((TagsRow)(this.GetParentRow(this.Table.ParentRelations["FK_Tags_QueryTagMappings"])));
-                }
-                set {
-                    this.SetParentRow(value, this.Table.ParentRelations["FK_Tags_QueryTagMappings"]);
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public QueriesRow QueriesRow {
                 get {
                     return ((QueriesRow)(this.GetParentRow(this.Table.ParentRelations["FK_Queries_QueryTagMappings"])));
                 }
                 set {
                     this.SetParentRow(value, this.Table.ParentRelations["FK_Queries_QueryTagMappings"]);
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public TagsRow TagsRow {
+                get {
+                    return ((TagsRow)(this.GetParentRow(this.Table.ParentRelations["FK_Tags_QueryTagMappings"])));
+                }
+                set {
+                    this.SetParentRow(value, this.Table.ParentRelations["FK_Tags_QueryTagMappings"]);
                 }
             }
             

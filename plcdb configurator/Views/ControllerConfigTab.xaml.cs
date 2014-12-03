@@ -31,10 +31,11 @@ namespace plcdb.Views
         {
             ControllerConfigPopup popup = new ControllerConfigPopup();
             var vm = this.DataContext as MainWindowViewModel;
+            
             Model.ControllersRow NewRow = vm.ActiveModel.Controllers.NewControllersRow();
             NewRow.Name = "New Controller";
             NewRow.Address = "";
-            NewRow.Type = "";
+            NewRow.Type = null;
             vm.ActiveModel.Controllers.AddControllersRow(NewRow);
             popup.DataContext = new ControllerPopupViewModel()
             {

@@ -17,7 +17,7 @@ namespace plcdb_service
             ServiceBase[] ServicesToRun;
             ServicesToRun = new ServiceBase[] 
             { 
-                new Service1() 
+                new plcdb() 
             };
             ServiceBase.Run(ServicesToRun);
         }
