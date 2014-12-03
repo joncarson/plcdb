@@ -11,7 +11,7 @@ namespace plcdb.ViewModels
 {
     public class QueryPopupViewModel : BaseViewModel
     {
-         private MainWindowViewModel vm = App.Current.Resources["MainWindowViewModel"] as MainWindowViewModel;
+        private Model ActiveModel = (App.Current.Resources["MainWindowViewModel"] as MainWindowViewModel).ActiveModel;
 
         #region Properties
 
@@ -23,7 +23,7 @@ namespace plcdb.ViewModels
             {
                 if (_availableDatabases == null)
                 {
-                    _availableDatabases = vm.ActiveModel.Databases.Rows;
+                    _availableDatabases = ActiveModel.Databases.Rows;
                 }
                 return _availableDatabases;
             }
@@ -84,7 +84,7 @@ namespace plcdb.ViewModels
                     if (!value.IsDatabaseNull())
                         Database = value.DatabasesRow;
                     if (!value.IsTriggerTagNull())
-                        TriggerTag = vm.ActiveModel.Tags.FindByPK(value.TriggerTag);
+                        TriggerTag = ActiveModel.Tags.FindByPK(value.TriggerTag);
                     RefreshRate = value.RefreshRate;
                     MappingType = value.MappingType;
                     MaxRows = value.MaxRows;
@@ -204,13 +204,31 @@ namespace plcdb.ViewModels
         }
         #endregion
 
+        #region AvailableMappingTypes
+        private List<String> _availableMappingTypes;
+        public List<String> AvailableMappingTypes
+        {
+            get
+            {
+                if (_availableMappingTypes == null)
+                {
+                    _availableMappingTypes = new List<String>();
+                    _availableMappingTypes.Add("Single Row");
+                    _availableMappingTypes.Add("Multi-Row (array)");
+                    _availableMappingTypes.Add("Multi-Row (manual");
+                }
+                return _availableMappingTypes;
+            }
+        }
+        #endregion
+
         #region MappingType
         public string MappingType
         {
             get { return CurrentQuery.MappingType; }
             set
             {
-                if (CurrentQuery.MappingType != null && CurrentQuery.MappingType != value)
+                if (CurrentQuery.IsMappingTypeNull() || CurrentQuery.MappingType != value)
                 {
                     CurrentQuery.MappingType = value;
                     RaisePropertyChanged(() => MappingType);
@@ -234,6 +252,32 @@ namespace plcdb.ViewModels
         }
         #endregion
 
+        #region TagMappings
+        public Model.QueryTagMappingsRow[] TagMappings
+        {
+            get
+            {
+                return CurrentQuery.GetQueryTagMappingsRows();
+            }
+            set
+            {
+                ActiveModel.QueryTagMappings.AcceptChanges();
+                foreach (Model.QueryTagMappingsRow row in ActiveModel.QueryTagMappings.Where(p => p.Query == CurrentQuery.PK)) 
+                {
+                    row.Delete();
+                    //ActiveModel.QueryTagMappings.Rows.Remove(row);
+                }
+                foreach (Model.QueryTagMappingsRow row in value)
+                {
+                    row.Query = CurrentQuery.PK;
+                    ActiveModel.QueryTagMappings.Rows.Add(row.ItemArray);
+                }
+                
+                RaisePropertyChanged(() => TagMappings);
+            }
+        }
+        #endregion
+
         #endregion
 
 
@@ -241,7 +285,7 @@ namespace plcdb.ViewModels
 
         public ICommand SaveCommand { get { return new DelegateCommand(OnSave); } }
         public ICommand CancelCommand { get { return new DelegateCommand(OnCancel); } }
-
+        public ICommand RefreshColumnsCommand { get { return new DelegateCommand(OnRefreshColumns); } }
         
         #endregion
 
@@ -258,11 +302,32 @@ namespace plcdb.ViewModels
         private void OnSave()
         {
             CurrentQuery.AcceptChanges();
+            ActiveModel.QueryTagMappings.AcceptChanges();
         }
 
         private void OnCancel()
         {
             CurrentQuery.RejectChanges();
+            ActiveModel.QueryTagMappings.RejectChanges();
+        }
+
+        private void OnRefreshColumns()
+        {
+            List<Model.QueryTagMappingsRow> Columns = new List<Model.QueryTagMappingsRow>();
+            SqlConnection Connection = new SqlConnection(CurrentQuery.DatabasesRow.ConnectionString);
+            SqlDataAdapter QueryCommand = new SqlDataAdapter(QueryText, Connection);
+            DataTable Results = new DataTable();
+            Connection.Open();
+            QueryCommand.Fill(Results);
+            foreach (DataColumn col in Results.Columns)
+            {
+                Model.QueryTagMappingsRow NewRow = ActiveModel.QueryTagMappings.NewQueryTagMappingsRow();
+                NewRow.ColumnName = col.ColumnName;
+                NewRow.Query = CurrentQuery.PK;
+                NewRow.Tag = 0;
+                Columns.Add(NewRow);
+            }
+            TagMappings = Columns.ToArray();
         }
         #endregion
 

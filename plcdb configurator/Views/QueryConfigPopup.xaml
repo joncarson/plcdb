@@ -7,10 +7,12 @@
     <Window.Resources>
         <ResourceDictionary>
             <valueConverters:StringToTagConverter x:Key="StringToTagConverter" />
+            <valueConverters:PKToTagConverter x:Key="PKToTagConverter" />
         </ResourceDictionary>
     </Window.Resources>
         <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -55,42 +57,25 @@
         <TextBox Grid.Row="4" Grid.Column="1" Margin="5" Width="50" HorizontalAlignment="Left" Text="{Binding RefreshRate}"></TextBox>
         <Label Grid.Row="5" Grid.Column="0">Query string:</Label>
         <TextBox Grid.Row="5" Grid.Column="1" Margin="5 0 5 0" Text="{Binding QueryText}"></TextBox>
-        <GroupBox Grid.Row="6" Grid.ColumnSpan="2"  Header="Query Parameters" Margin="5">
-            <TabControl  TabStripPlacement="Bottom" BorderThickness="0">
-            <TabItem Header="opc" Visibility="Collapsed">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="*" />
-                        </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-                    <Label Grid.Row="1" Grid.Column="0">Result type:</Label>
-                    <ComboBox Grid.Row="1" Grid.Column="1" Margin="5" Width="100" HorizontalAlignment="Left" SelectedItem="{Binding MappingType}">
-                        <ComboBoxItem>Single Row</ComboBoxItem>
-                        <ComboBoxItem>Multi Row (array)</ComboBoxItem>
-                        <ComboBoxItem>Multi Row (tag within query)</ComboBoxItem>
-                    </ComboBox>
-                    <Label Grid.Row="2" Grid.Column="0">Max results:</Label>
-                    <TextBox Grid.Row="2" Grid.Column="1" Margin="5 0 5 0" Width="50" HorizontalAlignment="Left" Text="{Binding MaxRows}"></TextBox>
-                    <DataGrid Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Margin="5">
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="Column" MinWidth="100"></DataGridTextColumn>
-                                <DataGridTextColumn Header="Controller" Width="0.5*"></DataGridTextColumn>
-                            <DataGridTextColumn Header="Tag" Width="*"></DataGridTextColumn>
-                            </DataGrid.Columns>
-                        </DataGrid>
+        <StackPanel Margin="5"  Grid.Row="6" Grid.ColumnSpan="2"  Orientation="Horizontal">
+            <Label>Result type:</Label>
+            <ComboBox   Margin="5" Width="100" HorizontalAlignment="Left" SelectedItem="{Binding MappingType}" ItemsSource="{Binding AvailableMappingTypes}">
 
+            </ComboBox>
+            <Label  Margin="5">Max results:</Label>
+            <TextBox  Margin="5 5 5 5" Width="50" HorizontalAlignment="Left" Text="{Binding MaxRows}"></TextBox>
+            <Button Margin="5" Command="{Binding RefreshColumnsCommand}">Refresh Columns</Button>
+        </StackPanel>
+       
+        <DataGrid Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Margin="5" ItemsSource="{Binding TagMappings}" AutoGenerateColumns="False" CanUserAddRows="False" CanUserReorderColumns="False"  >
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Column" MinWidth="100" Binding="{Binding ColumnName}"></DataGridTextColumn>
+                <DataGridTextColumn Header="Tag" Width="*" Binding="{Binding Tag, Converter={StaticResource PKToTagConverter}}"></DataGridTextColumn>
+            </DataGrid.Columns>
+        </DataGrid>
 
-                    </Grid>
-            </TabItem>
-        </TabControl>
-        </GroupBox>
-        <StackPanel Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right">
+            
+        <StackPanel Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right">
             <Button HorizontalAlignment="Right" Margin="5" Command="{Binding SaveCommand}" Click="btnSave_Click">Save</Button>
             <Button HorizontalAlignment="Right" Margin="5" Command="{Binding CancelCommand}" Click="btnCancel_Click">Cancel</Button>
         </StackPanel>
