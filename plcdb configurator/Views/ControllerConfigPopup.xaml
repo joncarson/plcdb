@@ -9,6 +9,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
@@ -28,7 +29,9 @@
         </ComboBox>
         <Label Grid.Row="2" Grid.Column="0" Margin="5">IP Address:</Label>
         <TextBox Grid.Row="2" Grid.Column="1" Margin="5" Text="{Binding Address}"></TextBox>
-        <TabControl Grid.Row="3" Grid.ColumnSpan="2" Margin="10" TabStripPlacement="Bottom" BorderThickness="0">
+        <Label Grid.Row="3" Grid.Column="0" Margin="5">OPC Server:</Label>
+        <ComboBox Grid.Row="3" Grid.Column="1" Margin="5" ItemsSource="{Binding AvailableSubaddresses}" SelectedItem="{Binding Subaddress}"></ComboBox>
+        <TabControl  Grid.Row="4" Grid.ColumnSpan="2" Margin="10" TabStripPlacement="Bottom" BorderThickness="0">
             <TabItem Header="Simulator" Visibility="Collapsed"></TabItem>
             <TabItem Header="OPC" Visibility="Collapsed">
                 <Grid>
@@ -44,7 +47,7 @@
                 </Grid>
             </TabItem>
         </TabControl>
-        <StackPanel Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right">
+        <StackPanel Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right">
             <Button HorizontalAlignment="Right" Margin="5" Command="{Binding SaveCommand}" Click="btnSave_Click">Save</Button>
             <Button HorizontalAlignment="Right" Margin="5" Command="{Binding CancelCommand}" Click="btnCancel_Click">Cancel</Button>
         </StackPanel>

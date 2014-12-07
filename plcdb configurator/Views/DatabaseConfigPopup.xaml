@@ -11,6 +11,12 @@
             <valueConverters:BoolToHiddenConverter x:Key="BoolToHiddenConverter" />
         </ResourceDictionary>
     </Window.Resources>
+    <Window.CommandBindings>
+        
+    </Window.CommandBindings>
+    <Window.InputBindings>
+        <KeyBinding Key="Escape" Command="{Binding CancelCommand}"></KeyBinding>
+    </Window.InputBindings>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -32,7 +38,7 @@
         <TextBox Grid.Row="1" Grid.Column="1" Margin="5" Text="{Binding Server}"/>
         <Label Grid.Row="2" Grid.Column="0" Margin="5">Database Catalog:</Label>
         <ComboBox Grid.Row="2" Grid.Column="1" Margin="5" Text="{Binding Catalog}" IsEditable="True" />
-        <CheckBox Grid.Row="3" Content="Windows Authentication" IsChecked="{Binding UseWindowsAuthentication}" Margin="5"></CheckBox>
+        <CheckBox Grid.Row="3" Content="Windows Authentication" IsChecked="{Binding UseWindowsAuthentication}" Margin="5" ></CheckBox>
         <Label Grid.Row="5" Grid.Column="0" Margin="5" Visibility="{Binding UseWindowsAuthentication, Mode=OneWay, Converter={StaticResource BoolToHiddenConverter}}">Username:</Label>
         <TextBox Grid.Row="5" Grid.Column="1" Margin="5" Visibility="{Binding UseWindowsAuthentication, Mode=OneWay, Converter={StaticResource BoolToHiddenConverter}}" Text="{Binding Username}"/>
         <Label Grid.Row="6" Grid.Column="0" Margin="5" Visibility="{Binding UseWindowsAuthentication, Mode=OneWay, Converter={StaticResource BoolToHiddenConverter}}">Password:</Label>

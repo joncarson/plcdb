@@ -21,8 +21,7 @@ namespace plcdb.ViewModels
             {
                 if (_availableControllers == null)
                 {
-                    var vm = App.Current.Resources["MainWindowViewModel"] as MainWindowViewModel;
-                    _availableControllers = vm.ActiveModel.Controllers.Rows;
+                    _availableControllers = ActiveModel.Controllers.Rows;
                 }
                 return _availableControllers;
             }
@@ -35,15 +34,18 @@ namespace plcdb.ViewModels
         #endregion
 
         #region AvailableTags
-        private DataRowCollection _availableTags;
-        public DataRowCollection AvailableTags
+        private EnumerableRowCollection _availableTags;
+        public EnumerableRowCollection AvailableTags
         {
             get
             {
+                if (CurrentController == null)
+                {
+                    return null;
+                }
                 if (_availableTags == null)
                 {
-                    //var vm = App.Current.Resources["MainWindowViewModel"] as MainWindowViewModel;
-                    _availableTags = ActiveModel.Tags.Rows;
+                    _availableTags = ActiveModel.Tags.Where(p => p.Controller == CurrentController.PK);
                 }
                 return _availableTags;
             }
@@ -89,7 +91,7 @@ namespace plcdb.ViewModels
                 {
                     _currentController = value;
                     RaisePropertyChanged(() => CurrentController);
-                    UpdateAvailableTags();
+                    SetAvailableTags();
                 }
             }
         }
@@ -101,6 +103,7 @@ namespace plcdb.ViewModels
 
         public ICommand SaveCommand { get { return new DelegateCommand(OnSave); } }
         public ICommand CancelCommand { get { return new DelegateCommand(OnCancel); } }
+        public ICommand RefreshTagsCommand { get { return new DelegateCommand(OnRefreshTags); } }
 
         
         #endregion
@@ -128,23 +131,28 @@ namespace plcdb.ViewModels
             }
         }
 
-        private void UpdateAvailableTags()
+        private void OnRefreshTags()
         {
-            MainWindowViewModel vm = App.Current.Resources["MainWindowViewModel"] as MainWindowViewModel;
-            foreach (Model.TagsRow row in vm.ActiveModel.Tags.Where(p => p.Controller == CurrentController.PK))
+            foreach (Model.TagsRow row in ActiveModel.Tags.Where(p => p.Controller == CurrentController.PK))
             {
                 row.Delete();
-                //vm.ActiveModel.Tags.RemoveTagsRow(row);
             }
             foreach (Model.TagsRow row in CurrentController.Controller.BrowseTags())
             {
-                row.Controller = CurrentController.PK;
-                vm.ActiveModel.Tags.Rows.Add(row.ItemArray);
-
+                Model.TagsRow NewRow = ActiveModel.Tags.NewTagsRow();
+                foreach (DataColumn col in ActiveModel.Tags.Columns)
+                {
+                    if (col.ColumnName != "PK")
+                    {
+                        NewRow[col.ColumnName] = row[col.ColumnName];
+                    }
+                }
+                ActiveModel.Tags.AddTagsRow(NewRow);
             }
-            vm.ActiveModel.Tags.AcceptChanges();
+            ActiveModel.Tags.AcceptChanges();
             SetAvailableTags();
         }
+        
 
         private void SetAvailableTags()
         {
@@ -153,7 +161,7 @@ namespace plcdb.ViewModels
             {
                 tbl.ImportRow(row);
             }
-            AvailableTags = tbl.Rows;
+            AvailableTags = tbl.AsEnumerable();
         }
         #endregion
 

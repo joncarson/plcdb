@@ -32,6 +32,7 @@
                     <MenuItem x:Name="miOpen" Header="_Open" Command="Open" InputGestureText="Ctrl+O"/>
                     <MenuItem x:Name="miSave" Header="_Save" Command="Save" InputGestureText="Ctrl+S"/>
                     <MenuItem x:Name="miClose" Header="_Close" Command="Close"/>
+                    <MenuItem x:Name="miSetupService" Header="Set Active Model" Command="{Binding SetServiceModelCommand}"/>
                     <MenuItem x:Name="miExit" Header="E_xit" Command="Stop" InputGestureText="Alt+F4"/>
                 </MenuItem>
             </Menu>

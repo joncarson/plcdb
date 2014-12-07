@@ -23,12 +23,15 @@ namespace plcdb_service.Properties {
             }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string ConfigFile {
+        public string ActiveModelPath {
             get {
-                return ((string)(this["ConfigFile"]));
+                return ((string)(this["ActiveModelPath"]));
+            }
+            set {
+                this["ActiveModelPath"] = value;
             }
         }
     }

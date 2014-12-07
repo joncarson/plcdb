@@ -3,12 +3,13 @@ using plcdb_lib.Models;
 using System;
 using System.ComponentModel;
 using System.Linq.Expressions;
+using NLog;
 
 namespace plcdb.ViewModels
 {
     public class BaseViewModel : INotifyPropertyChanged
     {
-        
+        protected Logger Log = LogManager.GetCurrentClassLogger();
         protected void RaisePropertyChanged<T>(Expression<Func<T>> action)
         {
             var propertyName = GetPropertyName(action);

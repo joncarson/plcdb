@@ -21,6 +21,7 @@ namespace plcdb.Views
     /// </summary>
     public partial class QueryConfigPopup : Window
     {
+        
         public QueryConfigPopup()
         {
             InitializeComponent();
@@ -40,10 +41,16 @@ namespace plcdb.Views
 
         private void btnTagBrowse_Click(object sender, RoutedEventArgs e)
         {
+            QueryPopupViewModel vm = this.DataContext as QueryPopupViewModel;
+
             Model.TagsRow Tag = null;
             if (e.Source == btnTriggerTag)
             {
-                Tag = ((sender as Button).DataContext as QueryPopupViewModel).TriggerTag;
+                Tag = vm.TriggerTag;
+            }
+            else
+            {
+                Tag = vm.CurrentTagMapping.TagsRow;
             }
 
             TagBrowserPopup popup = new TagBrowserPopup();
@@ -56,8 +63,15 @@ namespace plcdb.Views
 
             if (popup.DialogResult.HasValue && popup.DialogResult.Value)
             {
-                QueryPopupViewModel vm = this.DataContext as QueryPopupViewModel;
-                vm.TriggerTag = (popup.DataContext as TagBrowserViewModel).CurrentTag;
+                if (e.Source == btnTriggerTag)
+                {
+                    vm.TriggerTag = (popup.DataContext as TagBrowserViewModel).CurrentTag;
+                }
+                else
+                {
+                    vm.CurrentTagMapping.Tag = (popup.DataContext as TagBrowserViewModel).CurrentTag.PK;
+                }
+                dgTagMappings.Items.Refresh();
             }
         }
     }

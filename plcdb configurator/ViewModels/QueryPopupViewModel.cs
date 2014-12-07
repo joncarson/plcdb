@@ -73,7 +73,7 @@ namespace plcdb.ViewModels
                 if (_currentQuery != value)
                 {
                     _currentQuery = value;
-                    RaisePropertyChanged(() => Name);
+                    RaisePropertyChanged(() => CurrentQuery);
                 }
                 
                 try
@@ -98,6 +98,27 @@ namespace plcdb.ViewModels
                     MappingType = "";
                     MaxRows = 1;
                 }
+            }
+        }
+        #endregion
+
+        #region CurrentQuery
+        private plcdb_lib.Models.Model.QueryTagMappingsRow _currentTagMapping;
+        public plcdb_lib.Models.Model.QueryTagMappingsRow CurrentTagMapping
+        {
+            get
+            {
+                return _currentTagMapping;
+            }
+            set
+            {
+                if (_currentTagMapping != value)
+                {
+                    _currentTagMapping = value;
+                    RaisePropertyChanged(() => CurrentTagMapping);
+                    RaisePropertyChanged(() => TagMappings);
+                }
+
             }
         }
         #endregion
@@ -159,10 +180,17 @@ namespace plcdb.ViewModels
             }
             set
             {
-                if (CurrentQuery.IsTriggerTagNull() || CurrentQuery.TriggerTag != value.PK)
+                if (value == null)
                 {
-                    CurrentQuery.TriggerTag = value.PK;
-                    RaisePropertyChanged(() => TriggerTag);
+                    CurrentQuery.TriggerTag = 0;
+                }
+                else
+                {
+                    if (CurrentQuery.IsTriggerTagNull() || CurrentQuery.TriggerTag != value.PK)
+                    {
+                        CurrentQuery.TriggerTag = value.PK;
+                        RaisePropertyChanged(() => TriggerTag);
+                    }
                 }
             }
         }

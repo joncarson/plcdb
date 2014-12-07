@@ -3,6 +3,8 @@ using System.Collections.ObjectModel;
 using System.Windows.Input;
 using plcdb.Helpers;
 using plcdb_lib.Models;
+using plcdb_lib.WCF;
+using System.ServiceModel;
 
 namespace plcdb.ViewModels
 {
@@ -47,11 +49,40 @@ namespace plcdb.ViewModels
         }
         #endregion
 
+        #region ServiceCommunicator
+        private IServiceCommunicator _serviceCommunicator;
+        public IServiceCommunicator ServiceCommunicator
+        {
+            get
+            {
+                if (_serviceCommunicator == null)
+                {
+                    ChannelFactory<IServiceCommunicator> pipeFactory =
+                    new ChannelFactory<IServiceCommunicator>(
+                      new NetNamedPipeBinding(),
+                      new EndpointAddress(
+                        "net.pipe://localhost/plcdb"));
+
+                  _serviceCommunicator =
+                    pipeFactory.CreateChannel();
+                }
+                return _serviceCommunicator;
+            }
+            set
+            {
+                if (_serviceCommunicator != value)
+                {
+                    _serviceCommunicator = value;
+                    RaisePropertyChanged(() => ServiceCommunicator);
+                }
+            }
+        }
+        #endregion
         #endregion
 
         #region Commands
 
-        //public ICommand RefreshDateCommand { get { return new DelegateCommand(OnRefreshDate); } }
+        public ICommand SetServiceModelCommand { get { return new DelegateCommand(OnSetServiceModelPath); } }
         
         #endregion
 
@@ -71,6 +102,22 @@ namespace plcdb.ViewModels
         public void OnSaveModel()
         {
             ActiveModel.Save(ActiveModelPath);
+        }
+
+        public void OnSetServiceModelPath()
+        {
+            try
+            {
+                ServiceCommunicator.SetActiveModelPath(ActiveModelPath);
+            }
+            catch (EndpointNotFoundException e)
+            {
+                Log.Error("Attempted to set serice model path but WCF server was not found");
+            }
+            catch (Exception e)
+            {
+                Log.Error(e);
+            }
         }
 
         #endregion

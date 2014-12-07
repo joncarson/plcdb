@@ -1,0 +1,289 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ProcessControlStandards.OPC.Core</name>
+    </assembly>
+    <members>
+        <member name="T:ProcessControlStandards.OPC.Core.IOPCCommon">
+            <summary>
+            OPC Server common interface.
+            </summary>
+        </member>
+        <member name="M:ProcessControlStandards.OPC.Core.IOPCCommon.SetLocaleID(System.Int32)">
+            <summary>
+            Sets OPC Server locale ID.
+            </summary>
+            <param name="lcid">New locale ID.</param>
+        </member>
+        <member name="M:ProcessControlStandards.OPC.Core.IOPCCommon.GetLocaleID(System.Int32@)">
+            <summary>
+            Retrieves OPC Server locale ID.
+            </summary>
+            <param name="lcid">Current locale ID.</param>
+        </member>
+        <member name="M:ProcessControlStandards.OPC.Core.IOPCCommon.QueryAvailableLocaleIDs(System.UInt32@,System.IntPtr@)">
+            <summary>
+            Retrieves all possible locales of OPC Server.
+            </summary>
+            <param name="count">Number of locale ID.</param>
+            <param name="lcid">Array of locale ID.</param>
+        </member>
+        <member name="M:ProcessControlStandards.OPC.Core.IOPCCommon.GetErrorString(System.Int32,System.String@)">
+            <summary>
+            Converts error code to localized message based on current OPC Server locale.
+            </summary>
+            <param name="error">Error code.</param>
+            <param name="@string">Message for specified error code.</param>
+        </member>
+        <member name="M:ProcessControlStandards.OPC.Core.IOPCCommon.SetClientName(System.String)">
+            <summary>
+            Sets name of current connection to OPC Server.
+            </summary>
+            <param name="name">Name of current connection to OPC Server.</param>
+        </member>
+        <member name="T:ProcessControlStandards.OPC.Core.IEnumString">
+            <summary>
+            Manages the definition of the IEnumString interface.
+            </summary>
+        </member>
+        <member name="M:ProcessControlStandards.OPC.Core.IEnumString.Next(System.UInt32,System.String[],System.UInt32@)">
+            <summary>
+            Retrieves a specified number of items in the enumeration sequence.
+            </summary>
+            <param name="celt">The number of strings to return in rgelt.</param>
+            <param name="rgelt">When this method returns, contains a reference to the enumerated strings.</param>
+            <param name="celtFetched">When this method returns, contains a reference to the actual number of strings enumerated in rgelt.</param>
+            <returns>S_OK if the celtFetched parameter equals the celt parameter; otherwise, S_FALSE.</returns>
+        </member>
+        <member name="M:ProcessControlStandards.OPC.Core.IEnumString.Skip(System.UInt32)">
+            <summary>
+            Skips a specified number of items in the enumeration sequence.
+            </summary>
+            <param name="celt">The number of elements to skip in the enumeration.</param>
+            <returns>S_OK if the number of elements skipped equals the celt parameter; otherwise, S_FALSE.</returns>
+        </member>
+        <member name="M:ProcessControlStandards.OPC.Core.IEnumString.Reset">
+            <summary>
+            Resets the enumeration sequence to the beginning.
+            </summary>
+        </member>
+        <member name="M:ProcessControlStandards.OPC.Core.IEnumString.Clone(ProcessControlStandards.OPC.Core.IEnumString@)">
+            <summary>
+            Creates a new enumerator that contains the same enumeration state as the current one.
+            </summary>
+            <param name="enum">When this method returns, contains a reference to the newly created enumerator.</param>
+        </member>
+        <member name="T:ProcessControlStandards.OPC.Core.OPCException">
+            <summary>
+            Exception for OPC Toolkit library.
+            </summary>
+        </member>
+        <member name="M:ProcessControlStandards.OPC.Core.OPCException.#ctor">
+            <summary>
+            Default constructor.
+            </summary>
+        </member>
+        <member name="M:ProcessControlStandards.OPC.Core.OPCException.#ctor(System.String)">
+            <summary>
+            Constructor based on error description.
+            </summary>
+            <param name="message">Error description.</param>
+        </member>
+        <member name="M:ProcessControlStandards.OPC.Core.OPCException.#ctor(System.String,System.Exception)">
+            <summary>
+            Constructor based on error description and other exception.
+            </summary>
+            <param name="message">Error description.</param>
+            <param name="innerException">Error that happened earlier.</param>
+        </member>
+        <member name="T:ProcessControlStandards.OPC.Core.Properties.Resources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:ProcessControlStandards.OPC.Core.Properties.Resources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:ProcessControlStandards.OPC.Core.Properties.Resources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:ProcessControlStandards.OPC.Core.Properties.Resources.ErrorArgumentNullOrEmpty">
+            <summary>
+              Looks up a localized string similar to Argument must be not null or empty.
+            </summary>
+        </member>
+        <member name="T:ProcessControlStandards.OPC.Core.Server">
+            <summary>
+            OPC Server client. Helps to connect to the OPC server and read information about it.
+            </summary>
+        </member>
+        <member name="M:ProcessControlStandards.OPC.Core.Server.#ctor(System.Guid)">
+            <summary>
+            Connects to specified OPC Server.
+            </summary>
+            <param name="id">UUID of OPC Server.</param>
+        </member>
+        <member name="M:ProcessControlStandards.OPC.Core.Server.#ctor(System.String)">
+            <summary>
+            Connects to specified OPC Server.
+            </summary>
+            <param name="id"> Program ID of OPC Server.</param>
+        </member>
+        <member name="M:ProcessControlStandards.OPC.Core.Server.#ctor(System.Guid,System.String)">
+            <summary>
+            Connects to specified remote OPC Server.
+            </summary>
+            <param name="id">UUID of OPC Server.</param>
+            <param name="host">Host name or IP address of computer with OPC Server.</param>
+        </member>
+        <member name="M:ProcessControlStandards.OPC.Core.Server.#ctor(System.String,System.String)">
+            <summary>
+            Connects to specified remote OPC Server.
+            </summary>
+            <param name="id">Program ID of OPC Server.</param>
+            <param name="host">Host name or IP address of computer with OPC Server.</param>
+        </member>
+        <member name="M:ProcessControlStandards.OPC.Core.Server.Dispose">
+            <summary>
+            Disconnects from OPC Server.
+            </summary>
+        </member>
+        <member name="M:ProcessControlStandards.OPC.Core.Server.Dispose(System.Boolean)">
+            <summary>
+            Disconnects from OPC Server.
+            </summary>
+            <param name="dispose">true - call in Dispose.</param>
+        </member>
+        <member name="M:ProcessControlStandards.OPC.Core.Server.SetLocale">
+            <summary>
+            Sets current UI culture locale.
+            </summary>
+        </member>
+        <member name="M:ProcessControlStandards.OPC.Core.Server.SetLocale(System.Globalization.CultureInfo)">
+            <summary>
+            Sets specified culture locale.
+            </summary>
+            <param name="locale">Culture info for OPC Server.</param>
+        </member>
+        <member name="M:ProcessControlStandards.OPC.Core.Server.GetLocale">
+            <summary>
+            Retrieves current locale of OPC Server.
+            </summary>
+            <returns>Current locale of OPC Server.</returns>
+        </member>
+        <member name="M:ProcessControlStandards.OPC.Core.Server.QueryAvailableLocales">
+            <summary>
+            Retrieves all possible locales of OPC Server.
+            </summary>
+            <returns>All possible locales of OPC Server.</returns>
+        </member>
+        <member name="M:ProcessControlStandards.OPC.Core.Server.GetErrorString(System.Int32)">
+            <summary>
+            Converts error code to localized message based on current OPC Server locale.
+            </summary>
+            <param name="error">Error code.</param>
+            <returns>Message for specified error code.</returns>
+        </member>
+        <member name="M:ProcessControlStandards.OPC.Core.Server.SetClientName(System.String)">
+            <summary>
+            Sets name of current connection to OPC Server.
+            </summary>
+            <param name="name">Name of current connection to OPC Server.</param>
+        </member>
+        <member name="M:ProcessControlStandards.OPC.Core.Server.DisposedCheck">
+            <summary>
+            Tests OPC Server connection state.
+            </summary>
+        </member>
+        <member name="P:ProcessControlStandards.OPC.Core.Server.Common">
+            <summary>
+            OPC Server IOPCCommon interface.
+            </summary>
+        </member>
+        <member name="T:ProcessControlStandards.OPC.Core.ServerDescription">
+            <summary>
+            Information about installed OPC Server.
+            </summary>
+        </member>
+        <member name="M:ProcessControlStandards.OPC.Core.ServerDescription.#ctor(System.Guid,System.String,System.String,System.String)">
+            <summary>
+            Constructor based on information about installed OPC Server.
+            </summary>
+            <param name="id">UUID of OPC Server.</param>
+            <param name="programId">Program ID of OPC Server.</param>
+            <param name="versionIndependentProgramId">Independent Program ID of OPC Server from Version .</param>
+            <param name="name">Name of OPC Server.</param>
+        </member>
+        <member name="M:ProcessControlStandards.OPC.Core.ServerDescription.#ctor(System.Guid,System.Exception)">
+            <summary>
+            Constructor based of error that occurred in the process of obtaining information.
+            </summary>
+            <param name="id">UUID of OPC Server.</param>
+            <param name="error">Error that occurred in the process of obtaining information.</param>
+        </member>
+        <member name="P:ProcessControlStandards.OPC.Core.ServerDescription.Id">
+            <summary>
+            UUID of OPC Server.
+            </summary>
+        </member>
+        <member name="P:ProcessControlStandards.OPC.Core.ServerDescription.ProgramId">
+            <summary>
+            Program ID of OPC Server.
+            </summary>
+        </member>
+        <member name="P:ProcessControlStandards.OPC.Core.ServerDescription.VersionIndependentProgramId">
+            <summary>
+            Independent Program ID of OPC Server from Version.
+            </summary>
+        </member>
+        <member name="P:ProcessControlStandards.OPC.Core.ServerDescription.Name">
+            <summary>
+            Name of OPC Server.
+            </summary>
+        </member>
+        <member name="P:ProcessControlStandards.OPC.Core.ServerDescription.Error">
+            <summary>
+            Error that occurred in the process of obtaining information.
+            </summary>
+        </member>
+        <member name="T:ProcessControlStandards.OPC.Core.ServerBrowser">
+            <summary>
+            Helps to retrieve information about installed OPC Servers.
+            </summary>
+        </member>
+        <member name="M:ProcessControlStandards.OPC.Core.ServerBrowser.#ctor">
+            <summary>
+            Connects to local computer.
+            </summary>
+        </member>
+        <member name="M:ProcessControlStandards.OPC.Core.ServerBrowser.#ctor(System.String)">
+            <summary>
+            Connects to remote computer.
+            </summary>
+            <param name="host">Host name or IP address of remote computer.</param>
+        </member>
+        <member name="M:ProcessControlStandards.OPC.Core.ServerBrowser.GetEnumerator(System.Guid[])">
+            <summary>
+            Returns an enumerator to allow to determine available OPC servers.
+            </summary>
+            <param name="categories">OPC Server categories (OPCDA/OPCHDA etc.)</param>
+            <returns>Enumerator to allow to determine available OPC servers.</returns>
+        </member>
+        <member name="M:ProcessControlStandards.OPC.Core.ServerBrowser.Dispose">
+            <summary>
+            Disconnects from OPC Server browser.
+            </summary>
+        </member>
+        <member name="M:ProcessControlStandards.OPC.Core.ServerBrowser.Dispose(System.Boolean)">
+            <summary>
+            Disconnects from OPC Server browser.
+            </summary>
+            <param name="dispose">true - call in Dispose.</param>
+        </member>
+    </members>
+</doc>

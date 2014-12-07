@@ -22,7 +22,7 @@ namespace plcdb.Converters
         {
             if (value == null || value == "")
             {
-                return null;
+                return new ValidationResult(false, "Invalid controller name");
             }
             String input = (String)value;
             Match ControllerMatch = Regex.Match(input, @"\[(.*?)\]");

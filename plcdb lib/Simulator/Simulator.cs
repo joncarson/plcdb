@@ -5,16 +5,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using plcdb_lib.Models;
+using NLog;
+
 
 namespace plcdb_lib
 {
     class Simulator : ControllerBase
     {
+        
         public override string Name
         {
             get
             {
                 return "Simulator";
+                
             }
         }
 
@@ -28,13 +32,13 @@ namespace plcdb_lib
                 case "Doubles\\Rand":
                     return (new Random()).NextDouble();
                     break;
-                case "Bool\\AlwaysOn":
+                case "Bools\\AlwaysOn":
                     return true;
                     break;
-                case "Bool\\AlwaysOff":
+                case "Bools\\AlwaysOff":
                     return false;
                     break;
-                case "Bool\\RandBool":
+                case "Bools\\RandBool":
                     return ((new Random()).NextDouble()) >= 0.5;
                     break;
             }
@@ -88,6 +92,11 @@ namespace plcdb_lib
 
         public  Simulator(Model.ControllersRow row)
         {
+        }
+
+        public override List<string> GetAvailableSubaddresses()
+        {
+            return new List<string>();
         }
     }
 }

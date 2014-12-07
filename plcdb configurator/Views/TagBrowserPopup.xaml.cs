@@ -35,5 +35,11 @@ namespace plcdb.Views
             this.DialogResult = true;
             this.Close();
         }
+
+        private void ListBox_SelectionChanged_1(object sender, SelectionChangedEventArgs e)
+        {
+            ListBox lb = sender as ListBox;
+            lb.ScrollIntoView(lb.SelectedItem);
+        }
     }
 }

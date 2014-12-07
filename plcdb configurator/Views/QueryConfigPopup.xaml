@@ -8,6 +8,7 @@
         <ResourceDictionary>
             <valueConverters:StringToTagConverter x:Key="StringToTagConverter" />
             <valueConverters:PKToTagConverter x:Key="PKToTagConverter" />
+            <valueConverters:QueryTypeToTextConverter x:Key="QueryTypeToTextConverter" />
         </ResourceDictionary>
     </Window.Resources>
         <Grid>
@@ -41,7 +42,7 @@
         </ComboBox>
         <Label Grid.Row="3" Grid.Column="0" Margin="5">Trigger Tag:</Label>
         <DockPanel Grid.Row="3" Grid.Column="1" LastChildFill="True">
-            <Button x:Name="btnTriggerTag" DockPanel.Dock="Right" Margin="0 5 5 5" Click="btnTagBrowse_Click">...</Button>
+            <Button x:Name="btnTriggerTag" DockPanel.Dock="Right" Margin="0 5 5 5" Click="btnTagBrowse_Click" Width="30">...</Button>
             <TextBox DockPanel.Dock="Left" Margin="5" Width="Auto">
                 <TextBox.Text>
                     <Binding Path="TriggerTag" Converter="{StaticResource StringToTagConverter}">
@@ -55,8 +56,8 @@
         
         <Label Grid.Row="4" Grid.Column="0" Margin="5">Refresh Rate (ms):</Label>
         <TextBox Grid.Row="4" Grid.Column="1" Margin="5" Width="50" HorizontalAlignment="Left" Text="{Binding RefreshRate}"></TextBox>
-        <Label Grid.Row="5" Grid.Column="0">Query string:</Label>
-        <TextBox Grid.Row="5" Grid.Column="1" Margin="5 0 5 0" Text="{Binding QueryText}"></TextBox>
+        <Label Grid.Row="5" Grid.Column="0" Margin="5" Content="{Binding QueryType, Converter={StaticResource QueryTypeToTextConverter}, Mode=OneWay}"></Label>
+        <TextBox Grid.Row="5" Grid.Column="1"  Margin="5" Text="{Binding QueryText}"></TextBox>
         <StackPanel Margin="5"  Grid.Row="6" Grid.ColumnSpan="2"  Orientation="Horizontal">
             <Label>Result type:</Label>
             <ComboBox   Margin="5" Width="100" HorizontalAlignment="Left" SelectedItem="{Binding MappingType}" ItemsSource="{Binding AvailableMappingTypes}">
@@ -67,10 +68,19 @@
             <Button Margin="5" Command="{Binding RefreshColumnsCommand}">Refresh Columns</Button>
         </StackPanel>
        
-        <DataGrid Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Margin="5" ItemsSource="{Binding TagMappings}" AutoGenerateColumns="False" CanUserAddRows="False" CanUserReorderColumns="False"  >
+        <DataGrid x:Name="dgTagMappings" Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Margin="5" ItemsSource="{Binding TagMappings}" SelectedItem="{Binding CurrentTagMapping}" AutoGenerateColumns="False" CanUserAddRows="False" CanUserReorderColumns="False"  >
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Column" MinWidth="100" Binding="{Binding ColumnName}"></DataGridTextColumn>
-                <DataGridTextColumn Header="Tag" Width="*" Binding="{Binding Tag, Converter={StaticResource PKToTagConverter}}"></DataGridTextColumn>
+                <DataGridTextColumn Header="Column" MinWidth="100" Binding="{Binding ColumnName}" TextBlock.TextAlignment="Center"></DataGridTextColumn>
+                <DataGridTemplateColumn Header="Tag" Width="*"><!--Binding="{Binding Tag, Converter={StaticResource PKToTagConverter}}">-->
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <DockPanel LastChildFill="True">
+                                <Button Height="30" DockPanel.Dock="Right"  Click="btnTagBrowse_Click" Width="30">...</Button>
+                                <Label Height="30" DockPanel.Dock="Left"  Content="{Binding Tag, Converter={StaticResource PKToTagConverter}}"></Label>
+                            </DockPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
 

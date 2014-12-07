@@ -34,6 +34,8 @@ namespace plcdb_lib.Models {
         
         private QueryTagMappingsDataTable tableQueryTagMappings;
         
+        private ControllerParametersDataTable tableControllerParameters;
+        
         private global::System.Data.DataRelation relationFK_Controllers_Tags;
         
         private global::System.Data.DataRelation relationFK_Databases_Queries;
@@ -41,6 +43,8 @@ namespace plcdb_lib.Models {
         private global::System.Data.DataRelation relationQueries_Tags;
         
         private global::System.Data.DataRelation relationFK_Queries_QueryTagMappings;
+        
+        private global::System.Data.DataRelation relationFK_Controllers_ControllerParameters;
         
         private global::System.Data.DataRelation relationFK_Tags_QueryTagMappings;
         
@@ -86,6 +90,9 @@ namespace plcdb_lib.Models {
                 }
                 if ((ds.Tables["QueryTagMappings"] != null)) {
                     base.Tables.Add(new QueryTagMappingsDataTable(ds.Tables["QueryTagMappings"]));
+                }
+                if ((ds.Tables["ControllerParameters"] != null)) {
+                    base.Tables.Add(new ControllerParametersDataTable(ds.Tables["ControllerParameters"]));
                 }
                 this.DataSetName = ds.DataSetName;
                 this.Prefix = ds.Prefix;
@@ -152,6 +159,16 @@ namespace plcdb_lib.Models {
         public QueryTagMappingsDataTable QueryTagMappings {
             get {
                 return this.tableQueryTagMappings;
+            }
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        [global::System.ComponentModel.Browsable(false)]
+        [global::System.ComponentModel.DesignerSerializationVisibility(global::System.ComponentModel.DesignerSerializationVisibility.Content)]
+        public ControllerParametersDataTable ControllerParameters {
+            get {
+                return this.tableControllerParameters;
             }
         }
         
@@ -237,6 +254,9 @@ namespace plcdb_lib.Models {
                 if ((ds.Tables["QueryTagMappings"] != null)) {
                     base.Tables.Add(new QueryTagMappingsDataTable(ds.Tables["QueryTagMappings"]));
                 }
+                if ((ds.Tables["ControllerParameters"] != null)) {
+                    base.Tables.Add(new ControllerParametersDataTable(ds.Tables["ControllerParameters"]));
+                }
                 this.DataSetName = ds.DataSetName;
                 this.Prefix = ds.Prefix;
                 this.Namespace = ds.Namespace;
@@ -300,10 +320,17 @@ namespace plcdb_lib.Models {
                     this.tableQueryTagMappings.InitVars();
                 }
             }
+            this.tableControllerParameters = ((ControllerParametersDataTable)(base.Tables["ControllerParameters"]));
+            if ((initTable == true)) {
+                if ((this.tableControllerParameters != null)) {
+                    this.tableControllerParameters.InitVars();
+                }
+            }
             this.relationFK_Controllers_Tags = this.Relations["FK_Controllers_Tags"];
             this.relationFK_Databases_Queries = this.Relations["FK_Databases_Queries"];
             this.relationQueries_Tags = this.Relations["Queries_Tags"];
             this.relationFK_Queries_QueryTagMappings = this.Relations["FK_Queries_QueryTagMappings"];
+            this.relationFK_Controllers_ControllerParameters = this.Relations["FK_Controllers_ControllerParameters"];
             this.relationFK_Tags_QueryTagMappings = this.Relations["FK_Tags_QueryTagMappings"];
         }
         
@@ -325,6 +352,8 @@ namespace plcdb_lib.Models {
             base.Tables.Add(this.tableQueries);
             this.tableQueryTagMappings = new QueryTagMappingsDataTable();
             base.Tables.Add(this.tableQueryTagMappings);
+            this.tableControllerParameters = new ControllerParametersDataTable();
+            base.Tables.Add(this.tableControllerParameters);
             global::System.Data.ForeignKeyConstraint fkc;
             fkc = new global::System.Data.ForeignKeyConstraint("FK_Controllers_Tags", new global::System.Data.DataColumn[] {
                         this.tableControllers.PKColumn}, new global::System.Data.DataColumn[] {
@@ -354,6 +383,13 @@ namespace plcdb_lib.Models {
             fkc.AcceptRejectRule = global::System.Data.AcceptRejectRule.None;
             fkc.DeleteRule = global::System.Data.Rule.Cascade;
             fkc.UpdateRule = global::System.Data.Rule.Cascade;
+            fkc = new global::System.Data.ForeignKeyConstraint("FK_Controllers_ControllerParameters", new global::System.Data.DataColumn[] {
+                        this.tableControllers.PKColumn}, new global::System.Data.DataColumn[] {
+                        this.tableControllerParameters.ControllerColumn});
+            this.tableControllerParameters.Constraints.Add(fkc);
+            fkc.AcceptRejectRule = global::System.Data.AcceptRejectRule.None;
+            fkc.DeleteRule = global::System.Data.Rule.Cascade;
+            fkc.UpdateRule = global::System.Data.Rule.Cascade;
             this.relationFK_Controllers_Tags = new global::System.Data.DataRelation("FK_Controllers_Tags", new global::System.Data.DataColumn[] {
                         this.tableControllers.PKColumn}, new global::System.Data.DataColumn[] {
                         this.tableTags.ControllerColumn}, false);
@@ -370,6 +406,10 @@ namespace plcdb_lib.Models {
                         this.tableQueries.PKColumn}, new global::System.Data.DataColumn[] {
                         this.tableQueryTagMappings.QueryColumn}, false);
             this.Relations.Add(this.relationFK_Queries_QueryTagMappings);
+            this.relationFK_Controllers_ControllerParameters = new global::System.Data.DataRelation("FK_Controllers_ControllerParameters", new global::System.Data.DataColumn[] {
+                        this.tableControllers.PKColumn}, new global::System.Data.DataColumn[] {
+                        this.tableControllerParameters.ControllerColumn}, false);
+            this.Relations.Add(this.relationFK_Controllers_ControllerParameters);
             this.relationFK_Tags_QueryTagMappings = new global::System.Data.DataRelation("FK_Tags_QueryTagMappings", new global::System.Data.DataColumn[] {
                         this.tableTags.PKColumn}, new global::System.Data.DataColumn[] {
                         this.tableQueryTagMappings.TagColumn}, false);
@@ -403,6 +443,12 @@ namespace plcdb_lib.Models {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         private bool ShouldSerializeQueryTagMappings() {
+            return false;
+        }
+        
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        private bool ShouldSerializeControllerParameters() {
             return false;
         }
         
@@ -476,6 +522,9 @@ namespace plcdb_lib.Models {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         public delegate void QueryTagMappingsRowChangeEventHandler(object sender, QueryTagMappingsRowChangeEvent e);
         
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        public delegate void ControllerParametersRowChangeEventHandler(object sender, ControllerParametersRowChangeEvent e);
+        
         /// <summary>
         ///Represents the strongly named DataTable class.
         ///</summary>
@@ -490,6 +539,8 @@ namespace plcdb_lib.Models {
             private global::System.Data.DataColumn columnAddress;
             
             private global::System.Data.DataColumn columnPK;
+            
+            private global::System.Data.DataColumn columnSubaddress;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
@@ -558,6 +609,14 @@ namespace plcdb_lib.Models {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn SubaddressColumn {
+                get {
+                    return this.columnSubaddress;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -593,13 +652,14 @@ namespace plcdb_lib.Models {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public ControllersRow AddControllersRow(string Name, System.Type Type, string Address) {
+            public ControllersRow AddControllersRow(string Name, System.Type Type, string Address, string Subaddress) {
                 ControllersRow rowControllersRow = ((ControllersRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         Name,
                         Type,
                         Address,
-                        null};
+                        null,
+                        Subaddress};
                 rowControllersRow.ItemArray = columnValuesArray;
                 this.Rows.Add(rowControllersRow);
                 return rowControllersRow;
@@ -633,6 +693,7 @@ namespace plcdb_lib.Models {
                 this.columnType = base.Columns["Type"];
                 this.columnAddress = base.Columns["Address"];
                 this.columnPK = base.Columns["PK"];
+                this.columnSubaddress = base.Columns["Subaddress"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -646,13 +707,14 @@ namespace plcdb_lib.Models {
                 base.Columns.Add(this.columnAddress);
                 this.columnPK = new global::System.Data.DataColumn("PK", typeof(long), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnPK);
+                this.columnSubaddress = new global::System.Data.DataColumn("Subaddress", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnSubaddress);
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
                                 this.columnPK}, true));
                 this.columnName.DefaultValue = ((string)(""));
                 this.columnAddress.DefaultValue = ((string)(""));
                 this.columnPK.AutoIncrement = true;
-                this.columnPK.AutoIncrementSeed = -1;
-                this.columnPK.AutoIncrementStep = -1;
+                this.columnPK.AutoIncrementSeed = 1;
                 this.columnPK.AllowDBNull = false;
                 this.columnPK.Unique = true;
             }
@@ -987,8 +1049,7 @@ namespace plcdb_lib.Models {
                 this.columnName.DefaultValue = ((string)(""));
                 this.columnAddress.DefaultValue = ((string)(""));
                 this.columnPK.AutoIncrement = true;
-                this.columnPK.AutoIncrementSeed = -1;
-                this.columnPK.AutoIncrementStep = -1;
+                this.columnPK.AutoIncrementSeed = 1;
                 this.columnPK.AllowDBNull = false;
                 this.columnPK.Unique = true;
             }
@@ -1278,8 +1339,7 @@ namespace plcdb_lib.Models {
                 this.columnName.DefaultValue = ((string)(""));
                 this.columnConnectionString.DefaultValue = ((string)(""));
                 this.columnPK.AutoIncrement = true;
-                this.columnPK.AutoIncrementSeed = -1;
-                this.columnPK.AutoIncrementStep = -1;
+                this.columnPK.AutoIncrementSeed = 1;
                 this.columnPK.AllowDBNull = false;
                 this.columnPK.Unique = true;
             }
@@ -1657,8 +1717,7 @@ namespace plcdb_lib.Models {
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
                                 this.columnPK}, true));
                 this.columnPK.AutoIncrement = true;
-                this.columnPK.AutoIncrementSeed = -1;
-                this.columnPK.AutoIncrementStep = -1;
+                this.columnPK.AutoIncrementSeed = 1;
                 this.columnPK.AllowDBNull = false;
                 this.columnPK.Unique = true;
                 this.columnQueryType.DefaultValue = ((string)("SELECT"));
@@ -1972,8 +2031,7 @@ namespace plcdb_lib.Models {
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
                                 this.columnPK}, true));
                 this.columnPK.AutoIncrement = true;
-                this.columnPK.AutoIncrementSeed = -1;
-                this.columnPK.AutoIncrementStep = -1;
+                this.columnPK.AutoIncrementSeed = 1;
                 this.columnPK.AllowDBNull = false;
                 this.columnPK.Unique = true;
                 this.columnColumnName.DefaultValue = ((string)(""));
@@ -2104,6 +2162,300 @@ namespace plcdb_lib.Models {
         }
         
         /// <summary>
+        ///Represents the strongly named DataTable class.
+        ///</summary>
+        [global::System.Serializable()]
+        [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
+        public partial class ControllerParametersDataTable : global::System.Data.TypedTableBase<ControllerParametersRow> {
+            
+            private global::System.Data.DataColumn columnPK;
+            
+            private global::System.Data.DataColumn columnParameter;
+            
+            private global::System.Data.DataColumn columnValue;
+            
+            private global::System.Data.DataColumn columnController;
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public ControllerParametersDataTable() {
+                this.TableName = "ControllerParameters";
+                this.BeginInit();
+                this.InitClass();
+                this.EndInit();
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            internal ControllerParametersDataTable(global::System.Data.DataTable table) {
+                this.TableName = table.TableName;
+                if ((table.CaseSensitive != table.DataSet.CaseSensitive)) {
+                    this.CaseSensitive = table.CaseSensitive;
+                }
+                if ((table.Locale.ToString() != table.DataSet.Locale.ToString())) {
+                    this.Locale = table.Locale;
+                }
+                if ((table.Namespace != table.DataSet.Namespace)) {
+                    this.Namespace = table.Namespace;
+                }
+                this.Prefix = table.Prefix;
+                this.MinimumCapacity = table.MinimumCapacity;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            protected ControllerParametersDataTable(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
+                    base(info, context) {
+                this.InitVars();
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn PKColumn {
+                get {
+                    return this.columnPK;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn ParameterColumn {
+                get {
+                    return this.columnParameter;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn ValueColumn {
+                get {
+                    return this.columnValue;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn ControllerColumn {
+                get {
+                    return this.columnController;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            [global::System.ComponentModel.Browsable(false)]
+            public int Count {
+                get {
+                    return this.Rows.Count;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public ControllerParametersRow this[int index] {
+                get {
+                    return ((ControllerParametersRow)(this.Rows[index]));
+                }
+            }
+            
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public event ControllerParametersRowChangeEventHandler ControllerParametersRowChanging;
+            
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public event ControllerParametersRowChangeEventHandler ControllerParametersRowChanged;
+            
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public event ControllerParametersRowChangeEventHandler ControllerParametersRowDeleting;
+            
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public event ControllerParametersRowChangeEventHandler ControllerParametersRowDeleted;
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void AddControllerParametersRow(ControllerParametersRow row) {
+                this.Rows.Add(row);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public ControllerParametersRow AddControllerParametersRow(string Parameter, string Value, ControllersRow parentControllersRowByFK_Controllers_ControllerParameters) {
+                ControllerParametersRow rowControllerParametersRow = ((ControllerParametersRow)(this.NewRow()));
+                object[] columnValuesArray = new object[] {
+                        null,
+                        Parameter,
+                        Value,
+                        null};
+                if ((parentControllersRowByFK_Controllers_ControllerParameters != null)) {
+                    columnValuesArray[3] = parentControllersRowByFK_Controllers_ControllerParameters[3];
+                }
+                rowControllerParametersRow.ItemArray = columnValuesArray;
+                this.Rows.Add(rowControllerParametersRow);
+                return rowControllerParametersRow;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public override global::System.Data.DataTable Clone() {
+                ControllerParametersDataTable cln = ((ControllerParametersDataTable)(base.Clone()));
+                cln.InitVars();
+                return cln;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            protected override global::System.Data.DataTable CreateInstance() {
+                return new ControllerParametersDataTable();
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            internal void InitVars() {
+                this.columnPK = base.Columns["PK"];
+                this.columnParameter = base.Columns["Parameter"];
+                this.columnValue = base.Columns["Value"];
+                this.columnController = base.Columns["Controller"];
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            private void InitClass() {
+                this.columnPK = new global::System.Data.DataColumn("PK", typeof(long), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnPK);
+                this.columnParameter = new global::System.Data.DataColumn("Parameter", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnParameter);
+                this.columnValue = new global::System.Data.DataColumn("Value", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnValue);
+                this.columnController = new global::System.Data.DataColumn("Controller", typeof(long), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnController);
+                this.columnPK.AutoIncrement = true;
+                this.columnPK.AutoIncrementSeed = 1;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public ControllerParametersRow NewControllerParametersRow() {
+                return ((ControllerParametersRow)(this.NewRow()));
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            protected override global::System.Data.DataRow NewRowFromBuilder(global::System.Data.DataRowBuilder builder) {
+                return new ControllerParametersRow(builder);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            protected override global::System.Type GetRowType() {
+                return typeof(ControllerParametersRow);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            protected override void OnRowChanged(global::System.Data.DataRowChangeEventArgs e) {
+                base.OnRowChanged(e);
+                if ((this.ControllerParametersRowChanged != null)) {
+                    this.ControllerParametersRowChanged(this, new ControllerParametersRowChangeEvent(((ControllerParametersRow)(e.Row)), e.Action));
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            protected override void OnRowChanging(global::System.Data.DataRowChangeEventArgs e) {
+                base.OnRowChanging(e);
+                if ((this.ControllerParametersRowChanging != null)) {
+                    this.ControllerParametersRowChanging(this, new ControllerParametersRowChangeEvent(((ControllerParametersRow)(e.Row)), e.Action));
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            protected override void OnRowDeleted(global::System.Data.DataRowChangeEventArgs e) {
+                base.OnRowDeleted(e);
+                if ((this.ControllerParametersRowDeleted != null)) {
+                    this.ControllerParametersRowDeleted(this, new ControllerParametersRowChangeEvent(((ControllerParametersRow)(e.Row)), e.Action));
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            protected override void OnRowDeleting(global::System.Data.DataRowChangeEventArgs e) {
+                base.OnRowDeleting(e);
+                if ((this.ControllerParametersRowDeleting != null)) {
+                    this.ControllerParametersRowDeleting(this, new ControllerParametersRowChangeEvent(((ControllerParametersRow)(e.Row)), e.Action));
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void RemoveControllerParametersRow(ControllerParametersRow row) {
+                this.Rows.Remove(row);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public static global::System.Xml.Schema.XmlSchemaComplexType GetTypedTableSchema(global::System.Xml.Schema.XmlSchemaSet xs) {
+                global::System.Xml.Schema.XmlSchemaComplexType type = new global::System.Xml.Schema.XmlSchemaComplexType();
+                global::System.Xml.Schema.XmlSchemaSequence sequence = new global::System.Xml.Schema.XmlSchemaSequence();
+                Model ds = new Model();
+                global::System.Xml.Schema.XmlSchemaAny any1 = new global::System.Xml.Schema.XmlSchemaAny();
+                any1.Namespace = "http://www.w3.org/2001/XMLSchema";
+                any1.MinOccurs = new decimal(0);
+                any1.MaxOccurs = decimal.MaxValue;
+                any1.ProcessContents = global::System.Xml.Schema.XmlSchemaContentProcessing.Lax;
+                sequence.Items.Add(any1);
+                global::System.Xml.Schema.XmlSchemaAny any2 = new global::System.Xml.Schema.XmlSchemaAny();
+                any2.Namespace = "urn:schemas-microsoft-com:xml-diffgram-v1";
+                any2.MinOccurs = new decimal(1);
+                any2.ProcessContents = global::System.Xml.Schema.XmlSchemaContentProcessing.Lax;
+                sequence.Items.Add(any2);
+                global::System.Xml.Schema.XmlSchemaAttribute attribute1 = new global::System.Xml.Schema.XmlSchemaAttribute();
+                attribute1.Name = "namespace";
+                attribute1.FixedValue = ds.Namespace;
+                type.Attributes.Add(attribute1);
+                global::System.Xml.Schema.XmlSchemaAttribute attribute2 = new global::System.Xml.Schema.XmlSchemaAttribute();
+                attribute2.Name = "tableTypeName";
+                attribute2.FixedValue = "ControllerParametersDataTable";
+                type.Attributes.Add(attribute2);
+                type.Particle = sequence;
+                global::System.Xml.Schema.XmlSchema dsSchema = ds.GetSchemaSerializable();
+                if (xs.Contains(dsSchema.TargetNamespace)) {
+                    global::System.IO.MemoryStream s1 = new global::System.IO.MemoryStream();
+                    global::System.IO.MemoryStream s2 = new global::System.IO.MemoryStream();
+                    try {
+                        global::System.Xml.Schema.XmlSchema schema = null;
+                        dsSchema.Write(s1);
+                        for (global::System.Collections.IEnumerator schemas = xs.Schemas(dsSchema.TargetNamespace).GetEnumerator(); schemas.MoveNext(); ) {
+                            schema = ((global::System.Xml.Schema.XmlSchema)(schemas.Current));
+                            s2.SetLength(0);
+                            schema.Write(s2);
+                            if ((s1.Length == s2.Length)) {
+                                s1.Position = 0;
+                                s2.Position = 0;
+                                for (; ((s1.Position != s1.Length) 
+                                            && (s1.ReadByte() == s2.ReadByte())); ) {
+                                    ;
+                                }
+                                if ((s1.Position == s1.Length)) {
+                                    return type;
+                                }
+                            }
+                        }
+                    }
+                    finally {
+                        if ((s1 != null)) {
+                            s1.Close();
+                        }
+                        if ((s2 != null)) {
+                            s2.Close();
+                        }
+                    }
+                }
+                xs.Add(dsSchema);
+                return type;
+            }
+        }
+        
+        /// <summary>
         ///Represents strongly named DataRow class.
         ///</summary>
         public partial class ControllersRow : global::System.Data.DataRow {
@@ -2178,6 +2530,22 @@ namespace plcdb_lib.Models {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public string Subaddress {
+                get {
+                    try {
+                        return ((string)(this[this.tableControllers.SubaddressColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'Subaddress\' in table \'Controllers\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableControllers.SubaddressColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public bool IsNameNull() {
                 return this.IsNull(this.tableControllers.NameColumn);
             }
@@ -2210,6 +2578,29 @@ namespace plcdb_lib.Models {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public void SetAddressNull() {
                 this[this.tableControllers.AddressColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsSubaddressNull() {
+                return this.IsNull(this.tableControllers.SubaddressColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetSubaddressNull() {
+                this[this.tableControllers.SubaddressColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public ControllerParametersRow[] GetControllerParametersRows() {
+                if ((this.Table.ChildRelations["FK_Controllers_ControllerParameters"] == null)) {
+                    return new ControllerParametersRow[0];
+                }
+                else {
+                    return ((ControllerParametersRow[])(base.GetChildRows(this.Table.ChildRelations["FK_Controllers_ControllerParameters"])));
+                }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -2932,6 +3323,144 @@ namespace plcdb_lib.Models {
         }
         
         /// <summary>
+        ///Represents strongly named DataRow class.
+        ///</summary>
+        public partial class ControllerParametersRow : global::System.Data.DataRow {
+            
+            private ControllerParametersDataTable tableControllerParameters;
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            internal ControllerParametersRow(global::System.Data.DataRowBuilder rb) : 
+                    base(rb) {
+                this.tableControllerParameters = ((ControllerParametersDataTable)(this.Table));
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public long PK {
+                get {
+                    try {
+                        return ((long)(this[this.tableControllerParameters.PKColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'PK\' in table \'ControllerParameters\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableControllerParameters.PKColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public string Parameter {
+                get {
+                    try {
+                        return ((string)(this[this.tableControllerParameters.ParameterColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'Parameter\' in table \'ControllerParameters\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableControllerParameters.ParameterColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public string Value {
+                get {
+                    try {
+                        return ((string)(this[this.tableControllerParameters.ValueColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'Value\' in table \'ControllerParameters\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableControllerParameters.ValueColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public long Controller {
+                get {
+                    try {
+                        return ((long)(this[this.tableControllerParameters.ControllerColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'Controller\' in table \'ControllerParameters\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableControllerParameters.ControllerColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public ControllersRow ControllersRow {
+                get {
+                    return ((ControllersRow)(this.GetParentRow(this.Table.ParentRelations["FK_Controllers_ControllerParameters"])));
+                }
+                set {
+                    this.SetParentRow(value, this.Table.ParentRelations["FK_Controllers_ControllerParameters"]);
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsPKNull() {
+                return this.IsNull(this.tableControllerParameters.PKColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetPKNull() {
+                this[this.tableControllerParameters.PKColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsParameterNull() {
+                return this.IsNull(this.tableControllerParameters.ParameterColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetParameterNull() {
+                this[this.tableControllerParameters.ParameterColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsValueNull() {
+                return this.IsNull(this.tableControllerParameters.ValueColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetValueNull() {
+                this[this.tableControllerParameters.ValueColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsControllerNull() {
+                return this.IsNull(this.tableControllerParameters.ControllerColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetControllerNull() {
+                this[this.tableControllerParameters.ControllerColumn] = global::System.Convert.DBNull;
+            }
+        }
+        
+        /// <summary>
         ///Row event argument class
         ///</summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
@@ -3087,6 +3616,40 @@ namespace plcdb_lib.Models {
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public QueryTagMappingsRow Row {
+                get {
+                    return this.eventRow;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataRowAction Action {
+                get {
+                    return this.eventAction;
+                }
+            }
+        }
+        
+        /// <summary>
+        ///Row event argument class
+        ///</summary>
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+        public class ControllerParametersRowChangeEvent : global::System.EventArgs {
+            
+            private ControllerParametersRow eventRow;
+            
+            private global::System.Data.DataRowAction eventAction;
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public ControllerParametersRowChangeEvent(ControllerParametersRow row, global::System.Data.DataRowAction action) {
+                this.eventRow = row;
+                this.eventAction = action;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public ControllerParametersRow Row {
                 get {
                     return this.eventRow;
                 }

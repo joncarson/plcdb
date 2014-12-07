@@ -17,14 +17,21 @@ namespace plcdb.Converters
         
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            Model.TagsRow Tag = ActiveModel.Tags.FindByPK((long)value) as Model.TagsRow;
-            if (Tag == null)
+            try
+            {
+                Model.TagsRow Tag = ActiveModel.Tags.FindByPK((long)value) as Model.TagsRow;
+                if (Tag == null)
+                {
+                    return "";
+                }
+                String TagName = Tag.Name == null || Tag.Name == String.Empty ? Tag.Address : Tag.Name;
+                return "[" + Tag.ControllersRow.Name + "]" + TagName;
+            }
+            catch (Exception e)
             {
                 return "";
             }
-            String TagName = Tag.Name == null ? Tag.Address : Tag.Name;
-
-            return "[" + Tag.ControllersRow.Name + "]" + TagName;
+            
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

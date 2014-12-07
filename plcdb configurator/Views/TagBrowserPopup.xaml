@@ -21,15 +21,18 @@
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <Label Grid.Row="0" Grid.Column="0" Margin="5">Controller:</Label>
-        <ComboBox Grid.Row="0" Grid.Column="1" Margin="5" SelectedItem="{Binding CurrentController}" ItemsSource="{Binding AvailableControllers}">
-            <ComboBox.ItemTemplate>
-                <DataTemplate>
-                    <Label Content="{Binding Name}"></Label>
-                </DataTemplate>
-            </ComboBox.ItemTemplate>
-        </ComboBox>
-        <ListBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="5" SelectedItem="{Binding CurrentTag}" ItemsSource="{Binding AvailableTags}">
+        <DockPanel Grid.Row="0" Grid.ColumnSpan="2">
+            <Label Grid.Row="0" Grid.Column="0" Margin="5">Controller:</Label>
+            <Button Command="{Binding RefreshTagsCommand}" Margin="5" DockPanel.Dock="Right">Refresh Tags</Button>
+            <ComboBox Grid.Row="0" Grid.Column="1" Margin="5" SelectedItem="{Binding CurrentController}" ItemsSource="{Binding AvailableControllers}">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <Label Content="{Binding Name}"></Label>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+        </DockPanel>
+        <ListBox SelectionChanged="ListBox_SelectionChanged_1"  Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="5" SelectedItem="{Binding CurrentTag}" ItemsSource="{Binding AvailableTags}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <Label Content="{Binding Address}"></Label>
