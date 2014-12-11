@@ -1,0 +1,137 @@
+﻿<UserControl x:Class="plcdb.Views.MainRibbon"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="145" d:DesignWidth="500"
+             xmlns:Fluent="clr-namespace:Fluent;assembly=Fluent" >
+            
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/plcdb;component\Converters\ConvertersDictionary.xaml"></ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    
+        <Fluent:Ribbon>
+            <Fluent:Ribbon.Menu>
+                <Fluent:Backstage>
+                </Fluent:Backstage>
+            </Fluent:Ribbon.Menu>
+        
+        <Fluent:Ribbon.ContextualGroups>
+            <Fluent:RibbonContextualTabGroup Header="Databases" Visibility="Visible" x:Name="DatabaseGroup" Background="Green" BorderBrush="Green" />
+            <Fluent:RibbonContextualTabGroup Header="PLCs" Visibility="Visible" x:Name="ControllerGroup" Background="Green" BorderBrush="Green" />
+            <Fluent:RibbonContextualTabGroup Header="Queries" Visibility="Visible" x:Name="QueryGroup" Background="Green" BorderBrush="Green" />
+        </Fluent:Ribbon.ContextualGroups>
+
+        <Fluent:RibbonTabItem Header="Home" >
+            <Fluent:RibbonTabItem.Resources>
+                <Style TargetType="{x:Type Fluent:Button}">
+                    <Setter Property="HorizontalAlignment" Value="Center">
+                    </Setter>
+                </Style>
+            </Fluent:RibbonTabItem.Resources>
+            
+                <Fluent:RibbonGroupBox Margin="5" Header="Configuration">
+                    <Fluent:Button LargeIcon="/plcdb;component/Resources/Icons/icon_save.png" Header="Save" Command="Save" />
+                    <Fluent:Button LargeIcon="/plcdb;component/Resources/Icons/icon_saveas.png" Command="SaveAs"  Header="Save As" Size="Large"/>
+                <Fluent:Button LargeIcon="/plcdb;component\Resources\Icons\open_48.png"     Command="Open"  Header="Open" Size="Large" ></Fluent:Button>
+                <Fluent:Button LargeIcon="/plcdb;component\Resources\Icons\folder_delete_48.png" Header="Close" Command="Close" Size="Large"/>
+                </Fluent:RibbonGroupBox>
+            <!--<Fluent:RibbonTabItem Header="Edit" Group="{Binding ElementName=DatabaseGroup}" x:Name="DatabaseTab" Width="100" >-->
+                <Fluent:RibbonGroupBox x:Name="DatabaseTab">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="60"></ColumnDefinition>
+                            <ColumnDefinition Width="60"></ColumnDefinition>
+                            <ColumnDefinition Width="60"></ColumnDefinition>
+                            <ColumnDefinition Width="60"></ColumnDefinition>
+                            <ColumnDefinition Width="60"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <Fluent:Button Click="btnAddNewDatabase_Click" Grid.Column="1"  Margin="5 0 0 0" LargeIcon="/plcdb;component\Resources\Icons\database_new.png"  Header="New Database" Size="Large" />
+                        <Fluent:Button Click="btnEditDatabase_Click"  Grid.Column="0" Margin="5 0 0 0"  LargeIcon="/plcdb;component\Resources\Icons\pencil.jpg"  Header="Edit Database" Size="Large"/>
+                        <Fluent:Button Click="btnDeleteDatabase_Click" Grid.Column="2" Margin="5 0 0 0" LargeIcon="/plcdb;component\Resources\Icons\database_delete.png" Header="Delete Database"  Size="Large" />
+                        <Fluent:Button Grid.Column="3" Margin="5 0 0 0" LargeIcon="/plcdb;component\Resources\Icons\copy-icon.png" Header="Copy Database"  Size="Large" />
+                        <Fluent:Button Grid.Column="4"  Margin="5 0 0 0" LargeIcon="/plcdb;component\Resources\Icons\globe_win7.ico" Header="Test Database"  Size="Large" />
+                    </Grid>
+                </Fluent:RibbonGroupBox>
+            <!--</Fluent:RibbonTabItem>-->
+            <!--<Fluent:RibbonTabItem Header="Edit" Group="{Binding ElementName=ControllerGroup}" x:Name="ControllerTab" Width="100" >-->
+                <Fluent:RibbonGroupBox x:Name="ControllerTab">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="60"></ColumnDefinition>
+                            <ColumnDefinition Width="60"></ColumnDefinition>
+                            <ColumnDefinition Width="60"></ColumnDefinition>
+                            <ColumnDefinition Width="60"></ColumnDefinition>
+                            <ColumnDefinition Width="60"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <Fluent:Button Click="btnAddNewController_Click" Grid.Column="1" Margin="5 0 0 0" LargeIcon="/plcdb;component\Resources\Icons\database_new.png"  Header="New   PLC   " Size="Large"  />
+                        <Fluent:Button Click="btnEditController_Click" Grid.Column="0" Margin="5 0 0 0"  LargeIcon="/plcdb;component\Resources\Icons\pencil.jpg"  Header="Edit   PLC   " Size="Large" />
+                        <Fluent:Button Click="btnDeleteController_Click" Grid.Column="2" Margin="5 0 0 0" LargeIcon="/plcdb;component\Resources\Icons\database_delete.png" Header="Delete   PLC   "  Size="Large"  />
+                        <Fluent:Button Grid.Column="3" Margin="5 0 0 0" LargeIcon="/plcdb;component\Resources\Icons\copy-icon.png" Header="Copy   PLC   "  Size="Large"  />
+                        <Fluent:Button Grid.Column="4" Margin="5 0 0 0" LargeIcon="/plcdb;component\Resources\Icons\globe_win7.ico" Header="Test   PLC   "  Size="Large" />
+                    </Grid>
+                </Fluent:RibbonGroupBox>
+            <!--</Fluent:RibbonTabItem>-->
+            <!--<Fluent:RibbonTabItem Header="Edit" Group="{Binding ElementName=QueryGroup}" x:Name="QueryTab" Width="100" >-->
+                <Fluent:RibbonGroupBox x:Name="QueryTab">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="60"></ColumnDefinition>
+                        <ColumnDefinition Width="60"></ColumnDefinition>
+                        <ColumnDefinition Width="60"></ColumnDefinition>
+                        <ColumnDefinition Width="60"></ColumnDefinition>
+                        <ColumnDefinition Width="60"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Fluent:Button Grid.Column="0"  Click="btnAddQuery_Click" Margin="5 0 0 0" LargeIcon="/plcdb;component\Resources\Icons\database_new.png"  Header="New Query" Size="Large" />
+                    <Fluent:Button Grid.Column="1" Click="btnEditQuery_Click" Margin="5 0 0 0"  LargeIcon="/plcdb;component\Resources\Icons\pencil.jpg"  Header="Edit Query" Size="Large"/>
+                    <Fluent:Button Grid.Column="2" Click="btnDeleteQuery_Click" Margin="5 0 0 0" LargeIcon="/plcdb;component\Resources\Icons\database_delete.png" Header="Delete Query"  Size="Large" />
+                    <Fluent:Button Grid.Column="3" Margin="5 0 0 0" LargeIcon="/plcdb;component\Resources\Icons\copy-icon.png" Header="Copy Query"  Size="Large" />
+                    <Fluent:Button Grid.Column="4" Margin="5 0 0 0" LargeIcon="/plcdb;component\Resources\Icons\globe_win7.ico" Header="Test Query"  Size="Large" />
+                </Grid>
+            </Fluent:RibbonGroupBox>
+            <!--</Fluent:RibbonTabItem>-->
+            <Fluent:RibbonGroupBox Margin="5" Header="Service Status" HorizontalAlignment="Right">
+                    <Image HorizontalAlignment="Center" Source="/plcdb;component/Resources/Images/stoplight-red.png" >
+                        <Image.Style>
+                            <Style>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ServiceRunning}" Value="True">
+                                        <Setter Property="Image.Visibility" Value="Collapsed" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ServiceRunning}" Value="False">
+                                        <Setter Property="Image.Visibility" Value="Visible" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Image.Style>
+                    </Image>
+                    <Image HorizontalAlignment="Center" Source="/plcdb;component/Resources/Images/stoplight-green.png" >
+                        <Image.Style>
+                            <Style>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ServiceRunning}" Value="True">
+                                        <Setter Property="Image.Visibility" Value="Visible" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ServiceRunning}" Value="False">
+                                        <Setter Property="Image.Visibility" Value="Collapsed" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Image.Style>
+                    </Image>
+                <Fluent:Button Margin="5 0 0 0"  LargeIcon="/plcdb;component\Resources\Icons\recycle_256.png"  Header="Start Service" Command="{Binding StartServiceCommand}" Size="Large"/>
+                <Fluent:Button Margin="5 0 0 0" LargeIcon="/plcdb;component\Resources\Icons\delete_256.png"  Header="Stop Service" Command="{Binding StopServiceCommand}" Size="Large" />
+                <Fluent:Button Margin="5 0 0 0" LargeIcon="/plcdb;component\Resources\Icons\globe_win7.ico" Header="Activate Config" Command="{Binding SetServiceModelCommand}" Size="Large" />
+                </Fluent:RibbonGroupBox>
+            
+            </Fluent:RibbonTabItem>
+        
+    </Fluent:Ribbon>
+      
+        
+</UserControl>

@@ -1,0 +1,15 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:valueConverters="clr-namespace:plcdb.Converters;assembly=plcdb">
+    <valueConverters:PKToNameConverter x:Key="PKToNameConverter" />
+    <valueConverters:PKToTagConverter x:Key="PKToTagConverter" />
+    <valueConverters:ObjectStatusToColorConverter x:Key="ObjectStatusToColorConverter" />
+    <valueConverters:StringToTagValidator x:Key="StringToTagValidator" />
+    <valueConverters:StringToTagConverter x:Key="StringToTagConverter" />
+    <valueConverters:QueryTypeToTextConverter x:Key="QueryTypeToTextConverter" />
+    <valueConverters:StringPrefixConverter x:Key="StringPrefixConverter" />
+    <valueConverters:BoolToHiddenConverter x:Key="BoolToHiddenConverter" />
+    <valueConverters:BoolToVisibleConverter x:Key="BoolToVisibleConverter" />
+    <valueConverters:DataRowViewToObjectConverter x:Key="DataRowViewToObjectConverter" />
+    
+</ResourceDictionary>

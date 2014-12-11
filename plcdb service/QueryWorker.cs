@@ -10,6 +10,8 @@ using System.Data;
 using System.Threading;
 using NLog;
 using plcdb_lib.SQL;
+using plcdb_lib.WCF;
+using System.Diagnostics;
 
 namespace plcdb_service
 {
@@ -21,18 +23,31 @@ namespace plcdb_service
         public bool StopRequest {get;set;}
         private Model.TagsRow TriggerTag = null;
         private ControllerBase TriggerController = null;
+        private static object queryLock = new object();
+        public StatusEnum Status { get; set; }
 
         public QueryWorker(Model m, Model.QueriesRow q)
         {
-            ActiveModel = m;
-            ActiveQuery = q;
+            try
+            {
+                ActiveModel = (Model)m.Copy();
+                ActiveQuery = ActiveModel.Queries.First(p => p.PK == q.PK);
+                TriggerController = m.Tags.First(p => p.PK == q.TriggerTag).ControllersRow.Controller;
+                Status = StatusEnum.Good;
+            }
+            catch (Exception e)
+            {
+                Status = StatusEnum.Error;
+                Log.Log(Error(e.Message));
+            }
         }
 
         public void DoWork()
         {
+            
             if (ActiveModel == null || ActiveQuery == null)
             {
-                Log.Error("ActiveModel or ActiveQuery is null");
+                Log.Log(Error("ActiveModel or ActiveQuery is null"));
                 return;
             }
 
@@ -43,16 +58,20 @@ namespace plcdb_service
             }
             catch (Exception e)
             {
-                Log.Error(e);
+                Status = StatusEnum.Error;
+                Log.Error(Error(e.Message));
             }
             while (!StopRequest)
             {
                 try
                 {
+                    //lock (queryLock)
+                    //{
                     bool QueryTriggered = (bool)TriggerController.Read(TriggerTag);
 
                     if (QueryTriggered)
                     {
+                        
                         switch (ActiveQuery.QueryType)
                         {
                             case "SELECT":
@@ -69,15 +88,30 @@ namespace plcdb_service
                                 break;
                         }
                     }
+                    Status = StatusEnum.Good;
                 }
                 catch (Exception e)
                 {
-                    Log.Error(e);
+                    Status = StatusEnum.Error;
+                    Log.Log(Error(e.Message));
                 }
-
+                
                 Thread.Sleep((int)ActiveQuery.RefreshRate);
 
             }
+        }
+
+        private LogEventInfo Error(string Message)
+        {
+            LogEventInfo LogEvent = new LogEventInfo()
+            {
+                Message = Message,
+                Level = LogLevel.Error,
+                TimeStamp = DateTime.Now,
+                LoggerName = "Query Worker",
+            };
+            LogEvent.Properties["Query"] = ActiveQuery.PK;
+            return LogEvent;
         }
 
         private void ProcessDeleteQuery()
@@ -138,7 +172,7 @@ namespace plcdb_service
                     }
                     else
                     {
-                        Log.Trace("Query triggered but TagMapping not set up for column '{1}'", col.ColumnName);
+                        Log.Trace("Query triggered but TagMapping not set up for column '" + col.ColumnName + "'");
                     }
                 }
             }

@@ -20,9 +20,7 @@ namespace plcdb_lib_opc
         private DAServer Server = null;
         private Group TagGroup = null;
         private Model.ControllersRow ControllerInfo;
-        Dictionary<int, Item> Tags = new Dictionary<int,Item>(); //key is client ID
-        Dictionary<String, ItemValue> TagValues = new Dictionary<string,ItemValue>(); //key is tag address
-        List<Model.TagsRow> ActiveTags = new List<Model.TagsRow>();
+        List<OpcTag> ActiveTags = new List<OpcTag>();
 
         private static int ItemClientId = 1;
         private static int GroupClientId = 1;
@@ -34,32 +32,22 @@ namespace plcdb_lib_opc
 
         public override object Read(plcdb_lib.Models.Model.TagsRow t)
         {
-            if (!ActiveTags.Contains(t))
+            if (!ActiveTags.Select(p => p.TagRow).Contains(t))
             {
-                ActiveTags.Add(t);
-                Tags.Add((int)t.PK, new Item()
-                {
-                    //AccessPath = TagRow.Address,
-                    Active = true,
-                    ClientId = (int)t.PK,
-                    ItemId = t.Address,
-                    RequestedDataType = VarEnum.VT_EMPTY// TagRow.IsDataTypeNull() ? VarEnum.VT_UNKNOWN : TypeToOpcType(TagRow.DataType)
-                });
-                TagValues.Add(t.Address, new ItemValue());
-                TagGroup.AddItems(new Item[] {Tags[(int)t.PK]});
-
-                //add event handler -- make sure we are not adding a duplicate copy
-                TagGroup.ReadComplete -= TagGroup_ReadComplete;
-                TagGroup.DataChange -= TagGroup_ReadComplete;
-                TagGroup.ReadComplete += TagGroup_ReadComplete;
-                TagGroup.DataChange += TagGroup_ReadComplete;
+                AddTagToGroup(t);
             }
-            return TagValues[t.Address].Value;
+            return ActiveTags.First(p => p.TagRow.PK == t.PK).Value;
         }
 
         public override bool Write(plcdb_lib.Models.Model.TagsRow t, object val)
         {
-            throw new NotImplementedException();
+            if (!ActiveTags.Select(p => p.TagRow).Contains(t))
+            {
+                AddTagToGroup(t);
+            }
+            OpcTag ToWrite = ActiveTags.First(p => p.TagRow.PK == t.PK);
+            TagGroup.SyncWriteItems(new int[] {ToWrite.ServerId}, new object[] {val});
+            return true;
         }
 
         public override plcdb_lib.Models.Model.TagsDataTable BrowseTags()
@@ -89,16 +77,13 @@ namespace plcdb_lib_opc
             
             TagGroup = Server.AddGroup(Interlocked.Increment(ref GroupClientId), OpcName, true, 100, (float)0.0);
             Model.TagsRow[] TagRows = ControllerInfo.GetTagsRows();
-            Tags = new Dictionary<int, Item>();
-            TagValues = new Dictionary<string, ItemValue>();
         }
 
         void TagGroup_ReadComplete(object sender, DataChangeEventArgs e)
         {
             foreach (ItemValue value in e.Values)
             {
-                Item TagRow = Tags[value.ClientId];
-                TagValues[TagRow.ItemId] = value;
+                ActiveTags.First(p => p.ClientId == value.ClientId).ItemValue = value;
             }
         }
 
@@ -121,6 +106,31 @@ namespace plcdb_lib_opc
         {
             ServerBrowser browser = new ServerBrowser();
             return new List<string>();
+        }
+
+        private void AddTagToGroup(Model.TagsRow tag)
+        {
+            OpcTag NewTag = new OpcTag();
+            NewTag.TagRow = tag;
+            NewTag.Item = new Item()
+            {
+                //AccessPath = TagRow.Address,
+                Active = true,
+                ClientId = (int)tag.PK,
+                ItemId = tag.Address,
+                RequestedDataType = VarEnum.VT_EMPTY// TagRow.IsDataTypeNull() ? VarEnum.VT_UNKNOWN : TypeToOpcType(TagRow.DataType)
+            };
+            NewTag.ItemValue = new ItemValue();
+            
+            var TagResult = TagGroup.AddItems(new Item[] { NewTag.Item }).First();
+            NewTag.ItemResult = TagResult;
+
+            ActiveTags.Add(NewTag);
+            //add event handler -- make sure we are not adding a duplicate copy
+            TagGroup.ReadComplete -= TagGroup_ReadComplete;
+            TagGroup.DataChange -= TagGroup_ReadComplete;
+            TagGroup.ReadComplete += TagGroup_ReadComplete;
+            TagGroup.DataChange += TagGroup_ReadComplete;
         }
     }
 }

@@ -125,7 +125,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>taskkill /F /IM plcdb-service.exe</PreBuildEvent>
+    <PreBuildEvent>taskkill /f /im plcdb-service.exe</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PostBuildEvent>net start plcdb</PostBuildEvent>

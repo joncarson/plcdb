@@ -37,6 +37,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Fluent">
+      <HintPath>Resources\Fluent.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Windows.Shell, Version=3.5.41019.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="NLog, Version=3.1.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\NLog.3.1.0.0\lib\net45\NLog.dll</HintPath>
@@ -44,6 +48,10 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceProcess" />
+    <Reference Include="System.Windows.Interactivity">
+      <HintPath>Resources\System.Windows.Interactivity.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -63,6 +71,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Resource Include="Converters\ConvertersDictionary.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
     <Page Include="Resources\IconsResourceDictionary.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -75,9 +88,25 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Styles\DataGridStyles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Styles\RibbonStyle.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\ControllerConfigTab.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\ServiceLogTab.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\MainRibbon.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\TagBrowserPopup.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -111,6 +140,10 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Converters\BoolToVisibleConverter.cs" />
+    <Compile Include="Converters\DataRowViewToObjectConverter.cs" />
+    <Compile Include="Converters\StringPrefixConverter.cs" />
+    <Compile Include="Converters\ObjectStatusToColorConverter.cs" />
     <Compile Include="Converters\QueryTypeToTextConverter.cs" />
     <Compile Include="Converters\PKToTagConverter.cs" />
     <Compile Include="Converters\StringToTagConverter.cs" />
@@ -128,6 +161,12 @@
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="Views\ControllerConfigTab.xaml.cs">
       <DependentUpon>ControllerConfigTab.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ServiceLogTab.xaml.cs">
+      <DependentUpon>ServiceLogTab.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\MainRibbon.xaml.cs">
+      <DependentUpon>MainRibbon.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\TagBrowserPopup.xaml.cs">
       <DependentUpon>TagBrowserPopup.xaml</DependentUpon>
@@ -183,6 +222,224 @@
       <Project>{d607510a-331b-4329-bb8d-c623cb6a609e}</Project>
       <Name>plcdb lib</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\sql-full-to-sql-compact.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\Alert 04.ico" />
+    <Resource Include="Resources\Images\LargeIcon.png" />
+    <Resource Include="Resources\Images\MediaL.png" />
+    <Resource Include="Resources\Images\MediaS.png" />
+    <Resource Include="Resources\Images\MINUS.ico" />
+    <Resource Include="Resources\Images\OfficeL.png" />
+    <Resource Include="Resources\Images\OfficeS.png" />
+    <Resource Include="Resources\Images\open.png" />
+    <Resource Include="Resources\Images\PersonL.png" />
+    <Resource Include="Resources\Images\PersonS.png" />
+    <Resource Include="Resources\Images\Plus.ico" />
+    <Resource Include="Resources\Images\SafariL.png" />
+    <Resource Include="Resources\Images\SafariS.png" />
+    <Resource Include="Resources\Images\Sign 05.ico" />
+    <Resource Include="Resources\Images\SmallIcon.png" />
+    <Resource Include="Resources\Images\Symantec.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\stoplight-green.png" />
+    <Resource Include="Resources\Images\stoplight-red.png" />
+    <Resource Include="Resources\Images\stoplight-yellow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Icons\box_16.png" />
+    <Resource Include="Resources\Icons\box_24.png" />
+    <Resource Include="Resources\Icons\box_256.png" />
+    <Resource Include="Resources\Icons\box_32.png" />
+    <Resource Include="Resources\Icons\box_48.png" />
+    <Resource Include="Resources\Icons\brush_16.png" />
+    <Resource Include="Resources\Icons\brush_24.png" />
+    <Resource Include="Resources\Icons\brush_256.png" />
+    <Resource Include="Resources\Icons\brush_32.png" />
+    <Resource Include="Resources\Icons\brush_48.png" />
+    <Resource Include="Resources\Icons\Brush_win7.ico" />
+    <Resource Include="Resources\Icons\Brush_win7_disabled.ico" />
+    <Resource Include="Resources\Icons\Brush_win7_hot.ico" />
+    <Resource Include="Resources\Icons\CheckMark.jpg" />
+    <Resource Include="Resources\Icons\close_16.png" />
+    <Resource Include="Resources\Icons\close_24.png" />
+    <Resource Include="Resources\Icons\close_256.png" />
+    <Resource Include="Resources\Icons\close_32.png" />
+    <Resource Include="Resources\Icons\close_48.png" />
+    <Resource Include="Resources\Icons\Close_win7.ico" />
+    <Resource Include="Resources\Icons\Close_win7_disabled.ico" />
+    <Resource Include="Resources\Icons\Close_win7_hot.ico" />
+    <Resource Include="Resources\Icons\configFile.png" />
+    <Resource Include="Resources\Icons\copy-icon.PNG" />
+    <Resource Include="Resources\Icons\delete-icon.PNG" />
+    <Resource Include="Resources\Icons\delete_16.png" />
+    <Resource Include="Resources\Icons\delete_24.png" />
+    <Resource Include="Resources\Icons\delete_256.png" />
+    <Resource Include="Resources\Icons\delete_32.png" />
+    <Resource Include="Resources\Icons\delete_48.png" />
+    <Resource Include="Resources\Icons\Delete_win7.ico" />
+    <Resource Include="Resources\Icons\Delete_win7_disabled.ico" />
+    <Resource Include="Resources\Icons\Delete_win7_hot.ico" />
+    <Resource Include="Resources\Icons\disc_16.png" />
+    <Resource Include="Resources\Icons\disc_24.png" />
+    <Resource Include="Resources\Icons\disc_256.png" />
+    <Resource Include="Resources\Icons\disc_32.png" />
+    <Resource Include="Resources\Icons\disc_48.png" />
+    <Resource Include="Resources\Icons\Disc_win7.ico" />
+    <Resource Include="Resources\Icons\Disc_win7_disabled.ico" />
+    <Resource Include="Resources\Icons\Disc_win7_hot.ico" />
+    <Resource Include="Resources\Icons\document_16.png" />
+    <Resource Include="Resources\Icons\document_24.png" />
+    <Resource Include="Resources\Icons\document_256.png" />
+    <Resource Include="Resources\Icons\document_32.png" />
+    <Resource Include="Resources\Icons\document_48.png" />
+    <Resource Include="Resources\Icons\document_add_16.png" />
+    <Resource Include="Resources\Icons\document_add_24.png" />
+    <Resource Include="Resources\Icons\document_add_256.png" />
+    <Resource Include="Resources\Icons\document_add_32.png" />
+    <Resource Include="Resources\Icons\document_add_48.png" />
+    <Resource Include="Resources\Icons\Document_Add_win7.ico" />
+    <Resource Include="Resources\Icons\Document_Add_win7_disabled.ico" />
+    <Resource Include="Resources\Icons\Document_Add_win7_hot.ico" />
+    <Resource Include="Resources\Icons\document_delete_16.png" />
+    <Resource Include="Resources\Icons\document_delete_24.png" />
+    <Resource Include="Resources\Icons\document_delete_256.png" />
+    <Resource Include="Resources\Icons\document_delete_32.png" />
+    <Resource Include="Resources\Icons\document_delete_48.png" />
+    <Resource Include="Resources\Icons\Document_Delete_win7.ico" />
+    <Resource Include="Resources\Icons\Document_Delete_win7_disabled.ico" />
+    <Resource Include="Resources\Icons\Document_Delete_win7_hot.ico" />
+    <Resource Include="Resources\Icons\Document_win7.ico" />
+    <Resource Include="Resources\Icons\Document_win7_disabled.ico" />
+    <Resource Include="Resources\Icons\Document_win7_hot.ico" />
+    <Resource Include="Resources\Icons\down_arrow_table.png" />
+    <Resource Include="Resources\Icons\favourites_16.png" />
+    <Resource Include="Resources\Icons\favourites_24.png" />
+    <Resource Include="Resources\Icons\favourites_256.png" />
+    <Resource Include="Resources\Icons\favourites_32.png" />
+    <Resource Include="Resources\Icons\favourites_48.png" />
+    <Resource Include="Resources\Icons\Favourites_win7.ico" />
+    <Resource Include="Resources\Icons\Favourites_win7_disabled.ico" />
+    <Resource Include="Resources\Icons\Favourites_win7_hot.ico" />
+    <Resource Include="Resources\Icons\filtering-and-results-icon.PNG" />
+    <Resource Include="Resources\Icons\folder-icon.png" />
+    <Resource Include="Resources\Icons\folder_16.png" />
+    <Resource Include="Resources\Icons\folder_24.png" />
+    <Resource Include="Resources\Icons\folder_256.png" />
+    <Resource Include="Resources\Icons\folder_32.png" />
+    <Resource Include="Resources\Icons\folder_48.png" />
+    <Resource Include="Resources\Icons\folder_add_16.png" />
+    <Resource Include="Resources\Icons\folder_add_24.png" />
+    <Resource Include="Resources\Icons\folder_add_256.png" />
+    <Resource Include="Resources\Icons\folder_add_32.png" />
+    <Resource Include="Resources\Icons\folder_add_48.png" />
+    <Resource Include="Resources\Icons\folder_delete_16.png" />
+    <Resource Include="Resources\Icons\folder_delete_24.png" />
+    <Resource Include="Resources\Icons\folder_delete_256.png" />
+    <Resource Include="Resources\Icons\folder_delete_32.png" />
+    <Resource Include="Resources\Icons\folder_delete_48.png" />
+    <Resource Include="Resources\Icons\Folder_Delete_win7.ico" />
+    <Resource Include="Resources\Icons\Folder_Delete_win7_disabled.ico" />
+    <Resource Include="Resources\Icons\Folder_Delete_win7_hot.ico" />
+    <Resource Include="Resources\Icons\Folder_New_win7.ico" />
+    <Resource Include="Resources\Icons\Folder_New_win7_disabled.ico" />
+    <Resource Include="Resources\Icons\Folder_New_win7_hot.ico" />
+    <Resource Include="Resources\Icons\Folder_win7.ico" />
+    <Resource Include="Resources\Icons\Folder_win7_disabled.ico" />
+    <Resource Include="Resources\Icons\Folder_win7_hot.ico" />
+    <Resource Include="Resources\Icons\Globe_win7.ico" />
+    <Resource Include="Resources\Icons\Globe_win7_disabled.ico" />
+    <Resource Include="Resources\Icons\Globe_win7_hot.ico" />
+    <Resource Include="Resources\Icons\icon_copy.PNG" />
+    <Resource Include="Resources\Icons\icon_copy60.PNG" />
+    <Resource Include="Resources\Icons\microphone_16.png" />
+    <Resource Include="Resources\Icons\microphone_24.png" />
+    <Resource Include="Resources\Icons\microphone_256.png" />
+    <Resource Include="Resources\Icons\microphone_32.png" />
+    <Resource Include="Resources\Icons\microphone_48.png" />
+    <Resource Include="Resources\Icons\Microphone_win7.ico" />
+    <Resource Include="Resources\Icons\Microphone_win7_disabled.ico" />
+    <Resource Include="Resources\Icons\Microphone_win7_hot.ico" />
+    <Resource Include="Resources\Icons\music_16.png" />
+    <Resource Include="Resources\Icons\music_24.png" />
+    <Resource Include="Resources\Icons\music_256.png" />
+    <Resource Include="Resources\Icons\music_32.png" />
+    <Resource Include="Resources\Icons\music_48.png" />
+    <Resource Include="Resources\Icons\Music_win7.ico" />
+    <Resource Include="Resources\Icons\Music_win7_disabled.ico" />
+    <Resource Include="Resources\Icons\Music_win7_hot.ico" />
+    <Resource Include="Resources\Icons\open_16.png" />
+    <Resource Include="Resources\Icons\open_24.png" />
+    <Resource Include="Resources\Icons\open_256.png" />
+    <Resource Include="Resources\Icons\open_32.png" />
+    <Resource Include="Resources\Icons\open_48.png" />
+    <Resource Include="Resources\Icons\Open_win7.ico" />
+    <Resource Include="Resources\Icons\Open_win7_disabled.ico" />
+    <Resource Include="Resources\Icons\Open_win7_hot.ico" />
+    <Resource Include="Resources\Icons\parameters-icon-cog.PNG" />
+    <Resource Include="Resources\Icons\Parcel_win7.ico" />
+    <Resource Include="Resources\Icons\Parcel_win7_disabled.ico" />
+    <Resource Include="Resources\Icons\Parcel_win7_hot.ico" />
+    <Resource Include="Resources\Icons\play_16.png" />
+    <Resource Include="Resources\Icons\play_24.png" />
+    <Resource Include="Resources\Icons\play_256.png" />
+    <Resource Include="Resources\Icons\play_32.png" />
+    <Resource Include="Resources\Icons\play_48.png" />
+    <Resource Include="Resources\Icons\Play_win7.ico" />
+    <Resource Include="Resources\Icons\Play_win7_disabled.ico" />
+    <Resource Include="Resources\Icons\Play_win7_hot.ico" />
+    <Resource Include="Resources\Icons\recycle_16.png" />
+    <Resource Include="Resources\Icons\recycle_24.png" />
+    <Resource Include="Resources\Icons\recycle_256.png" />
+    <Resource Include="Resources\Icons\recycle_32.png" />
+    <Resource Include="Resources\Icons\recycle_48.png" />
+    <Resource Include="Resources\Icons\Recycle_win7.ico" />
+    <Resource Include="Resources\Icons\Recycle_win7_disabled.ico" />
+    <Resource Include="Resources\Icons\Recycle_win7_hot.ico" />
+    <Resource Include="Resources\Icons\rename-icon.PNG" />
+    <Resource Include="Resources\Icons\share-icon.PNG" />
+    <Resource Include="Resources\Icons\shimmer-icons-readme.txt" />
+    <Resource Include="Resources\Icons\software_16.png" />
+    <Resource Include="Resources\Icons\software_24.png" />
+    <Resource Include="Resources\Icons\software_256.png" />
+    <Resource Include="Resources\Icons\software_32.png" />
+    <Resource Include="Resources\Icons\software_48.png" />
+    <Resource Include="Resources\Icons\Software_win7.ico" />
+    <Resource Include="Resources\Icons\Software_win7_disabled.ico" />
+    <Resource Include="Resources\Icons\Software_win7_hot.ico" />
+    <Resource Include="Resources\Icons\up_arrow_table.png" />
+    <Resource Include="Resources\Icons\warning_16.png" />
+    <Resource Include="Resources\Icons\warning_24.png" />
+    <Resource Include="Resources\Icons\warning_256.png" />
+    <Resource Include="Resources\Icons\warning_32.png" />
+    <Resource Include="Resources\Icons\warning_48.png" />
+    <Resource Include="Resources\Icons\Warning_win7.ico" />
+    <Resource Include="Resources\Icons\Warning_win7_disabled.ico" />
+    <Resource Include="Resources\Icons\Warning_win7_hot.ico" />
+    <Resource Include="Resources\Icons\world_16.png" />
+    <Resource Include="Resources\Icons\world_24.png" />
+    <Resource Include="Resources\Icons\world_256.png" />
+    <Resource Include="Resources\Icons\world_32.png" />
+    <Resource Include="Resources\Icons\world_48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Icons\icon_save.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Icons\icon_saveas.PNG" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Icons\icon_save.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Icons\pencil.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Icons\database_delete.png" />
+    <Resource Include="Resources\Icons\database_new.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -46,6 +46,7 @@ namespace plcdb.ViewModels
                     List<String> lst = new List<string>();
                     lst.Add("SELECT");
                     lst.Add("INSERT");
+                    lst.Add("STORED PROCEDURE");
                     lst.Add("UPDATE");
                     lst.Add("DELETE");
                     _availableQueryTypes = lst;
@@ -300,7 +301,7 @@ namespace plcdb.ViewModels
                     row.Query = CurrentQuery.PK;
                     ActiveModel.QueryTagMappings.Rows.Add(row.ItemArray);
                 }
-                
+                ActiveModel.QueryTagMappings.AcceptChanges();
                 RaisePropertyChanged(() => TagMappings);
             }
         }
@@ -341,6 +342,43 @@ namespace plcdb.ViewModels
 
         private void OnRefreshColumns()
         {
+            try
+            {
+                if (QueryType == "SELECT")
+                    RefreshColumns(QueryText);
+                else if (QueryType == "INSERT")
+                    RefreshColumns("SELECT * FROM " + QueryText);
+                else if (QueryType == "STORED PROCEDURE")
+                    RefreshStoredProcColumns(QueryText);
+            }
+            catch (Exception e)
+            {
+                Log.Error(e);
+            }
+            
+        }
+
+        private void RefreshStoredProcColumns(string QueryText)
+        {
+            List<Model.QueryTagMappingsRow> Columns = new List<Model.QueryTagMappingsRow>();
+            SqlConnection conn = new SqlConnection(CurrentQuery.DatabasesRow.ConnectionString);
+            SqlCommand cmd = new SqlCommand(QueryText, conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            conn.Open();
+            SqlCommandBuilder.DeriveParameters(cmd);
+            foreach (SqlParameter p in cmd.Parameters)
+            {
+                Model.QueryTagMappingsRow NewRow = ActiveModel.QueryTagMappings.NewQueryTagMappingsRow();
+                NewRow.ColumnName = p.ParameterName;
+                NewRow.Query = CurrentQuery.PK;
+                NewRow.Tag = 0;
+                Columns.Add(NewRow);
+            }
+            TagMappings = Columns.ToArray();
+        }
+
+        private void RefreshColumns(string QueryText)
+        {
             List<Model.QueryTagMappingsRow> Columns = new List<Model.QueryTagMappingsRow>();
             SqlConnection Connection = new SqlConnection(CurrentQuery.DatabasesRow.ConnectionString);
             SqlDataAdapter QueryCommand = new SqlDataAdapter(QueryText, Connection);
@@ -356,6 +394,7 @@ namespace plcdb.ViewModels
                 Columns.Add(NewRow);
             }
             TagMappings = Columns.ToArray();
+
         }
         #endregion
 

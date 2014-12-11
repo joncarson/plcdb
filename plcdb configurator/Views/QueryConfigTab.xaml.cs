@@ -27,7 +27,7 @@ namespace plcdb.Views
             InitializeComponent();
         }
 
-        private void btnAdd_Click(object sender, RoutedEventArgs e)
+        private void btnAddQuery_Click(object sender, RoutedEventArgs e)
         {
             QueryConfigPopup popup = new QueryConfigPopup();
             var vm = this.DataContext as MainWindowViewModel;
@@ -48,7 +48,7 @@ namespace plcdb.Views
             popup.ShowDialog();
         }
 
-        private void btnEdit_Click(object sender, RoutedEventArgs e)
+        private void btnEditQuery_Click(object sender, RoutedEventArgs e)
         {
             QueryConfigPopup popup = new QueryConfigPopup();
             popup.DataContext = new QueryPopupViewModel()

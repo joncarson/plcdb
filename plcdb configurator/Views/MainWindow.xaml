@@ -1,55 +1,146 @@
-﻿<Window x:Class="plcdb.Views.MainWindow"
+﻿<r:RibbonWindow 
 		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d"
-		xmlns:viewModels="clr-namespace:plcdb.ViewModels"
-        xmlns:converters="clr-namespace:plcdb.Converters"
         xmlns:views="clr-namespace:plcdb.Views"
-        Title="PLC-db"
+        mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        DataContext="{StaticResource MainWindowViewModel}"
         Loaded="Window_Loaded_1"
+        x:Class="plcdb.Views.MainWindow" 
+        Icon="/plcdb;component/Resources/Images/sql-full-to-sql-compact.png"
+        xmlns:r="clr-namespace:Fluent;assembly=Fluent"
         >
-    <Window.Resources>
-    </Window.Resources>
-    <Window.CommandBindings>
-        <CommandBinding Command="Open" Executed="OpenCommandBinding_Executed"></CommandBinding>
-        <CommandBinding Command="Save" Executed="SaveAsCommandBinding_Executed"></CommandBinding>
-        <CommandBinding Command="Close"  Executed="CloseCommandBinding_Executed"></CommandBinding>
-        <CommandBinding Command="Stop"  Executed="ExitCommandBinding_Executed"></CommandBinding>
-    </Window.CommandBindings>
-    <Window.InputBindings>
-        <KeyBinding Key="O" Modifiers="Control" Command="Open"></KeyBinding>
-        <KeyBinding Key="S" Modifiers="Control" Command="Save"></KeyBinding>
-    </Window.InputBindings>
-    <Grid>
-        
-        <DockPanel LastChildFill="True">
-            <Menu DockPanel.Dock="Top">
-                <MenuItem Header="_File">
-                    <MenuItem x:Name="miOpen" Header="_Open" Command="Open" InputGestureText="Ctrl+O"/>
-                    <MenuItem x:Name="miSave" Header="_Save" Command="Save" InputGestureText="Ctrl+S"/>
-                    <MenuItem x:Name="miClose" Header="_Close" Command="Close"/>
-                    <MenuItem x:Name="miSetupService" Header="Set Active Model" Command="{Binding SetServiceModelCommand}"/>
-                    <MenuItem x:Name="miExit" Header="E_xit" Command="Stop" InputGestureText="Alt+F4"/>
-                </MenuItem>
-            </Menu>
-            <TabControl>
-                <TabItem Header="db config">
-                    <views:DatabaseConfigTab></views:DatabaseConfigTab>
-                </TabItem>
-                <TabItem Header="plc config">
-                    <views:ControllerConfigTab></views:ControllerConfigTab>
-                </TabItem>
-                <TabItem Header="query mapping">
-                    <views:QueryConfigTab></views:QueryConfigTab>
-                </TabItem>
+    <r:RibbonWindow.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/plcdb;component\Converters\ConvertersDictionary.xaml"></ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+            <SolidColorBrush x:Key="PrimaryBrush" Color="Transparent" />
+            <SolidColorBrush x:Key="PrimaryFont" Color="Black" />
+            <Style TargetType="{x:Type DataGridColumnHeader}">
+                <Setter Property="Background" Value="{StaticResource PrimaryBrush}"/>
+                <Setter Property="Foreground" Value="{StaticResource PrimaryFont}" />
+                <Setter Property="HorizontalContentAlignment" Value="Left" />
+                <Setter Property="Margin" Value="0"></Setter>
+                <Setter Property="FontSize" Value="18"></Setter>
+                <Setter Property="BorderThickness" Value="0"></Setter>
+                <Setter Property="BorderBrush" Value="{StaticResource PrimaryFont}"></Setter>
+            </Style>
+            <Style TargetType="{x:Type DataGridCell}">
+                <Setter Property="Background" Value="{StaticResource PrimaryBrush}" ></Setter>
+                <Setter Property="Foreground" Value="{StaticResource PrimaryFont}" />
+                <Setter Property="HorizontalContentAlignment" Value="Left" />
+                <Setter Property="Margin" Value="0"></Setter>
+                <Setter Property="FontSize" Value="16"></Setter>
+                <Setter Property="BorderThickness" Value="0"></Setter>
+                <Setter Property="BorderBrush" Value="{StaticResource PrimaryFont}"></Setter>
+                <Style.Triggers>
+                    <Trigger Property="IsSelected" Value="True">
+                        <Setter Property="Background" Value="LightBlue"></Setter>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+            <Style TargetType="{x:Type DataGrid}">
+                <Setter Property="RowHeaderWidth" Value="0"></Setter>
+            </Style>
+        </ResourceDictionary>
+    </r:RibbonWindow.Resources>
+    <!--<r:RibbonWindow.WindowCommands>
+        <r:WindowCommands>
+            <r:WindowCommands.Items>
+                <r:Button Size="Large" Icon="/plcdb;component\Resources\Icons\pencil.jpg">
+
+                    <r:Button.ToolTip>
+                        <r:ScreenTip Title="Insert Chart"
+                                          Text="Insert a chart to illustarate and compare data. &#xa;&#xa;Bar, Pie, Line, Area and Surface are same of the available types."
+                                          
+                                          HelpTopic="http:\\fluent.codeplex.com"
+                                          DisableReason="Disable reason reason."
+                                          Width="190"
+                                          IsRibbonAligned="True" />
+                    </r:Button.ToolTip>
+                </r:Button>
+            </r:WindowCommands.Items>
+        </r:WindowCommands>
+    </r:RibbonWindow.WindowCommands>-->
+    <r:RibbonWindow.DataContext>
+        <StaticResource ResourceKey="MainWindowViewModel"/>
+    </r:RibbonWindow.DataContext>
+    <r:RibbonWindow.CommandBindings>
+        <CommandBinding Command="Open" Executed="OpenCommandBinding_Executed"/>
+        <CommandBinding Command="Save" Executed="SaveCommandBinding_Executed"/>
+        <CommandBinding Command="SaveAs" Executed="SaveAsCommandBinding_Executed"/>
+        <CommandBinding Command="Close"  Executed="CloseCommandBinding_Executed"/>
+        <CommandBinding Command="Stop"  Executed="ExitCommandBinding_Executed"/>
+    </r:RibbonWindow.CommandBindings>
+    <r:RibbonWindow.Title>
+        <Binding Path="ActiveModelPath" Converter="{StaticResource StringPrefixConverter}" ConverterParameter="plcdb"/>
+    </r:RibbonWindow.Title>
+    <r:RibbonWindow.InputBindings>
+        <KeyBinding Key="O" Modifiers="Control" Command="Open"/>
+        <KeyBinding Key="S" Modifiers="Control" Command="Save"/>
+    </r:RibbonWindow.InputBindings>
+
+    <DockPanel LastChildFill="True">
+        <views:MainRibbon DockPanel.Dock="Top" x:Name="MainRibbon" DataContext="{StaticResource MainWindowViewModel}"/>
+        <TabControl TabStripPlacement="Bottom" SelectionChanged="TabControl_SelectionChanged_1" x:Name="MainTabControl">
+            <TabControl.Resources>
+                <Style TargetType="{x:Type TabItem}">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type TabItem}">
+                                <Grid>
+                                    <Border Name="Border" Margin="0,0,0,0" Background="Transparent"
+                  BorderBrush="Transparent" BorderThickness="1,1,1,1" CornerRadius="5">
+                                        <ContentPresenter x:Name="ContentSite" VerticalAlignment="Center"
+                              HorizontalAlignment="Center"
+                              ContentSource="Header" Margin="12,2,12,2"
+                              RecognizesAccessKey="True"
+                                                          TextBlock.FontSize="24">
+                                            <!--<ContentPresenter.LayoutTransform>
+                                                <RotateTransform Angle="270" />
+                                            </ContentPresenter.LayoutTransform>-->
+                                            
+                                        </ContentPresenter>
+                                    </Border>
+                                </Grid>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter Property="Panel.ZIndex" Value="100" />
+                                        <Setter TargetName="Border" Property="TextBlock.Foreground" Value="#FF527AFF" />
+                                        <Setter TargetName="Border" Property="BorderThickness" Value="1,1,1,0" />
+                                    </Trigger>
+                                    <Trigger Property="IsEnabled" Value="False">
+                                        <Setter TargetName="Border" Property="Background" Value="DarkRed" />
+                                        <Setter TargetName="Border" Property="BorderBrush" Value="Black" />
+                                        <Setter Property="Foreground" Value="DarkGray" />
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
                 
-            </TabControl>
-        </DockPanel>
+            </TabControl.Resources>
+            <TabItem Header="Databases" x:Name="DatabaseTab">
+                <views:DatabaseConfigTab Margin="1"/>
+            </TabItem>
+            <TabItem Header="PLCs" x:Name="ControllerTab">
+                <views:ControllerConfigTab/>
+            </TabItem>
+            <TabItem Header="Queries" x:Name="QueryTab">
+                <views:QueryConfigTab/>
+            </TabItem>
+            <TabItem Header="Logs" x:Name="ServiceTab">
+                <views:ServiceLogTab/>
+            </TabItem>
+        </TabControl>
 
         
-    </Grid>
-</Window>
+
+    </DockPanel>
+
+
+
+</r:RibbonWindow >

@@ -5,6 +5,7 @@ using plcdb.Helpers;
 using plcdb_lib.Models;
 using System.Data.SqlClient;
 using System.Data;
+using System.Linq;
 
 namespace plcdb.ViewModels
 {
@@ -133,22 +134,35 @@ namespace plcdb.ViewModels
 
         private void OnRefreshTags()
         {
+            Model.TagsDataTable AllTags = CurrentController.Controller.BrowseTags();
+
+            //add new tags
+            foreach (Model.TagsRow row in AllTags)
+            {
+                if (ActiveModel.Tags.Where(p => p.Controller == CurrentController.PK && p.Address == row.Address).Count() == 0)
+                {
+                    Model.TagsRow NewRow = ActiveModel.Tags.NewTagsRow();
+                    NewRow.Controller = CurrentController.PK;
+                    foreach (DataColumn col in ActiveModel.Tags.Columns)
+                    {
+                        if (col.ColumnName != "PK")
+                        {
+                            NewRow[col.ColumnName] = row[col.ColumnName];
+                        }
+                    }
+                    ActiveModel.Tags.AddTagsRow(NewRow);
+                }
+            }
+
+            //delete old tags
             foreach (Model.TagsRow row in ActiveModel.Tags.Where(p => p.Controller == CurrentController.PK))
             {
-                row.Delete();
-            }
-            foreach (Model.TagsRow row in CurrentController.Controller.BrowseTags())
-            {
-                Model.TagsRow NewRow = ActiveModel.Tags.NewTagsRow();
-                foreach (DataColumn col in ActiveModel.Tags.Columns)
+                if (AllTags.Where(p => p.Address == row.Address).Count() == 0)
                 {
-                    if (col.ColumnName != "PK")
-                    {
-                        NewRow[col.ColumnName] = row[col.ColumnName];
-                    }
+                    row.Delete();
                 }
-                ActiveModel.Tags.AddTagsRow(NewRow);
             }
+
             ActiveModel.Tags.AcceptChanges();
             SetAvailableTags();
         }

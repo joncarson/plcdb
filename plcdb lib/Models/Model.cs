@@ -5,12 +5,14 @@ using System.Xml.Serialization;
 using System.Linq;
 using plcdb_lib;
 using plcdb_lib.Models.Controllers;
+using plcdb_lib.WCF;
 
 namespace plcdb_lib.Models
 {
     public partial class Model 
     {
         const string FILE_EXTENSION = ".plcdb";
+        
 
         public Model Open(string path)
         {
@@ -80,6 +82,8 @@ namespace plcdb_lib.Models
 
             return types;
         }
+
+
 
         public partial class ControllersRow
         {

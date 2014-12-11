@@ -11,7 +11,7 @@ using plcdb.ViewModels;
 
 namespace plcdb.Converters
 {
-    class StringToTagValidator : ValidationRule
+    public class StringToTagValidator : ValidationRule
     {
         Model ActiveModel = (App.Current.Resources["MainWindowViewModel"] as MainWindowViewModel).ActiveModel;
         public StringToTagValidator()

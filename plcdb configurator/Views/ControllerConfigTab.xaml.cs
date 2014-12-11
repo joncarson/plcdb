@@ -44,7 +44,7 @@ namespace plcdb.Views
             popup.ShowDialog();
         }
 
-        private void btnEdit_Click(object sender, RoutedEventArgs e)
+        private void btnEditController_Click(object sender, RoutedEventArgs e)
         {
             ControllerConfigPopup popup = new ControllerConfigPopup();
             popup.DataContext = new ControllerPopupViewModel()

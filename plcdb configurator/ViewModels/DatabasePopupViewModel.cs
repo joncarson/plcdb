@@ -4,6 +4,10 @@ using System.Windows.Input;
 using plcdb.Helpers;
 using plcdb_lib.Models;
 using System.Data.SqlClient;
+using System.Collections.Generic;
+using System.Data;
+using System.ComponentModel;
+using plcdb_lib.SQL;
 
 namespace plcdb.ViewModels
 {
@@ -74,7 +78,53 @@ namespace plcdb.ViewModels
                 SqlConnectionStringBuilder b = GetSqlConnection();
                 b.DataSource = value;
                 CurrentDatabase.ConnectionString = b.ToString();
+                UpdateAvailableDatabases();
             }
+        }
+
+        private void UpdateAvailableDatabases()
+        {
+            BackgroundWorker backgroundWorker = new BackgroundWorker();
+            backgroundWorker.DoWork += (sender, e) =>
+                {
+                    List<string> list = new List<string>();
+                    try
+                    {
+                        string conString = (String)e.Argument;
+                        if (!SqlHelper.TestForServer(new SqlConnection((String)e.Argument).DataSource))
+                        {
+                            e.Result = list;
+                            return;
+                        }
+
+                        using (SqlConnection con = new SqlConnection(conString + "; Connection Timeout=1"))
+                        {
+                            con.Open();
+                            using (SqlCommand cmd = new SqlCommand("SELECT name from sys.databases", con))
+                            {
+                                cmd.CommandTimeout = 500;
+                                using (IDataReader dr = cmd.ExecuteReader())
+                                {
+                                    while (dr.Read())
+                                    {
+                                        list.Add(dr[0].ToString());
+                                    }
+                                }
+                            }
+                        }
+                        e.Result = list;
+                    }
+                    catch (Exception ex)
+                    {
+                        e.Result = new List<String>();
+                    }
+                };
+            backgroundWorker.RunWorkerCompleted += (sender, e) =>
+                {
+                    AvailableDatabases = (List<String>)e.Result;
+                };
+
+            backgroundWorker.RunWorkerAsync(CurrentDatabase.ConnectionString);
         }
 
         #endregion
@@ -88,9 +138,33 @@ namespace plcdb.ViewModels
             }
             set
             {
-                SqlConnectionStringBuilder b = GetSqlConnection();
-                b.InitialCatalog = value;
-                CurrentDatabase.ConnectionString = b.ToString();
+                if (value != null)
+                {
+                    SqlConnectionStringBuilder b = GetSqlConnection();
+                    b.InitialCatalog = value;
+                    CurrentDatabase.ConnectionString = b.ToString();
+                }
+            
+            }
+        }
+
+        #endregion
+
+        #region AvailableDatabases
+        private List<String> _availableDatabases;
+        public List<String> AvailableDatabases
+        {
+            get
+            {
+                return _availableDatabases;
+            }
+            set
+            {
+                if (value != _availableDatabases)
+                {
+                    _availableDatabases = value;
+                    RaisePropertyChanged(() => AvailableDatabases);
+                }
             }
         }
 
@@ -108,6 +182,7 @@ namespace plcdb.ViewModels
                 SqlConnectionStringBuilder b = GetSqlConnection();
                 b.IntegratedSecurity = value;
                 CurrentDatabase.ConnectionString = b.ToString();
+                UpdateAvailableDatabases();
                 RaisePropertyChanged(() => UseWindowsAuthentication);
             }
         }
@@ -126,6 +201,7 @@ namespace plcdb.ViewModels
                 SqlConnectionStringBuilder b = GetSqlConnection();
                 b.UserID = value;
                 CurrentDatabase.ConnectionString = b.ToString();
+                UpdateAvailableDatabases();
             }
         }
 
@@ -143,6 +219,7 @@ namespace plcdb.ViewModels
                 SqlConnectionStringBuilder b = GetSqlConnection();
                 b.Password = value;
                 CurrentDatabase.ConnectionString = b.ToString();
+                UpdateAvailableDatabases();
             }
         }
 

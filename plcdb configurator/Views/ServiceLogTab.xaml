@@ -1,0 +1,28 @@
+﻿<UserControl x:Class="plcdb.Views.ServiceLogTab"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="500">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/plcdb;component\Converters\ConvertersDictionary.xaml"></ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <DockPanel LastChildFill="True">
+        <!--<Button x:Name="btnAddNewDatabase" DockPanel.Dock="Bottom" HorizontalAlignment="Right" Margin="10 10 10 10" Click="btnAddNewDatabase_Click">Add New</Button>-->
+        <DataGrid DockPanel.Dock="Top" CanUserAddRows="False" ItemsSource="{Binding ServiceLogs}" CanUserSortColumns="True" Name="DatabaseGrid" AutoGenerateColumns="False" SelectionMode="Single" >
+            <DataGrid.Columns>
+                <DataGridTextColumn Width="180" Header="Timestamp" Binding="{Binding Occurred}"></DataGridTextColumn>
+                <DataGridTextColumn Width="130" Header="Query" Binding="{Binding Query, Converter={StaticResource PKToNameConverter}, ConverterParameter=Queries}"></DataGridTextColumn>
+                <DataGridTextColumn Width="100" Header="Severity" Binding="{Binding LogLevel}"></DataGridTextColumn>
+                <DataGridTextColumn Width="200" Header="Class Name" Binding="{Binding Name}"></DataGridTextColumn>
+                <DataGridTextColumn Header="Message" Width="*" Binding="{Binding Message}"></DataGridTextColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+        
+    </DockPanel>
+</UserControl>

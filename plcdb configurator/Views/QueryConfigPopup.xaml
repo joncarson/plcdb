@@ -6,9 +6,9 @@
    
     <Window.Resources>
         <ResourceDictionary>
-            <valueConverters:StringToTagConverter x:Key="StringToTagConverter" />
-            <valueConverters:PKToTagConverter x:Key="PKToTagConverter" />
-            <valueConverters:QueryTypeToTextConverter x:Key="QueryTypeToTextConverter" />
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/plcdb;component\Converters\ConvertersDictionary.xaml"></ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
         <Grid>
@@ -38,7 +38,7 @@
             </ComboBox.ItemTemplate>
         </ComboBox>
         <Label Grid.Row="2" Grid.Column="0" Margin="5">Type: </Label>
-        <ComboBox Grid.Row="2" Grid.Column="1" Margin="5,0,0,5" Width="100" HorizontalAlignment="Left" ItemsSource="{Binding AvailableQueryTypes}" SelectedItem="{Binding QueryType}" Height="26" VerticalAlignment="Bottom">
+        <ComboBox Grid.Row="2" Grid.Column="1" Margin="5,0,0,5" Width="180" HorizontalAlignment="Left" ItemsSource="{Binding AvailableQueryTypes}" SelectedItem="{Binding QueryType}" Height="26" VerticalAlignment="Bottom">
         </ComboBox>
         <Label Grid.Row="3" Grid.Column="0" Margin="5">Trigger Tag:</Label>
         <DockPanel Grid.Row="3" Grid.Column="1" LastChildFill="True">
@@ -68,7 +68,7 @@
             <Button Margin="5" Command="{Binding RefreshColumnsCommand}">Refresh Columns</Button>
         </StackPanel>
        
-        <DataGrid x:Name="dgTagMappings" Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Margin="5" ItemsSource="{Binding TagMappings}" SelectedItem="{Binding CurrentTagMapping}" AutoGenerateColumns="False" CanUserAddRows="False" CanUserReorderColumns="False"  >
+        <DataGrid x:Name="dgTagMappings" Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Margin="5" ItemsSource="{Binding TagMappings}" SelectedItem="{Binding CurrentTagMapping}" AutoGenerateColumns="False" CanUserAddRows="False" CanUserReorderColumns="False" SelectionMode="Single"  >
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Column" MinWidth="100" Binding="{Binding ColumnName}" TextBlock.TextAlignment="Center"></DataGridTextColumn>
                 <DataGridTemplateColumn Header="Tag" Width="*"><!--Binding="{Binding Tag, Converter={StaticResource PKToTagConverter}}">-->
