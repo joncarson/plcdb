@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "plcdb lib opc", "plcdb lib 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "plcdb lib siemens s7", "plcdb lib siemens s7\plcdb lib siemens s7.csproj", "{0DFE4298-6D2B-4C7A-B102-9245953D31A5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "plcdb lib advancedhmi", "plcdb lib advancedhmi\plcdb lib advancedhmi.csproj", "{4EBB52F1-B68F-4632-89A9-8F04CFBE056A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,6 +73,16 @@ Global
 		{0DFE4298-6D2B-4C7A-B102-9245953D31A5}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{0DFE4298-6D2B-4C7A-B102-9245953D31A5}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{0DFE4298-6D2B-4C7A-B102-9245953D31A5}.Release|x86.ActiveCfg = Release|Any CPU
+		{4EBB52F1-B68F-4632-89A9-8F04CFBE056A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4EBB52F1-B68F-4632-89A9-8F04CFBE056A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4EBB52F1-B68F-4632-89A9-8F04CFBE056A}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{4EBB52F1-B68F-4632-89A9-8F04CFBE056A}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{4EBB52F1-B68F-4632-89A9-8F04CFBE056A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4EBB52F1-B68F-4632-89A9-8F04CFBE056A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4EBB52F1-B68F-4632-89A9-8F04CFBE056A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4EBB52F1-B68F-4632-89A9-8F04CFBE056A}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{4EBB52F1-B68F-4632-89A9-8F04CFBE056A}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{4EBB52F1-B68F-4632-89A9-8F04CFBE056A}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

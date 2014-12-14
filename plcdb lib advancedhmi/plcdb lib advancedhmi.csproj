@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{DCD4ABF2-4262-4073-9109-A1511E08467A}</ProjectGuid>
+    <ProjectGuid>{4EBB52F1-B68F-4632-89A9-8F04CFBE056A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>plcdb_lib_opc</RootNamespace>
-    <AssemblyName>plcdb-lib opc</AssemblyName>
+    <RootNamespace>plcdb_lib_advancedhmi</RootNamespace>
+    <AssemblyName>plcdb lib advancedhmi</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -30,14 +30,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="NLog">
-      <HintPath>..\packages\NLog.3.1.0.0\lib\net45\NLog.dll</HintPath>
+    <Reference Include="AdvancedHMIDrivers">
+      <HintPath>.\AdvancedHMIDrivers.dll</HintPath>
     </Reference>
-    <Reference Include="ProcessControlStandards.OPC.Core">
-      <HintPath>.\ProcessControlStandards.OPC.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="ProcessControlStandards.OPC.DataAccessClient">
-      <HintPath>.\ProcessControlStandards.OPC.DataAccessClient.dll</HintPath>
+    <Reference Include="MfgControl.AdvancedHMI.Drivers">
+      <HintPath>.\MfgControl.AdvancedHMI.Drivers.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -48,8 +45,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="OPC.cs" />
-    <Compile Include="OpcTag.cs" />
+    <Compile Include="EthernetIP_SLC.cs" />
+    <Compile Include="EthernetIP_CLX.cs" />
+    <Compile Include="ModbusTcp.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -58,13 +56,9 @@
       <Name>plcdb lib</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>echo "$(SolutionDir)plcdb lib\bin\Debug\$(TargetName).dll"
-copy /Y "$(TargetDir)$(TargetName).dll" "$(SolutionDir)plcdb lib\bin\Debug\$(TargetName).dll"
+    <PostBuildEvent>copy /Y "$(TargetDir)$(TargetName).dll" "$(SolutionDir)plcdb lib\bin\Debug\$(TargetName).dll"
 copy /Y "$(TargetDir)$(TargetName).dll" "$(SolutionDir)plcdb service\bin\Debug\$(TargetName).dll"
 copy /Y "$(TargetDir)$(TargetName).dll" "$(SolutionDir)plcdb configurator\bin\Debug\$(TargetName).dll"</PostBuildEvent>
   </PropertyGroup>

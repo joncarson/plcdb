@@ -10,17 +10,16 @@ namespace plcdb_lib.Models.Controllers
     public abstract class ControllerBase
     {
         protected static Logger Log = LogManager.GetCurrentClassLogger();
-        public abstract String Name { get; }
         public abstract object Read(Model.TagsRow t);
         public abstract bool Write(Model.TagsRow t, object val);
         public abstract Model.TagsDataTable BrowseTags();
         public abstract List<String> GetAvailableSubaddresses();
 
-        protected ControllerBase(Model.ControllersRow args)
+        public ControllerBase(Model.ControllersRow args)
         {
         }
 
-        protected ControllerBase()
+        public ControllerBase()
         {
         }
     }

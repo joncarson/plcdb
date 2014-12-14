@@ -20,11 +20,13 @@ namespace plcdb.ViewModels
 {
     public class MainWindowViewModel : BaseViewModel
     {
+        #region Private variables
         private readonly BackgroundWorker bgQueryStatus = new BackgroundWorker();
         private readonly BackgroundWorker bgLogChecker = new BackgroundWorker();
         private Uri SERVICE_ENDPOINT = new Uri("net.tcp://localhost/plcdb/main");
-
         private object _serviceLogLock = new object();
+        #endregion
+
         #region Properties
 
         #region ActiveModel
@@ -100,6 +102,17 @@ namespace plcdb.ViewModels
 
         #endregion
 
+        #region ServiceLogFilters
+        public ICollectionView ServiceLogView { get; private set; }
+        public Boolean LogFilterTrace { get; set; }
+        public Boolean LogFilterDebug { get; set; }
+        public Boolean LogFilterInfo  { get; set; }
+        public Boolean LogFilterWarn  { get; set; }
+        public Boolean LogFilterError { get; set; }
+        public Boolean LogFilterFatal { get; set; }
+        public Boolean PauseServiceLogging { get; set; }
+        #endregion
+
         private bool _activeModelChanged;
         public bool ActiveModelChanged
         {
@@ -125,9 +138,8 @@ namespace plcdb.ViewModels
         public ICommand SetServiceModelCommand { get { return new DelegateCommand(OnSetServiceModelPath); } }
         public ICommand StartServiceCommand { get { return new DelegateCommand(OnStartService, () => { return !ServiceRunning; }); } }
         public ICommand StopServiceCommand { get { return new DelegateCommand(OnStopService, () => { return ServiceRunning; }); } }
+        public ICommand ApplyLogFilterCommand { get { return new DelegateCommand(OnApplyLogFilter); } }
 
-        
-        
         #endregion
 
         #region Ctor
@@ -148,20 +160,50 @@ namespace plcdb.ViewModels
             CanExecute.Tick += (s, e) => { CommandManager.InvalidateRequerySuggested(); };
             CanExecute.Start();
 
-            BindingOperations.EnableCollectionSynchronization(ServiceLogs, _serviceLogLock);
+            //BindingOperations.EnableCollectionSynchronization(ServiceLogs, _serviceLogLock);
+
+            ActiveModel.DatasetChanged += ActiveModel_DatasetChanged;
+
+            ServiceLogView = CollectionViewSource.GetDefaultView(ServiceLogs);
+            ServiceLogView.Filter = new Predicate<object>(ServiceLogFilter);
+            LogFilterWarn = true;
+            LogFilterError = true;
+            LogFilterFatal = true;
+        }
+        #endregion
+
+        void ActiveModel_DatasetChanged(object sender, EventArgs e)
+        {
+            ActiveModelChanged = true;
         }
 
+        #region WCF Service Communication
         private void CheckLogs_Callback(object sender, RunWorkerCompletedEventArgs e)
         {
             if (e.Result != null)
             {
                 foreach (WcfEvent Event in (List<WcfEvent>)e.Result)
                 {
-                    ServiceLogs.Insert(0, Event);
+                    if (App.Current != null)
+                    {
+                        App.Current.Dispatcher.Invoke((Action)delegate // <--- HERE
+                        {
+                            ServiceLogs.Insert(0, Event);
+                        });
+                    }
+                }
+                while (ServiceLogs.Count > 1000)
+                {
+                    if (App.Current != null)
+                    {
+                        App.Current.Dispatcher.Invoke((Action)delegate // <--- HERE
+                        {
+                            ServiceLogs.RemoveAt(999);
+                        });
+                    }
                 }
             }
         }
-
         private void CheckLogs(object sender, DoWorkEventArgs e)
         {
             ChannelFactory<IServiceCommunicator> channelFactory = null;
@@ -191,8 +233,6 @@ namespace plcdb.ViewModels
                 }
             }
         }
-
-        
         void CheckQueryStatus_Callback(object sender, RunWorkerCompletedEventArgs e)
         {
             List<ObjectStatus> Statuses = e.Result as List<ObjectStatus>;
@@ -216,7 +256,6 @@ namespace plcdb.ViewModels
                 }
             }
         }
-
         void CheckQueryStatus(object sender, DoWorkEventArgs e)
         {
             ChannelFactory<IServiceCommunicator> channelFactory = null;
@@ -240,13 +279,12 @@ namespace plcdb.ViewModels
 
             }
         }
-
         void serviceMonitor_Elapsed(object sender, ElapsedEventArgs e)
         {
             if (! bgQueryStatus .IsBusy)
                 bgQueryStatus.RunWorkerAsync();
 
-            if (!bgLogChecker.IsBusy)
+            if (!bgLogChecker.IsBusy && !PauseServiceLogging)
                 bgLogChecker.RunWorkerAsync();
         }
         #endregion
@@ -255,15 +293,16 @@ namespace plcdb.ViewModels
         public void OnLoadModel()
         {
             ActiveModel = ActiveModel.Open(ActiveModelPath);
+            ActiveModelChanged = false;
         }
-
         public void OnSaveModel()
         {
             ActiveModel.Save(ActiveModelPath);
+            ActiveModelChanged = false;
         }
-
         public void OnSetServiceModelPath()
         {
+            OnSaveModel();
             BackgroundWorker bgWorker = new BackgroundWorker();
             bgWorker.DoWork += (s, e) => {
                 ChannelFactory<IServiceCommunicator> channelFactory = null;
@@ -319,14 +358,50 @@ namespace plcdb.ViewModels
                 Log.Error(e.Message);
             }
         }
-        #endregion
-
-
-
+        private void OnApplyLogFilter()
+        {
+            ServiceLogView.Refresh();
+        }
         internal void DeleteRow(DataRow Row)
         {
             Row.Delete();
             ActiveModel.AcceptChanges();
         }
+        private bool ServiceLogFilter(object item)
+        {
+            try
+            {
+                bool keepItem = true;
+                WcfEvent row = (WcfEvent)item;
+                if (row.LogLevel == "Trace" && !LogFilterTrace)
+                    keepItem = false;
+                else if (row.LogLevel == "Debug" && !LogFilterDebug)
+                    keepItem = false;
+                else if (row.LogLevel == "Info" && !LogFilterInfo)
+                    keepItem = false;
+                else if (row.LogLevel == "Warn" && !LogFilterWarn)
+                    keepItem = false;
+                else if (row.LogLevel == "Error" && !LogFilterError)
+                    keepItem = false;
+                else if (row.LogLevel == "Fatal" && !LogFilterFatal)
+                    keepItem = false;
+
+                if (!ActiveModel.Queries.First(p => p.PK == row.Query).Logged)
+                    keepItem = false;
+
+                return keepItem;
+            }
+            catch
+            {
+                return true;
+            }
+        }
+        #endregion
+
+
+
+        
+
+
     }
 }

@@ -6,6 +6,8 @@ using plcdb_lib.Models;
 using System.Data.SqlClient;
 using System.Collections.Generic;
 using System.Data;
+using System.ComponentModel;
+using System.Text.RegularExpressions;
 
 namespace plcdb.ViewModels
 {
@@ -33,6 +35,49 @@ namespace plcdb.ViewModels
                 RaisePropertyChanged(() => AvailableDatabases);
             }
         }
+        #endregion
+
+        #region AvailableTables
+        private List<String> _availableTables;
+        public List<String> AvailableTables
+        {
+            get
+            {
+                if (_availableTables == null)
+                {
+                    RefreshTables();
+                }
+                return _availableTables;
+            }
+            set
+            {
+                _availableTables = value;
+                RaisePropertyChanged(() => AvailableTables);
+            }
+        }
+
+        
+        #endregion
+
+        #region AvailableStoredProcedures
+        private List<String> _availableStoredProcedures;
+        public List<String> AvailableStoredProcedures
+        {
+            get
+            {
+                if (_availableStoredProcedures == null)
+                {
+                    RefreshStoredProcedures();
+                }
+                return _availableStoredProcedures;
+            }
+            set
+            {
+                _availableStoredProcedures = value;
+                RaisePropertyChanged(() => AvailableStoredProcedures);
+            }
+        }
+
         #endregion
 
         #region AvailableQueryTypes
@@ -213,6 +258,8 @@ namespace plcdb.ViewModels
                     CurrentQuery.DatabasesRow = value;
                     CurrentQuery.Database = value.PK;
                     RaisePropertyChanged(() => Database);
+                    RefreshStoredProcedures();
+                    RefreshTables();
                 }
             }
         }
@@ -345,9 +392,9 @@ namespace plcdb.ViewModels
             try
             {
                 if (QueryType == "SELECT")
-                    RefreshColumns(QueryText);
+                    RefreshColumnsSelect(QueryText);
                 else if (QueryType == "INSERT")
-                    RefreshColumns("SELECT * FROM " + QueryText);
+                    RefreshColumnsInsert("SELECT * FROM " + QueryText);
                 else if (QueryType == "STORED PROCEDURE")
                     RefreshStoredProcColumns(QueryText);
             }
@@ -372,29 +419,150 @@ namespace plcdb.ViewModels
                 NewRow.ColumnName = p.ParameterName;
                 NewRow.Query = CurrentQuery.PK;
                 NewRow.Tag = 0;
+                if (p.Direction == ParameterDirection.Output || p.Direction == ParameterDirection.ReturnValue || p.Direction == ParameterDirection.InputOutput)
+                    NewRow.OutputToController = true;
+
                 Columns.Add(NewRow);
             }
             TagMappings = Columns.ToArray();
         }
-
-        private void RefreshColumns(string QueryText)
+        private void RefreshColumnsInsert(string QueryText)
         {
             List<Model.QueryTagMappingsRow> Columns = new List<Model.QueryTagMappingsRow>();
             SqlConnection Connection = new SqlConnection(CurrentQuery.DatabasesRow.ConnectionString);
-            SqlDataAdapter QueryCommand = new SqlDataAdapter(QueryText, Connection);
-            DataTable Results = new DataTable();
+            String StrippedQueryString = QueryText;
+            foreach (Match match in Regex.Matches(QueryText, "(@[_a-zA-Z]+)"))
+            {
+                StrippedQueryString = StrippedQueryString.Replace(match.Value, "''");
+            }
+
+            SqlCommand QueryCommand = new SqlCommand(StrippedQueryString, Connection);
             Connection.Open();
-            QueryCommand.Fill(Results);
-            foreach (DataColumn col in Results.Columns)
+            SqlDataReader sqlReader = QueryCommand.ExecuteReader(CommandBehavior.SchemaOnly);
+
+            DataTable Results = sqlReader.GetSchemaTable();
+
+            foreach (DataRow row in Results.Rows)
+            {
+                if (!(bool)row["IsReadOnly"])
+                {
+                    Model.QueryTagMappingsRow NewRow = ActiveModel.QueryTagMappings.NewQueryTagMappingsRow();
+                    NewRow.ColumnName = row["ColumnName"].ToString();
+                    NewRow.Query = CurrentQuery.PK;
+                    NewRow.Tag = 0;
+                    NewRow.OutputToController = false;
+                    Columns.Add(NewRow);
+                }
+            }
+            foreach (Match match in Regex.Matches(QueryText, "(@[_a-zA-Z]+)"))
             {
                 Model.QueryTagMappingsRow NewRow = ActiveModel.QueryTagMappings.NewQueryTagMappingsRow();
-                NewRow.ColumnName = col.ColumnName;
+                NewRow.ColumnName = match.Value;
                 NewRow.Query = CurrentQuery.PK;
                 NewRow.Tag = 0;
+                NewRow.OutputToController = false;
                 Columns.Add(NewRow);
             }
             TagMappings = Columns.ToArray();
 
+        }
+
+        private void RefreshColumnsSelect(string QueryText)
+        {
+            List<Model.QueryTagMappingsRow> Columns = new List<Model.QueryTagMappingsRow>();
+            SqlConnection Connection = new SqlConnection(CurrentQuery.DatabasesRow.ConnectionString);
+            String StrippedQueryString = QueryText;
+            foreach (Match match in Regex.Matches(QueryText, "(@[_a-zA-Z]+)"))
+            {
+                StrippedQueryString = StrippedQueryString.Replace(match.Value, "''");
+            }
+
+            SqlCommand QueryCommand = new SqlCommand(StrippedQueryString, Connection);
+            Connection.Open();
+            SqlDataReader sqlReader = QueryCommand.ExecuteReader(CommandBehavior.SchemaOnly);
+
+            DataTable Results = sqlReader.GetSchemaTable();
+
+            foreach (DataRow row in Results.Rows)
+            {
+                Model.QueryTagMappingsRow NewRow = ActiveModel.QueryTagMappings.NewQueryTagMappingsRow();
+                NewRow.ColumnName = row["ColumnName"].ToString();
+                NewRow.Query = CurrentQuery.PK;
+                NewRow.Tag = 0;
+                NewRow.OutputToController = true;
+                Columns.Add(NewRow);
+            }
+            foreach (Match match in Regex.Matches(QueryText, "(@[_a-zA-Z]+)"))
+            {
+                Model.QueryTagMappingsRow NewRow = ActiveModel.QueryTagMappings.NewQueryTagMappingsRow();
+                NewRow.ColumnName = match.Value;
+                NewRow.Query = CurrentQuery.PK;
+                NewRow.Tag = 0;
+                NewRow.OutputToController = false;
+                Columns.Add(NewRow);
+            }
+            TagMappings = Columns.ToArray();
+
+        }
+
+        private void RefreshTables()
+        {
+            BackgroundWorker bgWorker = new BackgroundWorker();
+            bgWorker.DoWork += (s, e) =>
+            {
+                try
+                {
+                    SqlConnection conn = new SqlConnection(CurrentQuery.DatabasesRow.ConnectionString);
+                    conn.Open();
+                    List<String> availableTables = new List<string>();
+                    foreach (DataRow row in conn.GetSchema("Tables").Rows)
+                    {
+                        availableTables.Add((String)row["TABLE_NAME"]);
+                    }
+                    e.Result = availableTables;
+                }
+                catch (Exception ex)
+                {
+                    e.Result = new List<String>();
+                }
+            };
+
+            bgWorker.RunWorkerCompleted += (s, e) =>
+                {
+                    AvailableTables = (List<String>)e.Result;
+                };
+            bgWorker.RunWorkerAsync();
+        }
+        private void RefreshStoredProcedures()
+        {
+            BackgroundWorker bgWorker = new BackgroundWorker();
+            bgWorker.DoWork += (s, e) =>
+            {
+                try
+                {
+                    SqlConnection conn = new SqlConnection(CurrentQuery.DatabasesRow.ConnectionString);
+                    SqlDataAdapter QueryCommand = new SqlDataAdapter("select * from " + conn.Database + ".information_schema.routines  where routine_type = 'PROCEDURE'", conn);
+                    conn.Open();
+                    List<String> availableTables = new List<string>();
+                    DataTable Procedures = new DataTable();
+                    QueryCommand.Fill(Procedures);
+                    foreach (DataRow row in Procedures.Rows)
+                    {
+                        availableTables.Add((String)row["SPECIFIC_NAME"]);
+                    }
+                    e.Result = availableTables;
+                }
+                catch (Exception ex)
+                {
+                    e.Result = new List<String>();
+                }
+            };
+
+            bgWorker.RunWorkerCompleted += (s, e) =>
+            {
+                AvailableStoredProcedures = (List<String>)e.Result;
+            };
+            bgWorker.RunWorkerAsync();
         }
         #endregion
 

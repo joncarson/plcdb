@@ -8,14 +8,14 @@ using System.Windows;
 
 namespace plcdb.Converters
 {
-    [ValueConversion(typeof(bool), typeof(Visibility))]
-    public class BoolToVisibleConverter : IValueConverter
+    [ValueConversion(typeof(String), typeof(Visibility))]
+    public class StringToVisibleConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if ((bool)value)
+            if ((String)parameter == (String)value)
                 return Visibility.Visible;
-            return Visibility.Hidden;
+            return Visibility.Collapsed;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -26,5 +26,4 @@ namespace plcdb.Converters
         }
     }
 
-   
 }

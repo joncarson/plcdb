@@ -83,6 +83,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="QueryWorker.cs" />
+    <Compile Include="QueryWorkerLogger.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

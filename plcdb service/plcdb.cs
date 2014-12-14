@@ -37,7 +37,7 @@ namespace plcdb_service
         protected override void OnStart(string[] args)
         {
             
-            //Thread.Sleep(9000);
+           // Thread.Sleep(9000);
 
             //Set up WCF logging
             LogManager.Configuration.AddTarget("wcf", wcfLogger);
@@ -130,7 +130,7 @@ namespace plcdb_service
             {
                 QueryStatuses.Add(new ObjectStatus()
                 {
-                    PK = worker.ActiveQuery.PK,
+                    PK = worker.QueryPK,
                     Status = worker.Status
                 });
             }

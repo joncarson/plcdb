@@ -6,14 +6,15 @@ using System.Linq;
 using plcdb_lib;
 using plcdb_lib.Models.Controllers;
 using plcdb_lib.WCF;
+using System.Data;
 
 namespace plcdb_lib.Models
 {
     public partial class Model 
     {
         const string FILE_EXTENSION = ".plcdb";
-        
-
+        public event EventHandler DatasetChanged;
+ 
         public Model Open(string path)
         {
             if (!path.EndsWith(FILE_EXTENSION))
@@ -39,6 +40,15 @@ namespace plcdb_lib.Models
                 Str.Close();
             }
             this.AcceptChanges();
+
+            
+            foreach (DataTable tbl in this.Tables)
+            {
+                //tbl.RowChanged -= RaiseDatasetChangedEvent;
+                tbl.ColumnChanging-= RaiseDatasetChangedEvent;
+                //tbl.RowChanged += RaiseDatasetChangedEvent;
+                tbl.ColumnChanging += RaiseDatasetChangedEvent;
+            }
             return this;
         }
 
@@ -64,6 +74,20 @@ namespace plcdb_lib.Models
             }
         }
 
+        public void RaiseDatasetChangedEvent(object sender, DataColumnChangeEventArgs args)
+        {
+            if (args.Column.ColumnName != "Status")
+            {
+                if (args.ProposedValue == null ||  args.ProposedValue.ToString() != args.Row[args.Column].ToString())
+                {
+                    if (DatasetChanged != null)
+                    {
+                        DatasetChanged(this, null);
+                    }
+                }
+            }
+        }
+
         public static List<Type> GetAllControllerTypes()
         {
             //find some dlls at runtime 
@@ -82,8 +106,6 @@ namespace plcdb_lib.Models
 
             return types;
         }
-
-
 
         public partial class ControllersRow
         {

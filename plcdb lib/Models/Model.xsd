@@ -57,6 +57,7 @@
               <xs:element name="MaxRows" msprop:Generator_ColumnVarNameInTable="columnMaxRows" msprop:Generator_ColumnPropNameInRow="MaxRows" msprop:Generator_ColumnPropNameInTable="MaxRowsColumn" msprop:Generator_UserColumnName="MaxRows" type="xs:long" default="1" minOccurs="0" />
               <xs:element name="Name" msprop:Generator_ColumnVarNameInTable="columnName" msprop:Generator_ColumnPropNameInRow="Name" msprop:Generator_ColumnPropNameInTable="NameColumn" msprop:Generator_UserColumnName="Name" type="xs:string" default="" minOccurs="0" />
               <xs:element name="Status" msprop:Generator_ColumnVarNameInTable="columnStatus" msprop:Generator_ColumnPropNameInRow="Status" msprop:Generator_ColumnPropNameInTable="StatusColumn" msprop:Generator_UserColumnName="Status" type="xs:string" minOccurs="0" />
+              <xs:element name="Logged" msprop:nullValue="true" msprop:Generator_ColumnPropNameInRow="Logged" msprop:Generator_ColumnVarNameInTable="columnLogged" msprop:Generator_ColumnPropNameInTable="LoggedColumn" msprop:Generator_UserColumnName="Logged" type="xs:boolean" default="true" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>
@@ -67,6 +68,7 @@
               <xs:element name="Query" msprop:Generator_ColumnVarNameInTable="columnQuery" msprop:Generator_ColumnPropNameInRow="Query" msprop:Generator_ColumnPropNameInTable="QueryColumn" msprop:Generator_UserColumnName="Query" type="xs:long" minOccurs="0" />
               <xs:element name="ColumnName" msprop:Generator_ColumnVarNameInTable="columnColumnName" msprop:Generator_ColumnPropNameInRow="ColumnName" msprop:Generator_ColumnPropNameInTable="ColumnNameColumn" msprop:Generator_UserColumnName="ColumnName" type="xs:string" default="" minOccurs="0" />
               <xs:element name="Tag" msprop:Generator_ColumnVarNameInTable="columnTag" msprop:Generator_ColumnPropNameInRow="Tag" msprop:Generator_ColumnPropNameInTable="TagColumn" msprop:Generator_UserColumnName="Tag" type="xs:long" minOccurs="0" />
+              <xs:element name="OutputToController" msprop:nullValue="False" msprop:Generator_ColumnPropNameInRow="OutputToController" msprop:Generator_ColumnVarNameInTable="columnOutputToController" msprop:Generator_ColumnPropNameInTable="OutputToControllerColumn" msprop:Generator_UserColumnName="OutputToController" type="xs:boolean" default="false" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>

@@ -13,7 +13,7 @@ namespace plcdb_lib
     class Simulator : ControllerBase
     {
         
-        public override string Name
+        public static string Name
         {
             get
             {

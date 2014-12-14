@@ -9,7 +9,10 @@
     <valueConverters:QueryTypeToTextConverter x:Key="QueryTypeToTextConverter" />
     <valueConverters:StringPrefixConverter x:Key="StringPrefixConverter" />
     <valueConverters:BoolToHiddenConverter x:Key="BoolToHiddenConverter" />
+    <valueConverters:BoolToCollapsedConverter x:Key="BoolToCollapsedConverter" />
     <valueConverters:BoolToVisibleConverter x:Key="BoolToVisibleConverter" />
+    <valueConverters:StringToVisibleConverter x:Key="StringToVisibleConverter" />
     <valueConverters:DataRowViewToObjectConverter x:Key="DataRowViewToObjectConverter" />
-    
+    <valueConverters:TitleConverter x:Key="TitleConverter" />
+    <valueConverters:ControllerTypeToNameConverter x:Key="ControllerTypeToNameConverter" />
 </ResourceDictionary>

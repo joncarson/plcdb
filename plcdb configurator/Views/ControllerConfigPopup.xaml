@@ -3,7 +3,13 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Edit Controller Connection" Height="300" Width="300"
         WindowStartupLocation="CenterScreen">
-    
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/plcdb;component\Converters\ConvertersDictionary.xaml"></ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
         <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -23,7 +29,7 @@
         <ComboBox Grid.Row="1" Grid.Column="1" Margin="5" ItemsSource="{Binding AvailableControllerTypes}" SelectedItem="{Binding ControllerType}"  >
             <ComboBox.ItemTemplate>
                 <DataTemplate>
-                    <Label Content="{Binding Name}"></Label>
+                    <Label Content="{Binding Converter={StaticResource ControllerTypeToNameConverter}, Mode=OneWay}"></Label>
                 </DataTemplate>
             </ComboBox.ItemTemplate>
         </ComboBox>

@@ -4,13 +4,13 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             d:DesignHeight="145" d:DesignWidth="500"
+             d:DesignHeight="145" d:DesignWidth="5000"
              xmlns:Fluent="clr-namespace:Fluent;assembly=Fluent" >
             
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/plcdb;component\Converters\ConvertersDictionary.xaml"></ResourceDictionary>
+                <ResourceDictionary Source="pack://application:,,,/Converters/ConvertersDictionary.xaml"></ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
@@ -18,7 +18,15 @@
         <Fluent:Ribbon>
             <Fluent:Ribbon.Menu>
                 <Fluent:Backstage>
-                </Fluent:Backstage>
+                <Fluent:BackstageTabControl>
+                    <Fluent:BackstageTabItem Header="Settings"></Fluent:BackstageTabItem>
+                    <Fluent:BackstageTabItem Header="Check for Updates"></Fluent:BackstageTabItem>
+                    <Fluent:BackstageTabItem Header="License"></Fluent:BackstageTabItem>
+                    <Fluent:BackstageTabItem Header="About"></Fluent:BackstageTabItem>
+                    <Fluent:Button HorizontalAlignment="Left">Help</Fluent:Button>
+                    <Fluent:Button HorizontalAlignment="Left" Command="{Binding Exit}">Exit</Fluent:Button>
+                </Fluent:BackstageTabControl>
+            </Fluent:Backstage>
             </Fluent:Ribbon.Menu>
         
         <Fluent:Ribbon.ContextualGroups>
@@ -76,8 +84,6 @@
                         <Fluent:Button Grid.Column="4" Margin="5 0 0 0" LargeIcon="/plcdb;component\Resources\Icons\globe_win7.ico" Header="Test   PLC   "  Size="Large" />
                     </Grid>
                 </Fluent:RibbonGroupBox>
-            <!--</Fluent:RibbonTabItem>-->
-            <!--<Fluent:RibbonTabItem Header="Edit" Group="{Binding ElementName=QueryGroup}" x:Name="QueryTab" Width="100" >-->
                 <Fluent:RibbonGroupBox x:Name="QueryTab">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -94,7 +100,43 @@
                     <Fluent:Button Grid.Column="4" Margin="5 0 0 0" LargeIcon="/plcdb;component\Resources\Icons\globe_win7.ico" Header="Test Query"  Size="Large" />
                 </Grid>
             </Fluent:RibbonGroupBox>
-            <!--</Fluent:RibbonTabItem>-->
+            <Fluent:RibbonGroupBox Margin="5" x:Name="ServiceLogTab" Header="Log Filtering">
+                <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" VerticalAlignment="Stretch">
+                    <ListBox ItemsSource="{Binding ActiveModel.Queries}" Width="200" Margin="0" VerticalAlignment="Stretch" Height="67">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <CheckBox IsChecked="{Binding Logged}" Content="{Binding Name}">
+                                    </CheckBox>
+                                    <!--<TextBlock Text="{Binding Name}"></TextBlock>-->
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <Grid Margin="5" VerticalAlignment="Stretch">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="80"></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <CheckBox Grid.Row="0" Grid.Column="0" IsChecked="{Binding LogFilterTrace}" Content="Trace"></CheckBox>
+                        <CheckBox Grid.Row="1" Grid.Column="0" IsChecked="{Binding LogFilterDebug}" Content="Debug"></CheckBox>
+                        <CheckBox Grid.Row="2" Grid.Column="0" IsChecked="{Binding LogFilterInfo}" Content="Info"></CheckBox>
+                        <CheckBox Grid.Row="0" Grid.Column="1" IsChecked="{Binding LogFilterWarn}" Content="Warning"></CheckBox>
+                        <CheckBox Grid.Row="1" Grid.Column="1" IsChecked="{Binding LogFilterError}" Content="Error"></CheckBox>
+                        <CheckBox Grid.Row="2" Grid.Column="1" IsChecked="{Binding LogFilterFatal}" Content="Fatal"></CheckBox>
+                    </Grid>
+                    <Button Margin="5" Padding="5" Command="{Binding ApplyLogFilterCommand}" >
+                        <TextBlock HorizontalAlignment="Center" TextAlignment="Center" Width="50">Apply <LineBreak></LineBreak> Filter</TextBlock></Button>
+                    <ToggleButton Margin="5" Padding="5" IsChecked="{Binding PauseServiceLogging}">
+                        <TextBlock HorizontalAlignment="Center" TextAlignment="Center" Width="50">Pause <LineBreak></LineBreak> Logging</TextBlock>
+                    </ToggleButton>
+                </StackPanel>
+            </Fluent:RibbonGroupBox>
             <Fluent:RibbonGroupBox Margin="5" Header="Service Status" HorizontalAlignment="Right">
                     <Image HorizontalAlignment="Center" Source="/plcdb;component/Resources/Images/stoplight-red.png" >
                         <Image.Style>

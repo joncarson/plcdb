@@ -1502,6 +1502,8 @@ namespace plcdb_lib.Models {
             
             private global::System.Data.DataColumn columnStatus;
             
+            private global::System.Data.DataColumn columnLogged;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public QueriesDataTable() {
@@ -1617,6 +1619,14 @@ namespace plcdb_lib.Models {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn LoggedColumn {
+                get {
+                    return this.columnLogged;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -1652,7 +1662,7 @@ namespace plcdb_lib.Models {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public QueriesRow AddQueriesRow(string QueryType, string QueryText, long RefreshRate, TagsRow parentTagsRowByQueries_Tags, DatabasesRow parentDatabasesRowByFK_Databases_Queries, string MappingType, long MaxRows, string Name, string Status) {
+            public QueriesRow AddQueriesRow(string QueryType, string QueryText, long RefreshRate, TagsRow parentTagsRowByQueries_Tags, DatabasesRow parentDatabasesRowByFK_Databases_Queries, string MappingType, long MaxRows, string Name, string Status, bool Logged) {
                 QueriesRow rowQueriesRow = ((QueriesRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         null,
@@ -1664,7 +1674,8 @@ namespace plcdb_lib.Models {
                         MappingType,
                         MaxRows,
                         Name,
-                        Status};
+                        Status,
+                        Logged};
                 if ((parentTagsRowByQueries_Tags != null)) {
                     columnValuesArray[4] = parentTagsRowByQueries_Tags[4];
                 }
@@ -1710,6 +1721,7 @@ namespace plcdb_lib.Models {
                 this.columnMaxRows = base.Columns["MaxRows"];
                 this.columnName = base.Columns["Name"];
                 this.columnStatus = base.Columns["Status"];
+                this.columnLogged = base.Columns["Logged"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -1735,6 +1747,8 @@ namespace plcdb_lib.Models {
                 base.Columns.Add(this.columnName);
                 this.columnStatus = new global::System.Data.DataColumn("Status", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnStatus);
+                this.columnLogged = new global::System.Data.DataColumn("Logged", typeof(bool), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnLogged);
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
                                 this.columnPK}, true));
                 this.columnPK.AutoIncrement = true;
@@ -1747,6 +1761,8 @@ namespace plcdb_lib.Models {
                 this.columnMappingType.DefaultValue = ((string)(""));
                 this.columnMaxRows.DefaultValue = ((long)(1));
                 this.columnName.DefaultValue = ((string)(""));
+                this.columnLogged.AllowDBNull = false;
+                this.columnLogged.DefaultValue = ((bool)(true));
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -1888,6 +1904,8 @@ namespace plcdb_lib.Models {
             
             private global::System.Data.DataColumn columnTag;
             
+            private global::System.Data.DataColumn columnOutputToController;
+            
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public QueryTagMappingsDataTable() {
@@ -1955,6 +1973,14 @@ namespace plcdb_lib.Models {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn OutputToControllerColumn {
+                get {
+                    return this.columnOutputToController;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             [global::System.ComponentModel.Browsable(false)]
             public int Count {
                 get {
@@ -1990,13 +2016,14 @@ namespace plcdb_lib.Models {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public QueryTagMappingsRow AddQueryTagMappingsRow(QueriesRow parentQueriesRowByFK_Queries_QueryTagMappings, string ColumnName, TagsRow parentTagsRowByFK_Tags_QueryTagMappings) {
+            public QueryTagMappingsRow AddQueryTagMappingsRow(QueriesRow parentQueriesRowByFK_Queries_QueryTagMappings, string ColumnName, TagsRow parentTagsRowByFK_Tags_QueryTagMappings, bool OutputToController) {
                 QueryTagMappingsRow rowQueryTagMappingsRow = ((QueryTagMappingsRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         null,
                         null,
                         ColumnName,
-                        null};
+                        null,
+                        OutputToController};
                 if ((parentQueriesRowByFK_Queries_QueryTagMappings != null)) {
                     columnValuesArray[1] = parentQueriesRowByFK_Queries_QueryTagMappings[0];
                 }
@@ -2036,6 +2063,7 @@ namespace plcdb_lib.Models {
                 this.columnQuery = base.Columns["Query"];
                 this.columnColumnName = base.Columns["ColumnName"];
                 this.columnTag = base.Columns["Tag"];
+                this.columnOutputToController = base.Columns["OutputToController"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -2049,6 +2077,8 @@ namespace plcdb_lib.Models {
                 base.Columns.Add(this.columnColumnName);
                 this.columnTag = new global::System.Data.DataColumn("Tag", typeof(long), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnTag);
+                this.columnOutputToController = new global::System.Data.DataColumn("OutputToController", typeof(bool), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnOutputToController);
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
                                 this.columnPK}, true));
                 this.columnPK.AutoIncrement = true;
@@ -2056,6 +2086,8 @@ namespace plcdb_lib.Models {
                 this.columnPK.AllowDBNull = false;
                 this.columnPK.Unique = true;
                 this.columnColumnName.DefaultValue = ((string)(""));
+                this.columnOutputToController.AllowDBNull = false;
+                this.columnOutputToController.DefaultValue = ((bool)(false));
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -3099,6 +3131,17 @@ namespace plcdb_lib.Models {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool Logged {
+                get {
+                    return ((bool)(this[this.tableQueries.LoggedColumn]));
+                }
+                set {
+                    this[this.tableQueries.LoggedColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public TagsRow TagsRow {
                 get {
                     return ((TagsRow)(this.GetParentRow(this.Table.ParentRelations["Queries_Tags"])));
@@ -3309,6 +3352,17 @@ namespace plcdb_lib.Models {
                 }
                 set {
                     this[this.tableQueryTagMappings.TagColumn] = value;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool OutputToController {
+                get {
+                    return ((bool)(this[this.tableQueryTagMappings.OutputToControllerColumn]));
+                }
+                set {
+                    this[this.tableQueryTagMappings.OutputToControllerColumn] = value;
                 }
             }
             

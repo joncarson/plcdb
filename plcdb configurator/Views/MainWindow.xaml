@@ -10,60 +10,15 @@
         x:Class="plcdb.Views.MainWindow" 
         Icon="/plcdb;component/Resources/Images/sql-full-to-sql-compact.png"
         xmlns:r="clr-namespace:Fluent;assembly=Fluent"
+    Background="Silver"
         >
     <r:RibbonWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/plcdb;component\Converters\ConvertersDictionary.xaml"></ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
-            <SolidColorBrush x:Key="PrimaryBrush" Color="Transparent" />
-            <SolidColorBrush x:Key="PrimaryFont" Color="Black" />
-            <Style TargetType="{x:Type DataGridColumnHeader}">
-                <Setter Property="Background" Value="{StaticResource PrimaryBrush}"/>
-                <Setter Property="Foreground" Value="{StaticResource PrimaryFont}" />
-                <Setter Property="HorizontalContentAlignment" Value="Left" />
-                <Setter Property="Margin" Value="0"></Setter>
-                <Setter Property="FontSize" Value="18"></Setter>
-                <Setter Property="BorderThickness" Value="0"></Setter>
-                <Setter Property="BorderBrush" Value="{StaticResource PrimaryFont}"></Setter>
-            </Style>
-            <Style TargetType="{x:Type DataGridCell}">
-                <Setter Property="Background" Value="{StaticResource PrimaryBrush}" ></Setter>
-                <Setter Property="Foreground" Value="{StaticResource PrimaryFont}" />
-                <Setter Property="HorizontalContentAlignment" Value="Left" />
-                <Setter Property="Margin" Value="0"></Setter>
-                <Setter Property="FontSize" Value="16"></Setter>
-                <Setter Property="BorderThickness" Value="0"></Setter>
-                <Setter Property="BorderBrush" Value="{StaticResource PrimaryFont}"></Setter>
-                <Style.Triggers>
-                    <Trigger Property="IsSelected" Value="True">
-                        <Setter Property="Background" Value="LightBlue"></Setter>
-                    </Trigger>
-                </Style.Triggers>
-            </Style>
-            <Style TargetType="{x:Type DataGrid}">
-                <Setter Property="RowHeaderWidth" Value="0"></Setter>
-            </Style>
         </ResourceDictionary>
     </r:RibbonWindow.Resources>
-    <!--<r:RibbonWindow.WindowCommands>
-        <r:WindowCommands>
-            <r:WindowCommands.Items>
-                <r:Button Size="Large" Icon="/plcdb;component\Resources\Icons\pencil.jpg">
-
-                    <r:Button.ToolTip>
-                        <r:ScreenTip Title="Insert Chart"
-                                          Text="Insert a chart to illustarate and compare data. &#xa;&#xa;Bar, Pie, Line, Area and Surface are same of the available types."
-                                          
-                                          HelpTopic="http:\\fluent.codeplex.com"
-                                          DisableReason="Disable reason reason."
-                                          Width="190"
-                                          IsRibbonAligned="True" />
-                    </r:Button.ToolTip>
-                </r:Button>
-            </r:WindowCommands.Items>
-        </r:WindowCommands>
-    </r:RibbonWindow.WindowCommands>-->
     <r:RibbonWindow.DataContext>
         <StaticResource ResourceKey="MainWindowViewModel"/>
     </r:RibbonWindow.DataContext>
@@ -75,7 +30,10 @@
         <CommandBinding Command="Stop"  Executed="ExitCommandBinding_Executed"/>
     </r:RibbonWindow.CommandBindings>
     <r:RibbonWindow.Title>
-        <Binding Path="ActiveModelPath" Converter="{StaticResource StringPrefixConverter}" ConverterParameter="plcdb"/>
+        <MultiBinding Converter="{StaticResource TitleConverter}" ConverterParameter="PLC 2 SQL">
+            <Binding Path="ActiveModelPath"/>
+            <Binding Path="ActiveModelChanged"/>
+        </MultiBinding>
     </r:RibbonWindow.Title>
     <r:RibbonWindow.InputBindings>
         <KeyBinding Key="O" Modifiers="Control" Command="Open"/>

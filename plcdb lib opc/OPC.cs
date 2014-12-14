@@ -25,7 +25,7 @@ namespace plcdb_lib_opc
         private static int ItemClientId = 1;
         private static int GroupClientId = 1;
 
-        public override string Name
+        public static string Name
         {
             get { return "OPC DA"; }
         }

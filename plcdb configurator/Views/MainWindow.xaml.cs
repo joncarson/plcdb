@@ -121,6 +121,7 @@ namespace plcdb.Views
             MainRibbon.DatabaseTab.Visibility   = MainTabControl.SelectedItem == DatabaseTab ? Visibility.Visible : Visibility.Collapsed;
             MainRibbon.ControllerTab.Visibility = MainTabControl.SelectedItem == ControllerTab ? Visibility.Visible : Visibility.Collapsed;
             MainRibbon.QueryTab.Visibility      = MainTabControl.SelectedItem == QueryTab ? Visibility.Visible : Visibility.Collapsed;
+            MainRibbon.ServiceLogTab.Visibility = MainTabControl.SelectedItem == ServiceTab ? Visibility.Visible : Visibility.Collapsed;
 
             //MainRibbon.DatabaseTab.IsSelected = MainTabControl.SelectedItem == DatabaseTab ? true : false;
             //MainRibbon.ControllerTab.IsSelected = MainTabControl.SelectedItem == ControllerTab ? true : false;

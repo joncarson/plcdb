@@ -22,7 +22,7 @@ namespace plcdb.Converters
             {
                 return "";
             }
-            String TagName = Tag.Name == null ? Tag.Address : Tag.Name;
+            String TagName = Tag.Name == null || Tag.Name == String.Empty ? Tag.Address : Tag.Name;
 
             return "[" + Tag.ControllersRow.Name + "]" + TagName;
         }

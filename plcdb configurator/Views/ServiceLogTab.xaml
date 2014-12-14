@@ -13,13 +13,32 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <DockPanel LastChildFill="True">
-        <!--<Button x:Name="btnAddNewDatabase" DockPanel.Dock="Bottom" HorizontalAlignment="Right" Margin="10 10 10 10" Click="btnAddNewDatabase_Click">Add New</Button>-->
-        <DataGrid DockPanel.Dock="Top" CanUserAddRows="False" ItemsSource="{Binding ServiceLogs}" CanUserSortColumns="True" Name="DatabaseGrid" AutoGenerateColumns="False" SelectionMode="Single" >
+        
+        <DataGrid DockPanel.Dock="Top" CanUserAddRows="False" ItemsSource="{Binding ServiceLogView}" CanUserSortColumns="True" Name="DatabaseGrid" AutoGenerateColumns="False" SelectionMode="Single" ScrollViewer.CanContentScroll="True" IsReadOnly="True" >
+            <DataGrid.CellStyle>
+                <Style TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource {x:Type DataGridCell}}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding LogLevel}" Value="Error" >
+                            <Setter Property="Background" Value="Red" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding LogLevel}" Value="Warning" >
+                            <Setter Property="Background" Value="Yellow" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding LogLevel}" Value="Trace" >
+                            <Setter Property="Background" Value="LightBlue" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding LogLevel}" Value="Info" >
+                            <Setter Property="Background" Value="LightGreen" />
+                        </DataTrigger>
+                        
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.CellStyle>
             <DataGrid.Columns>
                 <DataGridTextColumn Width="180" Header="Timestamp" Binding="{Binding Occurred}"></DataGridTextColumn>
                 <DataGridTextColumn Width="130" Header="Query" Binding="{Binding Query, Converter={StaticResource PKToNameConverter}, ConverterParameter=Queries}"></DataGridTextColumn>
                 <DataGridTextColumn Width="100" Header="Severity" Binding="{Binding LogLevel}"></DataGridTextColumn>
-                <DataGridTextColumn Width="200" Header="Class Name" Binding="{Binding Name}"></DataGridTextColumn>
+                <!--<DataGridTextColumn Width="200" Header="Class Name" Binding="{Binding Name}"></DataGridTextColumn>-->
                 <DataGridTextColumn Header="Message" Width="*" Binding="{Binding Message}"></DataGridTextColumn>
             </DataGrid.Columns>
         </DataGrid>

@@ -16,6 +16,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
@@ -32,14 +33,15 @@
                 </ComboBox.ItemTemplate>
             </ComboBox>
         </DockPanel>
-        <ListBox SelectionChanged="ListBox_SelectionChanged_1"  Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="5" SelectedItem="{Binding CurrentTag}" ItemsSource="{Binding AvailableTags}">
+        <ListBox SelectionChanged="ListBox_SelectionChanged_1"  Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="5" SelectedItem="{Binding CurrentTag}" ItemsSource="{Binding AvailableTags}" MouseDoubleClick="ListBox_MouseDoubleClick_1">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <Label Content="{Binding Address}"></Label>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right">
+        <TextBox x:Name="tbCustomTag" Grid.Row="2" Margin="5,0,5,0" Grid.ColumnSpan="2" Height="20" Text="{Binding CustomTag}"></TextBox>
+        <StackPanel Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right">
             <Button x:Name="btnSave"   Grid.Row="2" Grid.Column="1" HorizontalAlignment="Right" Margin="5" Click="btnSave_Click" Command="{Binding SaveCommand}" IsCancel="True" >Save</Button>
             <Button x:Name="btnCancel" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Right" Margin="5" Click="btnCancel_Click" Command="{Binding CancelCommand}" IsCancel="True">Cancel</Button>
         </StackPanel>

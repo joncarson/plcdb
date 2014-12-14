@@ -17,7 +17,7 @@ namespace plcdb_lib_siemens_s7
         private List<SiemensTag> ActiveTags;
         private byte[] Buffer = new byte[1024];
         Timer RefreshDataTimer = new Timer();
-        public override string Name
+        public static string Name
         {
             get { return "Siemens S7"; }
         }

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using plcdb.ViewModels;
+using plcdb_lib.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -40,6 +42,22 @@ namespace plcdb.Views
         {
             ListBox lb = sender as ListBox;
             lb.ScrollIntoView(lb.SelectedItem);
+            try
+            {
+                TagBrowserViewModel vm = (TagBrowserViewModel)this.DataContext;
+                vm.CustomTag = ((Model.TagsRow)lb.SelectedItem).Address;
+            }
+            catch (Exception ex)
+            {
+            }
+
+        }
+
+        private void ListBox_MouseDoubleClick_1(object sender, MouseButtonEventArgs e)
+        {
+            TagBrowserViewModel vm = (TagBrowserViewModel)this.DataContext;
+            vm.SaveCommand.Execute(null);
+            btnSave_Click(null, null);
         }
     }
 }

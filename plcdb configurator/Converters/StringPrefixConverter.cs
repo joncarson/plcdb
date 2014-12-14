@@ -20,7 +20,9 @@ namespace plcdb.Converters
                 if (Value == null || Value == String.Empty)
                     return parameter;
                 else
+                {
                     return parameter + " - " + Value;
+                }
             }
             catch (Exception e)
             {

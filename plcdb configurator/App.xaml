@@ -10,6 +10,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/Fluent;Component/Themes/Generic.xaml" />
                 <ResourceDictionary Source="/Fluent;Component/Themes/Office2010/Silver.xaml" />
+                <ResourceDictionary Source="/plcdb;component\Styles\DataGridStyles.xaml"></ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
             
         </ResourceDictionary>

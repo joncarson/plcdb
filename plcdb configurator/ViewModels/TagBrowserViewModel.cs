@@ -75,6 +75,23 @@ namespace plcdb.ViewModels
             }
         }
 
+        private String _customTag;
+        public String CustomTag
+        {
+            get
+            {
+                return _customTag;
+            }
+            set
+            {
+                if (_customTag != value)
+                {
+                    _customTag = value;
+                    RaisePropertyChanged(() => CustomTag);
+                }
+            }
+        }
+
         private plcdb_lib.Models.Model.ControllersRow _currentController;
         public plcdb_lib.Models.Model.ControllersRow CurrentController
         {
