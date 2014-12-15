@@ -41,9 +41,5 @@ namespace plcdb_lib_advancedhmi
             return new Model.TagsDataTable();
         }
 
-        public override List<string> GetAvailableSubaddresses()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

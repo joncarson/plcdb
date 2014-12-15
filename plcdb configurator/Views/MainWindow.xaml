@@ -33,6 +33,7 @@
         <MultiBinding Converter="{StaticResource TitleConverter}" ConverterParameter="PLC 2 SQL">
             <Binding Path="ActiveModelPath"/>
             <Binding Path="ActiveModelChanged"/>
+            <Binding Path="LicenseStartTime"/>
         </MultiBinding>
     </r:RibbonWindow.Title>
     <r:RibbonWindow.InputBindings>

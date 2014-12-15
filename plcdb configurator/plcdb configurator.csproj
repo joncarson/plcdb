@@ -120,6 +120,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Views\SettingsTab.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\LicenseTab.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\ServiceLogTab.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -163,6 +171,7 @@
     <Compile Include="Converters\BoolToVisibleConverter.cs" />
     <Compile Include="Converters\BoolToCollapsedConverter.cs" />
     <Compile Include="Converters\ControllerTypeToNameConverter.cs" />
+    <Compile Include="Converters\NullToFalseConverter.cs" />
     <Compile Include="Converters\StringToVisibleConverter.cs" />
     <Compile Include="Converters\DataRowViewToObjectConverter.cs" />
     <Compile Include="Converters\StringPrefixConverter.cs" />
@@ -179,13 +188,18 @@
     <Compile Include="Helpers\DelegateCommand.cs" />
     <Compile Include="Helpers\BaseViewModel.cs" />
     <Compile Include="ViewModels\ControllerPopupViewModel.cs" />
-    <Compile Include="Helpers\LogLevelOnOff.cs" />
     <Compile Include="ViewModels\TagBrowserViewModel.cs" />
     <Compile Include="ViewModels\QueryPopupViewModel.cs" />
     <Compile Include="ViewModels\DatabasePopupViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="Views\ControllerConfigTab.xaml.cs">
       <DependentUpon>ControllerConfigTab.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SettingsTab.xaml.cs">
+      <DependentUpon>SettingsTab.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\LicenseTab.xaml.cs">
+      <DependentUpon>LicenseTab.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ServiceLogTab.xaml.cs">
       <DependentUpon>ServiceLogTab.xaml</DependentUpon>

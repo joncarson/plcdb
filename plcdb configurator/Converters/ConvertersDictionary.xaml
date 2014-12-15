@@ -15,4 +15,5 @@
     <valueConverters:DataRowViewToObjectConverter x:Key="DataRowViewToObjectConverter" />
     <valueConverters:TitleConverter x:Key="TitleConverter" />
     <valueConverters:ControllerTypeToNameConverter x:Key="ControllerTypeToNameConverter" />
+    <valueConverters:NullToFalseConverter x:Key="NullToFalseConverter" />
 </ResourceDictionary>

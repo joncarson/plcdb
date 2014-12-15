@@ -18,11 +18,18 @@
             <DataGrid.CellStyle>
                 <Style TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource {x:Type DataGridCell}}">
                     <Style.Triggers>
+                        <DataTrigger Binding="{Binding LogLevel}" Value="Fatal" >
+                            <Setter Property="Background" Value="DarkRed" />
+                            <Setter Property="Foreground" Value="White" />
+                        </DataTrigger>
                         <DataTrigger Binding="{Binding LogLevel}" Value="Error" >
                             <Setter Property="Background" Value="Red" />
                         </DataTrigger>
                         <DataTrigger Binding="{Binding LogLevel}" Value="Warning" >
                             <Setter Property="Background" Value="Yellow" />
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding LogLevel}" Value="Debug" >
+                            <Setter Property="Background" Value="LightGray" />
                         </DataTrigger>
                         <DataTrigger Binding="{Binding LogLevel}" Value="Trace" >
                             <Setter Property="Background" Value="LightBlue" />

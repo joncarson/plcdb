@@ -7,11 +7,17 @@ using plcdb_lib;
 using plcdb_lib.Models.Controllers;
 using plcdb_lib.WCF;
 using System.Data;
+using NLog;
 
 namespace plcdb_lib.Models
 {
     public partial class Model 
     {
+        private Logger Log = LogManager.GetCurrentClassLogger();
+        partial class ControllersDataTable
+        {
+        }
+    
         const string FILE_EXTENSION = ".plcdb";
         public event EventHandler DatasetChanged;
  
@@ -116,12 +122,39 @@ namespace plcdb_lib.Models
                 {
                     if (_controller == null)
                     {
-                        _controller = Activator.CreateInstance(this.Type, this) as ControllerBase;
+                        try
+                        {
+                            _controller = Activator.CreateInstance(this.Type, this) as ControllerBase;
+                        }
+                        catch (Exception ex)
+                        {
+                            throw new Exception("Error creating controller", ex);
+                        }
                     }
                     return _controller;
                 }
             }
         }
 
+        public partial class TagsRow
+        {
+            public override string ToString()
+            {
+                try
+                {
+                    if (this == null)
+                    {
+                        return "";
+                    }
+                    String TagName = this.Name == null || this.Name == String.Empty ? this.Address : this.Name;
+
+                    return "[" + this.ControllersRow.Name + "]" + TagName;
+                }
+                catch (Exception e)
+                {
+                    return base.ToString();
+                }
+            }
+        }
     }
 }

@@ -29,9 +29,5 @@ namespace plcdb_lib_advancedhmi
             throw new NotImplementedException();
         }
 
-        public override List<string> GetAvailableSubaddresses()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

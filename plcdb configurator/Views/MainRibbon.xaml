@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="plcdb.Views.MainRibbon"
+﻿<UserControl xmlns:Views="clr-namespace:plcdb.Views"  x:Class="plcdb.Views.MainRibbon"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -19,9 +19,13 @@
             <Fluent:Ribbon.Menu>
                 <Fluent:Backstage>
                 <Fluent:BackstageTabControl>
-                    <Fluent:BackstageTabItem Header="Settings"></Fluent:BackstageTabItem>
+                    <Fluent:BackstageTabItem Header="Settings">
+                        <Views:SettingsTab />
+                    </Fluent:BackstageTabItem>
                     <Fluent:BackstageTabItem Header="Check for Updates"></Fluent:BackstageTabItem>
-                    <Fluent:BackstageTabItem Header="License"></Fluent:BackstageTabItem>
+                    <Fluent:BackstageTabItem Header="License">
+                        <Views:LicenseTab />
+                    </Fluent:BackstageTabItem>
                     <Fluent:BackstageTabItem Header="About"></Fluent:BackstageTabItem>
                     <Fluent:Button HorizontalAlignment="Left">Help</Fluent:Button>
                     <Fluent:Button HorizontalAlignment="Left" Command="{Binding Exit}">Exit</Fluent:Button>
@@ -59,11 +63,11 @@
                             <ColumnDefinition Width="60"></ColumnDefinition>
                             <ColumnDefinition Width="60"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
-                        <Fluent:Button Click="btnAddNewDatabase_Click" Grid.Column="1"  Margin="5 0 0 0" LargeIcon="/plcdb;component\Resources\Icons\database_new.png"  Header="New Database" Size="Large" />
-                        <Fluent:Button Click="btnEditDatabase_Click"  Grid.Column="0" Margin="5 0 0 0"  LargeIcon="/plcdb;component\Resources\Icons\pencil.jpg"  Header="Edit Database" Size="Large"/>
-                        <Fluent:Button Click="btnDeleteDatabase_Click" Grid.Column="2" Margin="5 0 0 0" LargeIcon="/plcdb;component\Resources\Icons\database_delete.png" Header="Delete Database"  Size="Large" />
-                        <Fluent:Button Grid.Column="3" Margin="5 0 0 0" LargeIcon="/plcdb;component\Resources\Icons\copy-icon.png" Header="Copy Database"  Size="Large" />
-                        <Fluent:Button Grid.Column="4"  Margin="5 0 0 0" LargeIcon="/plcdb;component\Resources\Icons\globe_win7.ico" Header="Test Database"  Size="Large" />
+                        <Fluent:Button Click="btnAddNewDatabase_Click" Grid.Column="0"  Margin="5 0 0 0" LargeIcon="/plcdb;component\Resources\Icons\database_new.png"  Header="New Database" Size="Large" />
+                        <Fluent:Button Click="btnEditDatabase_Click"  Grid.Column="1" Margin="5 0 0 0"  LargeIcon="/plcdb;component\Resources\Icons\pencil.jpg"  Header="Edit Database" Size="Large" IsEnabled="{Binding SelectedDatabase, Converter={StaticResource NullToFalseConverter}}"/>
+                    <Fluent:Button Click="btnDeleteDatabase_Click" Grid.Column="2" Margin="5 0 0 0" LargeIcon="/plcdb;component\Resources\Icons\database_delete.png" Header="Delete Database"  Size="Large" IsEnabled="{Binding SelectedDatabase, Converter={StaticResource NullToFalseConverter}}" />
+                    <Fluent:Button Grid.Column="3" Margin="5 0 0 0" LargeIcon="/plcdb;component\Resources\Icons\copy-icon.png" Header="Copy Database"  Size="Large" IsEnabled="{Binding SelectedDatabase, Converter={StaticResource NullToFalseConverter}}" Command="{Binding CopyDatabaseCommand}"/>
+                    <Fluent:Button Grid.Column="4"  Margin="5 0 0 0" LargeIcon="/plcdb;component\Resources\Icons\globe_win7.ico" Header="Test Database"  Size="Large" IsEnabled="{Binding SelectedDatabase, Converter={StaticResource NullToFalseConverter}}" Click="btnTestDatabase_Click"/>
                     </Grid>
                 </Fluent:RibbonGroupBox>
             <!--</Fluent:RibbonTabItem>-->
@@ -77,11 +81,11 @@
                             <ColumnDefinition Width="60"></ColumnDefinition>
                             <ColumnDefinition Width="60"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
-                        <Fluent:Button Click="btnAddNewController_Click" Grid.Column="1" Margin="5 0 0 0" LargeIcon="/plcdb;component\Resources\Icons\database_new.png"  Header="New   PLC   " Size="Large"  />
-                        <Fluent:Button Click="btnEditController_Click" Grid.Column="0" Margin="5 0 0 0"  LargeIcon="/plcdb;component\Resources\Icons\pencil.jpg"  Header="Edit   PLC   " Size="Large" />
-                        <Fluent:Button Click="btnDeleteController_Click" Grid.Column="2" Margin="5 0 0 0" LargeIcon="/plcdb;component\Resources\Icons\database_delete.png" Header="Delete   PLC   "  Size="Large"  />
-                        <Fluent:Button Grid.Column="3" Margin="5 0 0 0" LargeIcon="/plcdb;component\Resources\Icons\copy-icon.png" Header="Copy   PLC   "  Size="Large"  />
-                        <Fluent:Button Grid.Column="4" Margin="5 0 0 0" LargeIcon="/plcdb;component\Resources\Icons\globe_win7.ico" Header="Test   PLC   "  Size="Large" />
+                        <Fluent:Button Click="btnAddNewController_Click" Grid.Column="0" Margin="5 0 0 0" LargeIcon="/plcdb;component\Resources\Icons\database_new.png"  Header="New   PLC   " Size="Large"  />
+                    <Fluent:Button Click="btnEditController_Click" Grid.Column="1" Margin="5 0 0 0"  LargeIcon="/plcdb;component\Resources\Icons\pencil.jpg"  Header="Edit   PLC   " Size="Large" IsEnabled="{Binding SelectedController, Converter={StaticResource NullToFalseConverter}}"/>
+                    <Fluent:Button Click="btnDeleteController_Click" Grid.Column="2" Margin="5 0 0 0" LargeIcon="/plcdb;component\Resources\Icons\database_delete.png" Header="Delete   PLC   "  Size="Large"  IsEnabled="{Binding SelectedController, Converter={StaticResource NullToFalseConverter}}"/>
+                    <Fluent:Button Grid.Column="3" Margin="5 0 0 0" LargeIcon="/plcdb;component\Resources\Icons\copy-icon.png" Header="Copy   PLC   "  Size="Large" IsEnabled="{Binding SelectedController, Converter={StaticResource NullToFalseConverter}}" Command="{Binding CopyControllerCommand}"/>
+                    <!--<Fluent:Button Grid.Column="4" Margin="5 0 0 0" LargeIcon="/plcdb;component\Resources\Icons\globe_win7.ico" Header="Test   PLC   "  Size="Large" IsEnabled="{Binding SelectedController, Converter={StaticResource NullToFalseConverter}}"/>-->
                     </Grid>
                 </Fluent:RibbonGroupBox>
                 <Fluent:RibbonGroupBox x:Name="QueryTab">
@@ -94,10 +98,10 @@
                         <ColumnDefinition Width="60"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
                     <Fluent:Button Grid.Column="0"  Click="btnAddQuery_Click" Margin="5 0 0 0" LargeIcon="/plcdb;component\Resources\Icons\database_new.png"  Header="New Query" Size="Large" />
-                    <Fluent:Button Grid.Column="1" Click="btnEditQuery_Click" Margin="5 0 0 0"  LargeIcon="/plcdb;component\Resources\Icons\pencil.jpg"  Header="Edit Query" Size="Large"/>
-                    <Fluent:Button Grid.Column="2" Click="btnDeleteQuery_Click" Margin="5 0 0 0" LargeIcon="/plcdb;component\Resources\Icons\database_delete.png" Header="Delete Query"  Size="Large" />
-                    <Fluent:Button Grid.Column="3" Margin="5 0 0 0" LargeIcon="/plcdb;component\Resources\Icons\copy-icon.png" Header="Copy Query"  Size="Large" />
-                    <Fluent:Button Grid.Column="4" Margin="5 0 0 0" LargeIcon="/plcdb;component\Resources\Icons\globe_win7.ico" Header="Test Query"  Size="Large" />
+                    <Fluent:Button Grid.Column="1" Click="btnEditQuery_Click" Margin="5 0 0 0"  LargeIcon="/plcdb;component\Resources\Icons\pencil.jpg"  Header="Edit Query" Size="Large" IsEnabled="{Binding SelectedQuery, Converter={StaticResource NullToFalseConverter}}"/>
+                    <Fluent:Button Grid.Column="2" Click="btnDeleteQuery_Click" Margin="5 0 0 0" LargeIcon="/plcdb;component\Resources\Icons\database_delete.png" Header="Delete Query"  Size="Large"  IsEnabled="{Binding SelectedQuery, Converter={StaticResource NullToFalseConverter}}" />
+                    <Fluent:Button Grid.Column="3" Margin="5 0 0 0" LargeIcon="/plcdb;component\Resources\Icons\copy-icon.png" Header="Copy Query"  Size="Large"  IsEnabled="{Binding SelectedQuery, Converter={StaticResource NullToFalseConverter}}" Command="{Binding CopyQueryCommand}"/>
+                    <!--<Fluent:Button Grid.Column="4" Margin="5 0 0 0" LargeIcon="/plcdb;component\Resources\Icons\globe_win7.ico" Header="Test Query"  Size="Large"  IsEnabled="{Binding SelectedQuery, Converter={StaticResource NullToFalseConverter}}"/>-->
                 </Grid>
             </Fluent:RibbonGroupBox>
             <Fluent:RibbonGroupBox Margin="5" x:Name="ServiceLogTab" Header="Log Filtering">

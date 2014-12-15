@@ -6,6 +6,8 @@ using plcdb_lib.Models;
 using System.Data.SqlClient;
 using System.Collections.Generic;
 using plcdb_lib.Models.Controllers;
+using System.ComponentModel;
+using plcdb_lib.HelperFunctions;
 
 namespace plcdb.ViewModels
 {
@@ -30,6 +32,27 @@ namespace plcdb.ViewModels
                 {
                     _availableControllerTypes = value;
                     RaisePropertyChanged(() => AvailableControllerTypes);
+                }
+            }
+        }
+
+        private IEnumerable<String> _availableOpcServers;
+        public IEnumerable<String> AvailableOpcServers
+        {
+            get
+            {
+                if (_availableOpcServers == null)
+                {
+                    _availableOpcServers = new List<String>();
+                }
+                return _availableOpcServers;
+            }
+            set
+            {
+                if (_availableOpcServers != value)
+                {
+                    _availableOpcServers = value;
+                    RaisePropertyChanged(() => AvailableOpcServers);
                 }
             }
         }
@@ -90,6 +113,7 @@ namespace plcdb.ViewModels
                     CurrentController.Address = value;
                     RaisePropertyChanged(() => Address);
                 }
+                RefreshOpcServers();
             }
         }
         #endregion
@@ -109,6 +133,7 @@ namespace plcdb.ViewModels
             }
         }
         #endregion
+
 
         #endregion
         #region Commands
@@ -140,5 +165,18 @@ namespace plcdb.ViewModels
         }
         #endregion
 
+        private void RefreshOpcServers()
+        {
+            BackgroundWorker bgWorker = new BackgroundWorker();
+            bgWorker.DoWork += (s, e) =>
+            {
+                e.Result = OpcHelper.GetOpcServers(Address);
+            };
+            bgWorker.RunWorkerCompleted += (s, e) =>
+            {
+                AvailableOpcServers = (List<String>)e.Result;
+            };
+            bgWorker.RunWorkerAsync();
+        }
     }
 }

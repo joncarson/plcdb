@@ -93,6 +93,22 @@
                             </DockPanel>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <DockPanel LastChildFill="True">
+                                <Button Height="30" DockPanel.Dock="Right"  Click="btnTagBrowse_Click" Width="30">...</Button>
+                                <TextBox Height="30" DockPanel.Dock="Left" >
+                                    <TextBox.Text>
+                                        <Binding  Path="Tag" Converter="{StaticResource PKToTagConverter}">
+                                            <Binding.ValidationRules>
+                                                <valueConverters:StringToTagValidator/>
+                                            </Binding.ValidationRules>
+                                        </Binding>
+                                    </TextBox.Text>
+                                </TextBox>
+                            </DockPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>

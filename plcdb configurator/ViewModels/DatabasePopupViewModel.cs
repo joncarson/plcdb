@@ -87,38 +87,9 @@ namespace plcdb.ViewModels
             BackgroundWorker backgroundWorker = new BackgroundWorker();
             backgroundWorker.DoWork += (sender, e) =>
                 {
-                    List<string> list = new List<string>();
-                    try
-                    {
-                        string conString = (String)e.Argument;
-                        if (!SqlHelper.TestForServer(new SqlConnection((String)e.Argument).DataSource))
-                        {
-                            e.Result = list;
-                            return;
-                        }
-
-                        using (SqlConnection con = new SqlConnection(conString + "; Connection Timeout=1"))
-                        {
-                            con.Open();
-                            using (SqlCommand cmd = new SqlCommand("SELECT name from sys.databases", con))
-                            {
-                                cmd.CommandTimeout = 500;
-                                using (IDataReader dr = cmd.ExecuteReader())
-                                {
-                                    while (dr.Read())
-                                    {
-                                        list.Add(dr[0].ToString());
-                                    }
-                                }
-                            }
-                        }
-                        e.Result = list;
-                    }
-                    catch (Exception ex)
-                    {
-                        e.Result = new List<String>();
-                    }
+                     e.Result = SqlHelper.GetAllDatabasesInServer(CurrentDatabase.ConnectionString);
                 };
+
             backgroundWorker.RunWorkerCompleted += (sender, e) =>
                 {
                     AvailableDatabases = (List<String>)e.Result;

@@ -111,10 +111,6 @@ namespace plcdb_lib
             ControllerInfo = row;
         }
 
-        public override List<string> GetAvailableSubaddresses()
-        {
-            return new List<string>();
-        }
 
         private Model.ControllersRow ControllerInfo { get; set; }
     }

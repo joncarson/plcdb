@@ -72,9 +72,5 @@ namespace plcdb_lib_siemens_s7
             return new Model.TagsDataTable();
         }
 
-        public override List<string> GetAvailableSubaddresses()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

@@ -13,7 +13,7 @@ namespace plcdb_lib.Models.Controllers
         public abstract object Read(Model.TagsRow t);
         public abstract bool Write(Model.TagsRow t, object val);
         public abstract Model.TagsDataTable BrowseTags();
-        public abstract List<String> GetAvailableSubaddresses();
+        
 
         public ControllerBase(Model.ControllersRow args)
         {

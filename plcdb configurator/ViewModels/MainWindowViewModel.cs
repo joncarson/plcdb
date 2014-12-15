@@ -23,8 +23,17 @@ namespace plcdb.ViewModels
         #region Private variables
         private readonly BackgroundWorker bgQueryStatus = new BackgroundWorker();
         private readonly BackgroundWorker bgLogChecker = new BackgroundWorker();
-        private Uri SERVICE_ENDPOINT = new Uri("net.tcp://localhost/plcdb/main");
+        private readonly BackgroundWorker bgLicenseChecker = new BackgroundWorker();
+        
         private object _serviceLogLock = new object();
+        private Uri ServicePath
+        {
+            get
+            {
+                return new Uri("net.tcp://" + ServiceHostComputer + "/plcdb/main");
+            }
+        }
+
         #endregion
 
         #region Properties
@@ -127,10 +136,99 @@ namespace plcdb.ViewModels
             }
         }
 
-        public Model.DatabasesRow SelectedDatabase { get; set; }
-        public Model.QueriesRow SelectedQuery { get; set; }
-        public Model.ControllersRow SelectedController { get; set; }
+        public int MaxRowsInLog
+        {
+            get
+            {
+                return Properties.Settings.Default.MaxLogLength;
+            }
+            set
+            {
+                Properties.Settings.Default.MaxLogLength = value;
+                Properties.Settings.Default.Save();
+            }
+        }
+        public String ServiceHostComputer
+        {
+            get
+            {
+                return Properties.Settings.Default.ServiceHost;
+            }
+            set
+            {
+                Properties.Settings.Default.ServiceHost = value;
+                Properties.Settings.Default.Save();
+            }
+        }
+        #region Selected Rows
+        private Model.DatabasesRow _selectedDatabase;
+        public Model.DatabasesRow SelectedDatabase
+        {
+            get
+            {
+                return _selectedDatabase;
+            }
+            set
+            {
+                if (value != _selectedDatabase)
+                {
+                    _selectedDatabase = value;
+                    RaisePropertyChanged(() => SelectedDatabase);
+                }
+            }
+        }
 
+        private Model.ControllersRow _selectedController;
+        public Model.ControllersRow SelectedController
+        {
+            get
+            {
+                return _selectedController;
+            }
+            set
+            {
+                if (value != _selectedController)
+                {
+                    _selectedController = value;
+                    RaisePropertyChanged(() => SelectedController);
+                }
+            }
+        }
+
+        private Model.QueriesRow _selectedQuery;
+        public Model.QueriesRow SelectedQuery
+        {
+            get
+            {
+                return _selectedQuery;
+            }
+            set
+            {
+                if (value != _selectedQuery)
+                {
+                    _selectedQuery = value;
+                    RaisePropertyChanged(() => SelectedQuery);
+                }
+            }
+        }
+        #endregion
+
+        private DateTime _licenseStartTime;
+        public DateTime LicenseStartTime
+        {
+            get
+            {
+                return _licenseStartTime;
+            }
+            set
+            {
+                if (_licenseStartTime != value)
+                {
+                    _licenseStartTime = value;
+                }
+                RaisePropertyChanged(() => LicenseStartTime);
+            }
+        }
         #endregion
 
         #region Commands
@@ -139,6 +237,10 @@ namespace plcdb.ViewModels
         public ICommand StartServiceCommand { get { return new DelegateCommand(OnStartService, () => { return !ServiceRunning; }); } }
         public ICommand StopServiceCommand { get { return new DelegateCommand(OnStopService, () => { return ServiceRunning; }); } }
         public ICommand ApplyLogFilterCommand { get { return new DelegateCommand(OnApplyLogFilter); } }
+        public ICommand CopyDatabaseCommand { get { return new DelegateCommand(OnCopyDatabase); } }
+        public ICommand CopyControllerCommand { get { return new DelegateCommand(OnCopyController); } }
+        public ICommand CopyQueryCommand { get { return new DelegateCommand(OnCopyQuery); } }
+        
 
         #endregion
 
@@ -150,6 +252,9 @@ namespace plcdb.ViewModels
 
             bgLogChecker.DoWork += CheckLogs;
             bgLogChecker.RunWorkerCompleted += CheckLogs_Callback;
+
+            bgLicenseChecker.DoWork += CheckLicenseStatus;
+            bgLicenseChecker.RunWorkerCompleted += CheckLicenseStatus_Callback;
 
             Timer serviceMonitor = new Timer(3000);
             serviceMonitor.Elapsed += serviceMonitor_Elapsed;
@@ -192,13 +297,13 @@ namespace plcdb.ViewModels
                         });
                     }
                 }
-                while (ServiceLogs.Count > 1000)
+                while (ServiceLogs.Count > MaxRowsInLog)
                 {
                     if (App.Current != null)
                     {
                         App.Current.Dispatcher.Invoke((Action)delegate // <--- HERE
                         {
-                            ServiceLogs.RemoveAt(999);
+                            ServiceLogs.RemoveAt(MaxRowsInLog-1);
                         });
                     }
                 }
@@ -209,10 +314,12 @@ namespace plcdb.ViewModels
             ChannelFactory<IServiceCommunicator> channelFactory = null;
             try
             {
-                channelFactory = new ChannelFactory<IServiceCommunicator>(
-                    new NetTcpBinding() { MaxBufferSize = 2147483647, MaxReceivedMessageSize = 2147483647 }, 
-                    new EndpointAddress(SERVICE_ENDPOINT));
-
+                NetTcpBinding ServiceBinding = new NetTcpBinding();
+                ServiceBinding.Security.Mode = SecurityMode.None;
+                ServiceBinding.MaxBufferSize = 2147483647;
+                ServiceBinding.MaxReceivedMessageSize = 2147483647;
+                channelFactory = new ChannelFactory<IServiceCommunicator>(ServiceBinding, new EndpointAddress(ServicePath));
+                
                 IServiceCommunicator Service =
                   channelFactory.CreateChannel();
 
@@ -236,7 +343,7 @@ namespace plcdb.ViewModels
         void CheckQueryStatus_Callback(object sender, RunWorkerCompletedEventArgs e)
         {
             List<ObjectStatus> Statuses = e.Result as List<ObjectStatus>;
-            foreach (Model.QueriesRow query in ActiveModel.Queries)
+            foreach (Model.QueriesRow query in (Model.QueriesDataTable)ActiveModel.Queries)
             {
                 if (Statuses == null)
                 {
@@ -261,11 +368,51 @@ namespace plcdb.ViewModels
             ChannelFactory<IServiceCommunicator> channelFactory = null;
             try
             {
-                channelFactory = new ChannelFactory<IServiceCommunicator>(new NetTcpBinding(), new EndpointAddress(SERVICE_ENDPOINT));
+                NetTcpBinding ServiceBinding = new NetTcpBinding();
+                ServiceBinding.Security.Mode = SecurityMode.None;
+                channelFactory = new ChannelFactory<IServiceCommunicator>(ServiceBinding, new EndpointAddress(ServicePath));
                 IServiceCommunicator Service =
                   channelFactory.CreateChannel();
 
                 e.Result = Service.GetQueriesStatus();
+                channelFactory.Close();
+                ServiceRunning = true;
+            }
+            catch (Exception ex)
+            {
+                ServiceRunning = false;
+                if (channelFactory != null)
+                {
+                    channelFactory.Abort();
+                }
+
+            }
+        }
+        private void CheckLicenseStatus_Callback(object sender, RunWorkerCompletedEventArgs e)
+        {
+            try
+            {
+                LicenseStartTime = (DateTime)e.Result;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex);
+                LicenseStartTime = DateTime.MaxValue;
+            }
+        }
+
+        private void CheckLicenseStatus(object sender, DoWorkEventArgs e)
+        {
+            ChannelFactory<IServiceCommunicator> channelFactory = null;
+            try
+            {
+                NetTcpBinding ServiceBinding = new NetTcpBinding();
+                ServiceBinding.Security.Mode = SecurityMode.None;
+                channelFactory = new ChannelFactory<IServiceCommunicator>(ServiceBinding, new EndpointAddress(ServicePath));
+                IServiceCommunicator Service =
+                  channelFactory.CreateChannel();
+
+                e.Result = Service.GetStartTime();
                 channelFactory.Close();
                 ServiceRunning = true;
             }
@@ -286,6 +433,9 @@ namespace plcdb.ViewModels
 
             if (!bgLogChecker.IsBusy && !PauseServiceLogging)
                 bgLogChecker.RunWorkerAsync();
+
+            if (!bgLicenseChecker .IsBusy)
+                bgLicenseChecker.RunWorkerAsync();
         }
         #endregion
 
@@ -308,7 +458,7 @@ namespace plcdb.ViewModels
                 ChannelFactory<IServiceCommunicator> channelFactory = null;
                 try
                 {
-                    channelFactory = new ChannelFactory<IServiceCommunicator>(new NetTcpBinding(), new EndpointAddress(SERVICE_ENDPOINT));
+                    channelFactory = new ChannelFactory<IServiceCommunicator>(new NetTcpBinding(), new EndpointAddress(ServicePath));
                     IServiceCommunicator Service =
                       channelFactory.CreateChannel();
 
@@ -367,6 +517,62 @@ namespace plcdb.ViewModels
             Row.Delete();
             ActiveModel.AcceptChanges();
         }
+        private void OnCopyDatabase()
+        {
+            Model.DatabasesRow NewRow = ActiveModel.Databases.NewDatabasesRow();
+            foreach (DataColumn col in ActiveModel.Databases.Columns)
+            {
+                if (col.ColumnName != "PK")
+                {
+                    NewRow[col.ColumnName] = SelectedDatabase[col.ColumnName];
+                }
+            }
+            ActiveModel.Databases.AddDatabasesRow(NewRow);
+        }
+        private void OnCopyController()
+        {
+            Model.ControllersRow NewRow = ActiveModel.Controllers.NewControllersRow();
+            foreach (DataColumn col in ActiveModel.Controllers.Columns)
+            {
+                if (col.ColumnName != "PK")
+                {
+                    NewRow[col.ColumnName] = SelectedController[col.ColumnName];
+                }
+            }
+            ActiveModel.Controllers.AddControllersRow(NewRow);
+        }
+        private void OnCopyQuery()
+        {
+            Model.QueriesRow NewRow = ActiveModel.Queries.NewQueriesRow();
+            foreach (DataColumn col in ActiveModel.Queries.Columns)
+            {
+                if (col.ColumnName != "PK")
+                {
+                    NewRow[col.ColumnName] = SelectedQuery[col.ColumnName];
+                }
+            }
+            ActiveModel.Queries.AddQueriesRow(NewRow);
+
+            foreach (Model.QueryTagMappingsRow Row in SelectedQuery.GetQueryTagMappingsRows())
+            {
+                Model.QueryTagMappingsRow NewTagMappingRow = ActiveModel.QueryTagMappings.NewQueryTagMappingsRow();
+                foreach (DataColumn col in ActiveModel.QueryTagMappings.Columns)
+                {
+                    if (col.ColumnName == "Query")
+                    {
+                        NewTagMappingRow[col.ColumnName] = NewRow.PK;
+                    }
+                    else if (col.ColumnName != "PK")
+                    {
+                        NewTagMappingRow[col.ColumnName] = Row[col.ColumnName];
+                    }
+                }
+                ActiveModel.QueryTagMappings.AddQueryTagMappingsRow(NewTagMappingRow);
+            }
+            ActiveModel.Queries.AcceptChanges();
+            ActiveModel.QueryTagMappings.AcceptChanges();
+            
+        }
         private bool ServiceLogFilter(object item)
         {
             try
@@ -397,11 +603,5 @@ namespace plcdb.ViewModels
             }
         }
         #endregion
-
-
-
-        
-
-
     }
 }

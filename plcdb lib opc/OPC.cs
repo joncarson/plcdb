@@ -12,6 +12,7 @@ using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Threading;
 using ProcessControlStandards.OPC.Core;
+using NLog;
 
 namespace plcdb_lib_opc
 {
@@ -21,7 +22,7 @@ namespace plcdb_lib_opc
         private Group TagGroup = null;
         private Model.ControllersRow ControllerInfo;
         List<OpcTag> ActiveTags = new List<OpcTag>();
-
+        private Logger Log = LogManager.GetCurrentClassLogger();
         private static int ItemClientId = 1;
         private static int GroupClientId = 1;
 
@@ -32,105 +33,122 @@ namespace plcdb_lib_opc
 
         public override object Read(plcdb_lib.Models.Model.TagsRow t)
         {
-            if (!ActiveTags.Select(p => p.TagRow).Contains(t))
+            try
             {
-                AddTagToGroup(t);
+                if (!ActiveTags.Select(p => p.TagRow).Contains(t))
+                {
+                    AddTagToGroup(t);
+                }
+                return ActiveTags.First(p => p.TagRow.PK == t.PK).Value;
             }
-            return ActiveTags.First(p => p.TagRow.PK == t.PK).Value;
+            catch (Exception ex)
+            {
+                throw new Exception("Error reading tag '" + t + "' from OPC server: " + ControllerInfo.Address + "\\" + ControllerInfo.opc_server, ex);
+            }
         }
 
         public override bool Write(plcdb_lib.Models.Model.TagsRow t, object val)
         {
-            if (!ActiveTags.Select(p => p.TagRow).Contains(t))
+            try
             {
-                AddTagToGroup(t);
+                if (!ActiveTags.Select(p => p.TagRow).Contains(t))
+                {
+                    AddTagToGroup(t);
+                }
+                OpcTag ToWrite = ActiveTags.First(p => p.TagRow.PK == t.PK);
+                TagGroup.SyncWriteItems(new int[] { ToWrite.ServerId }, new object[] { val });
+                return true;
             }
-            OpcTag ToWrite = ActiveTags.First(p => p.TagRow.PK == t.PK);
-            TagGroup.SyncWriteItems(new int[] {ToWrite.ServerId}, new object[] {val});
-            return true;
+            catch (Exception ex)
+            {
+                throw new Exception("Error writing tag '" + t + "' from OPC server: " + ControllerInfo.Address + "\\" + ControllerInfo.opc_server, ex);
+            }
         }
 
         public override plcdb_lib.Models.Model.TagsDataTable BrowseTags()
         {
-            Model.TagsDataTable Table = new Model.TagsDataTable();
-
-            if (Server == null || TagGroup == null)
-                return Table;
-
-            ServerAddressSpaceBrowser Browser = Server.GetAddressSpaceBrowser();
-            foreach (String ItemId in Browser.GetItemIds(BrowseType.Flat, string.Empty, VarEnum.VT_EMPTY, 0))
+            try
             {
-                Model.TagsRow Row = Table.NewTagsRow();
-                Row.Address = ItemId;
-                Row.Controller = ControllerInfo.PK;
-                Table.AddTagsRow(Row);
+                Model.TagsDataTable Table = new Model.TagsDataTable();
+
+                if (Server == null || TagGroup == null)
+                    return Table;
+
+                ServerAddressSpaceBrowser Browser = Server.GetAddressSpaceBrowser();
+                foreach (String ItemId in Browser.GetItemIds(BrowseType.Flat, string.Empty, VarEnum.VT_EMPTY, 0))
+                {
+                    Model.TagsRow Row = Table.NewTagsRow();
+                    Row.Address = ItemId;
+                    Row.Controller = ControllerInfo.PK;
+                    Table.AddTagsRow(Row);
+                }
+                Table.AcceptChanges();
+                return Table;
             }
-            Table.AcceptChanges();
-            return Table;
+            catch (Exception ex)
+            {
+                throw new Exception("Error browsing tags from OPC server: " + ControllerInfo.Address + "\\" + ControllerInfo.opc_server, ex);
+            }
         }
 
         public OPC(Model.ControllersRow ControllerInfo)
         {
-            this.ControllerInfo = ControllerInfo;
-            String OpcName =  "plcdb-" + ControllerInfo.PK;
-            Server = new DAServer(ControllerInfo.Address);
-            
-            TagGroup = Server.AddGroup(Interlocked.Increment(ref GroupClientId), OpcName, true, 100, (float)0.0);
-            Model.TagsRow[] TagRows = ControllerInfo.GetTagsRows();
+            try
+            {
+                this.ControllerInfo = ControllerInfo;
+                String OpcName = "plcdb-" + ControllerInfo.PK;
+                Server = new DAServer(ControllerInfo.opc_server, ControllerInfo.Address);
+
+                TagGroup = Server.AddGroup(Interlocked.Increment(ref GroupClientId), OpcName, true, 100, (float)0.0);
+                Model.TagsRow[] TagRows = ControllerInfo.GetTagsRows();
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Error creating OPC connection: " + ex.Message);
+            }
         }
 
         void TagGroup_ReadComplete(object sender, DataChangeEventArgs e)
         {
             foreach (ItemValue value in e.Values)
             {
-                ActiveTags.First(p => p.ClientId == value.ClientId).ItemValue = value;
+                var Tag = ActiveTags.FirstOrDefault(p => p.ClientId == value.ClientId);
+                if (Tag != null)
+                    Tag.ItemValue = value;
             }
-        }
-
-        private System.Runtime.InteropServices.VarEnum TypeToOpcType(Type type)
-        {
-            if (type == typeof(int))
-                return System.Runtime.InteropServices.VarEnum.VT_INT;
-            else if (type == typeof(float) || type == typeof(double))
-                return System.Runtime.InteropServices.VarEnum.VT_DECIMAL;
-            else if (type == typeof(string))
-                return System.Runtime.InteropServices.VarEnum.VT_LPSTR;
-            else if (type == typeof(bool))
-                return System.Runtime.InteropServices.VarEnum.VT_BOOL;
-            //else if (type == typeof(char))
-            //    return System.Runtime.InteropServices.VarEnum.VT_BYTE;
-            return System.Runtime.InteropServices.VarEnum.VT_UNKNOWN;
-        }
-
-        public override List<string> GetAvailableSubaddresses()
-        {
-            ServerBrowser browser = new ServerBrowser();
-            return new List<string>();
         }
 
         private void AddTagToGroup(Model.TagsRow tag)
         {
-            OpcTag NewTag = new OpcTag();
-            NewTag.TagRow = tag;
-            NewTag.Item = new Item()
+            try
             {
-                //AccessPath = TagRow.Address,
-                Active = true,
-                ClientId = (int)tag.PK,
-                ItemId = tag.Address,
-                RequestedDataType = VarEnum.VT_EMPTY// TagRow.IsDataTypeNull() ? VarEnum.VT_UNKNOWN : TypeToOpcType(TagRow.DataType)
-            };
-            NewTag.ItemValue = new ItemValue();
-            
-            var TagResult = TagGroup.AddItems(new Item[] { NewTag.Item }).First();
-            NewTag.ItemResult = TagResult;
+                OpcTag NewTag = new OpcTag();
+                NewTag.TagRow = tag;
+                NewTag.Item = new Item()
+                {
+                    //AccessPath = TagRow.Address,
+                    Active = true,
+                    ClientId = (int)tag.PK,
+                    ItemId = tag.Address,
+                    RequestedDataType = VarEnum.VT_EMPTY// TagRow.IsDataTypeNull() ? VarEnum.VT_UNKNOWN : TypeToOpcType(TagRow.DataType)
+                };
+                NewTag.ItemValue = new ItemValue();
 
-            ActiveTags.Add(NewTag);
-            //add event handler -- make sure we are not adding a duplicate copy
-            TagGroup.ReadComplete -= TagGroup_ReadComplete;
-            TagGroup.DataChange -= TagGroup_ReadComplete;
-            TagGroup.ReadComplete += TagGroup_ReadComplete;
-            TagGroup.DataChange += TagGroup_ReadComplete;
+                var TagResult = TagGroup.AddItems(new Item[] { NewTag.Item }).First();
+                NewTag.ItemResult = TagResult;
+
+                ActiveTags.Add(NewTag);
+                //add event handler -- make sure we are not adding a duplicate copy
+                TagGroup.ReadComplete -= TagGroup_ReadComplete;
+                TagGroup.DataChange -= TagGroup_ReadComplete;
+                TagGroup.ReadComplete += TagGroup_ReadComplete;
+                TagGroup.DataChange += TagGroup_ReadComplete;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error adding tag '" + tag + "' to group on OPC server: " + ControllerInfo.Address + "\\" + ControllerInfo.opc_server, ex);
+            }
+
         }
     }
 }

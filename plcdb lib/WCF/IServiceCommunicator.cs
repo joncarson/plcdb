@@ -20,6 +20,14 @@ namespace plcdb_lib.WCF
 
         [OperationContract]
         List<WcfEvent> GetLatestLogs(DateTime MinDate);
+
+        [OperationContract]
+        DateTime GetStartTime();
+
+        [OperationContract]
+        void SetLicense(String license);
+
+        
     }
 
     [DataContract(Namespace="plcdb_lib", Name="ObjectStatus")]

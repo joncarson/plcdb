@@ -64,7 +64,7 @@ namespace plcdb_service
             {
                 TriggerTag = ActiveModel.Tags.FindByPK(ActiveQuery.TriggerTag);
                 TriggerController = TriggerTag.ControllersRow.Controller;
-                Log.Info(this, "Trigger tag and controller found");
+                Log.Debug(this, "Trigger tag and controller found");
             }
             catch (Exception e)
             {
@@ -74,14 +74,14 @@ namespace plcdb_service
             }
             while (!StopRequest)
             {
-                Log.Info(this, "Starting event loop");
+                Log.Debug(this, "Starting event loop");
                 try
                 {
                     bool QueryTriggered = (bool)TriggerController.Read(TriggerTag);
 
                     if (QueryTriggered)
                     {
-                        Log.Info(this, "Query triggered");
+                        Log.Debug(this, "Query triggered");
                         switch (ActiveQuery.QueryType)
                         {
                             case "SELECT":
@@ -102,11 +102,11 @@ namespace plcdb_service
                             default:
                                 throw new KeyNotFoundException("Invalid query type: " + ActiveQuery.QueryType);
                         }
-                        Log.Info(this, "Query completed");
+                        Log.Debug(this, "Query completed");
                     }
                     else
                     {
-                        Log.Info(this, "Query not triggered");
+                        Log.Debug(this, "Query not triggered");
                     }
                     Status = StatusEnum.Good;
                 }
@@ -144,11 +144,13 @@ namespace plcdb_service
             {
                 if (TagMapping != null && !TagMapping.IsColumnNameNull() && TagMapping.TagsRow != null && TagMapping.QueriesRow != null)
                 {
-                    Log.Info(this, "Mapping parameter to query: " + TagMapping.TagsRow.Name + " to column " + TagMapping.ColumnName);
+                    Log.Debug(this, "Mapping parameter to query: " + TagMapping.TagsRow + " to column " + TagMapping.ColumnName);
                     Model.TagsRow Tag = TagMapping.TagsRow;
                     ControllerBase Controller = Tag.ControllersRow.Controller;
                     InsertQueryStart += TagMapping.ColumnName + ", ";
-                    InsertQueryEnd += Controller.Read(TagMapping.TagsRow).ToSqlString() + ", ";
+                    String ValueRead = Controller.Read(TagMapping.TagsRow).ToSqlString() + ", ";
+                    InsertQueryEnd += ValueRead;
+                    Log.Info(this, "Read input parameter for column '" + TagMapping.ColumnName + " from Tag " + TagMapping.TagsRow + "'. Value Read=" + ValueRead);
                 }
             }
             InsertQueryStart = InsertQueryStart.Remove(InsertQueryStart.Length-2) + ")";
@@ -172,7 +174,7 @@ namespace plcdb_service
             DataTable dataResults = new DataTable();
             Log.Info(this, "Performing query: " + ActiveQuery.QueryText);
             sqlDataAdapter.Fill(dataResults);
-            Log.Info(this, "Query completed");
+            Log.Debug(this, "Query completed");
             if (dataResults.Rows.Count > 100)
             {
                 Log.Warn("Warning! Query returned many results (" + dataResults.Rows.Count + " rows)!");
@@ -184,15 +186,15 @@ namespace plcdb_service
                     Model.QueryTagMappingsRow TagMapping = ActiveModel.QueryTagMappings.FirstOrDefault(p => p.Query == ActiveQuery.PK && p.ColumnName == col.ColumnName);
                     if (TagMapping != null && !TagMapping.IsColumnNameNull() && TagMapping.TagsRow != null && TagMapping.QueriesRow != null)
                     {
-                        Log.Info(this, "Mapping result to tag: " + TagMapping.ColumnName + " to tag " + TagMapping.TagsRow.Address);
+                        Log.Debug(this, "Mapping result to tag: " + TagMapping.ColumnName + " to tag " + TagMapping.TagsRow);
                         Model.TagsRow TagToWrite = TagMapping.TagsRow;
                         ControllerBase ControllerToWrite = TagToWrite.ControllersRow.Controller;
                         ControllerToWrite.Write(TagToWrite, row[col]);
-                        Log.Info(this, "Write complete: " + " value '" + row[col] + "' to tag " + TagToWrite.Address);
+                        Log.Info(this, "Wrote column '" + TagMapping.ColumnName + "', value '" + row[col] + "' to tag " + TagToWrite);
                     }
                     else
                     {
-                        Log.Info(this,"Query triggered but TagMapping not set up for column '" + col.ColumnName + "'");
+                        Log.Debug(this, "Query triggered but TagMapping not set up for column '" + col.ColumnName + "'");
                     }
                 }
             }
@@ -202,7 +204,7 @@ namespace plcdb_service
         private void ProcessStoredProcedure()
         {
             Log.TraceEnterFunction(this);
-            Log.Info(this, "Beginning STORED PROCEDURE query: " + ActiveQuery.QueryText);
+            Log.Info(this, "Beginning STORED PROCEDURE: " + ActiveQuery.QueryText);
             SqlConnection sqlConnection = new SqlConnection(ActiveQuery.DatabasesRow.ConnectionString);
             SqlCommand sqlCommand = new SqlCommand(ActiveQuery.QueryText, sqlConnection);
             SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(sqlCommand);
@@ -212,7 +214,7 @@ namespace plcdb_service
             {
                 if (tagMapping != null && !tagMapping.IsColumnNameNull() && tagMapping.TagsRow != null && tagMapping.QueriesRow != null)
                 {
-                    Log.Info(this, "Setting up tag mapping for column '" + tagMapping.ColumnName + "'");
+                    Log.Debug(this, "Setting up tag mapping for column '" + tagMapping.ColumnName + "'");
                     SqlParameter Parameter = new SqlParameter(tagMapping.ColumnName, null);
                     if (tagMapping.ColumnName == "@RETURN_VALUE")
                     {
@@ -222,18 +224,20 @@ namespace plcdb_service
                     {
                         Parameter.Direction = ParameterDirection.InputOutput;
                         Parameter.Value = tagMapping.TagsRow.ControllersRow.Controller.Read(tagMapping.TagsRow).ToSqlString();
+                        Log.Info(this, "Read InOut parameter '" + Parameter.ParameterName + "' from tag " + tagMapping.TagsRow + ". Value read=" + Parameter.Value);
                     }
                     else
                     {
                         Parameter.Direction = ParameterDirection.Input;
                         Parameter.Value = tagMapping.TagsRow.ControllersRow.Controller.Read(tagMapping.TagsRow).ToSqlString();
+                        Log.Info(this, "Read input parameter '" + Parameter.ParameterName + "' from tag " + tagMapping.TagsRow + ". Value read=" + Parameter.Value);
                     }
-                    Log.Info(this, "Parameterization complete for for column '" + tagMapping.ColumnName + "', type=" + Parameter.Direction.ToString());
+                    Log.Debug(this, "Parameterization complete for for column '" + tagMapping.ColumnName + "', type=" + Parameter.Direction.ToString());
                     sqlCommand.Parameters.Add(Parameter);
                 }
                 else
                 {
-                    Log.Info(this, "Query triggered but TagMapping not set up for column '" + tagMapping.ColumnName + "'");
+                    Log.Debug(this, "Query triggered but TagMapping not set up for column '" + tagMapping.ColumnName + "'");
                 }
             }
             
@@ -241,24 +245,24 @@ namespace plcdb_service
 
             DataTable dataResults = new DataTable();
             sqlDataAdapter.Fill(dataResults);
-            Log.Info(this, "Stored procedure execution completed");
+            Log.Debug(this, "Stored procedure execution completed");
 
             foreach (SqlParameter Parameter in sqlCommand.Parameters)
             {
                 if (Parameter.Direction != ParameterDirection.Input)
                 {
-                    Log.Info(this, "Mapping output parameter '" + Parameter.ParameterName + "'");
+                    Log.Debug(this, "Mapping output parameter '" + Parameter.ParameterName + "'");
                     Model.QueryTagMappingsRow TagMapping = ActiveModel.QueryTagMappings.FirstOrDefault(p => p.Query == ActiveQuery.PK && p.ColumnName == Parameter.ParameterName);
                     if (TagMapping != null && !TagMapping.IsColumnNameNull() && TagMapping.TagsRow != null && TagMapping.QueriesRow != null)
                     {
                         Model.TagsRow TagToWrite = TagMapping.TagsRow;
                         ControllerBase ControllerToWrite = TagToWrite.ControllersRow.Controller;
                         ControllerToWrite.Write(TagToWrite, Parameter.Value);
-                        Log.Info(this, "Wrote output parameter '" + Parameter.ParameterName + "', value '" + Parameter.Value.ToString() + "' to tag '" + TagToWrite.Address + "'");
+                        Log.Info(this, "Wrote output parameter '" + Parameter.ParameterName + "', value '" + Parameter.Value.ToString() + "' to tag '" + TagToWrite + "'");
                     }
                     else
                     {
-                        Log.Info(this, "Query triggered but TagMapping not set up for column '" + Parameter.ParameterName + "'");
+                        Log.Debug(this, "Query triggered but TagMapping not set up for column '" + Parameter.ParameterName + "'");
                     }
                     
                 }

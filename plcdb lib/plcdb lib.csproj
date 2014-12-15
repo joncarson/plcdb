@@ -35,6 +35,14 @@
     <Reference Include="NLog">
       <HintPath>..\packages\NLog.3.1.0.0\lib\net40\NLog.dll</HintPath>
     </Reference>
+    <Reference Include="ProcessControlStandards.OPC.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\ProcessControlStandards.OPC.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="ProcessControlStandards.OPC.DataAccessClient, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\ProcessControlStandards.OPC.DataAccessClient.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
@@ -46,6 +54,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CONSTANTS.cs" />
+    <Compile Include="HelperFunctions\OpcHelper.cs" />
     <Compile Include="Logging\WcfLogTarget.cs" />
     <Compile Include="Models\Model.cs">
       <DependentUpon>Model.xsd</DependentUpon>
@@ -59,7 +69,7 @@
     <Compile Include="Models\ControllerBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Simulator\Simulator.cs" />
-    <Compile Include="SQL\SqlHelper.cs" />
+    <Compile Include="HelperFunctions\SqlHelper.cs" />
     <Compile Include="WCF\IServiceCommunicator.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -78,6 +88,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="SQL\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

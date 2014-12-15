@@ -63,6 +63,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="LIcensing\ServiceLicense.cs" />
+    <Compile Include="LIcensing\ServiceLicenseProvider.cs" />
     <Compile Include="plcdb.cs">
       <SubType>Component</SubType>
     </Compile>

@@ -34,5 +34,29 @@ namespace plcdb.Properties {
                 this["LastOpenedFile"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("localhost")]
+        public string ServiceHost {
+            get {
+                return ((string)(this["ServiceHost"]));
+            }
+            set {
+                this["ServiceHost"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1000")]
+        public int MaxLogLength {
+            get {
+                return ((int)(this["MaxLogLength"]));
+            }
+            set {
+                this["MaxLogLength"] = value;
+            }
+        }
     }
 }

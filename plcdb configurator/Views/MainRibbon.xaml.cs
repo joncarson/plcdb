@@ -1,5 +1,6 @@
 ﻿using plcdb.ViewModels;
 using plcdb_lib.Models;
+using plcdb_lib.SQL;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -143,6 +144,19 @@ namespace plcdb.Views
                 CurrentQuery = vm.SelectedQuery
             };
             popup.ShowDialog();
+        }
+
+        private void btnTestDatabase_Click(object sender, RoutedEventArgs e)
+        {
+            var vm = this.DataContext as MainWindowViewModel;
+            if (SqlHelper.TestConnectionString(vm.SelectedDatabase.ConnectionString))
+            {
+                MessageBox.Show("Database connection succeeded!", "Success!", MessageBoxButton.OK);
+            }
+            else
+            {
+                MessageBox.Show("Database connection failed.", "Failure", MessageBoxButton.OK);
+            }
         }
     }
 }

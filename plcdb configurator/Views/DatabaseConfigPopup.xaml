@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Edit Database" Height="300" Width="266"
         WindowStartupLocation="CenterScreen"
-        xmlns:valueConverters="clr-namespace:plcdb.Converters"
+        xmlns:valueConverters="clr-namespace:plcdb.Converters" ShowInTaskbar="False" Topmost="True" ResizeMode="NoResize"
         >
     <Window.Resources>
         <ResourceDictionary>
