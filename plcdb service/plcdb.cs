@@ -16,13 +16,12 @@ using System.IO;
 using NLog;
 using plcdb_lib.Logging;
 using NLog.Config;
-using plcdb_service.Licensing;
 using plcdb_lib.constants;
+using plcdb_lib.HelperFunctions;
 
 namespace plcdb_service
 {
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, ConcurrencyMode = ConcurrencyMode.Single)]
-    [LicenseProvider(typeof(ServiceLicenseProvider))]
     public partial class plcdb : ServiceBase, IServiceCommunicator
     {
         private Model ActiveModel = new Model();
@@ -35,6 +34,7 @@ namespace plcdb_service
         private bool DemoLicenseExpired = false;
         private DateTime StartTime;
         private Logger Log = LogManager.GetCurrentClassLogger();
+        private bool IsDemo = true;
 
         public plcdb()
         {
@@ -44,7 +44,7 @@ namespace plcdb_service
         protected override void OnStart(string[] args)
         {
             
-            //Thread.Sleep(9000);
+            Thread.Sleep(9000);
             StartTime = DateTime.Now;
 
             //Set up WCF logging
@@ -65,15 +65,28 @@ namespace plcdb_service
             }
 
             //Set up license timer
-            if (License.IsDemo)
+            LicenseTimer = new System.Timers.Timer(CONSTANTS.DemoTimeout.TotalMilliseconds);
+            LicenseTimer.Elapsed += LicenseTimer_Elapsed;
+            LicenseTimer.AutoReset = false;
+            LicenseTimer.Enabled = true;
+
+            if (!LicenseHelper.IsLicenseValid(Properties.Settings.Default.LicenseKey, Properties.Settings.Default.PurchaseKey, LicenseHelper.Unique_HW_ID()))
             {
-                LicenseTimer = new System.Timers.Timer(CONSTANTS.DemoTimeout.TotalMilliseconds);
-                LicenseTimer.Elapsed += LicenseTimer_Elapsed;
-                LicenseTimer.AutoReset = false;
-                LicenseTimer.Enabled = true;
+                IsDemo = true;
                 LicenseTimer.Start();
             }
+            else
+            {
+                IsDemo = false;
+            }
+
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
                     
+        }
+
+        void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            Log.Error("Error from " + sender.ToString() + ": " + ((Exception)e.ExceptionObject).Message);
         }
 
         private void LicenseTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
@@ -173,29 +186,38 @@ namespace plcdb_service
             return events;
         }
 
-        internal ServiceLicense License
-        {
-            get
-            {
-                return ServiceLicense.CreateLicense(Properties.Settings.Default.License);
-            }
-        }
-
-
+       
         public DateTime GetStartTime()
         {
-            if (License.IsDemo)
+            if (IsDemo)
                 return StartTime;
             return DateTime.MaxValue;
         }
 
-        public void SetLicense(string license)
+        public void SetLicense(string PurchaseKey, string LicenseKey)
         {
-            Properties.Settings.Default.License = license;
-            if (!ServiceLicense.CreateLicense(license).IsDemo)
+            
+            Properties.Settings.Default.LicenseKey = LicenseKey;
+            Properties.Settings.Default.PurchaseKey = PurchaseKey;
+            Properties.Settings.Default.Save();
+            if (LicenseHelper.IsLicenseValid(Properties.Settings.Default.LicenseKey, Properties.Settings.Default.PurchaseKey, LicenseHelper.Unique_HW_ID()))
             {
+                Log.Info("License succeeded!");
                 LicenseTimer.Stop();
+                IsDemo = false;
             }
+            else
+            {
+                Log.Error("License failed: " + LicenseKey);
+                LicenseTimer.Start();
+                IsDemo = true;
+            }
+        }
+
+
+        public String GetUniqueHWID()
+        {
+            return LicenseHelper.Unique_HW_ID();
         }
     }
 }

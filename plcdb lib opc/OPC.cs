@@ -21,7 +21,7 @@ namespace plcdb_lib_opc
         private DAServer Server = null;
         private Group TagGroup = null;
         private Model.ControllersRow ControllerInfo;
-        List<OpcTag> ActiveTags = new List<OpcTag>();
+        private List<OpcTag> ActiveTags = new List<OpcTag>();
         private Logger Log = LogManager.GetCurrentClassLogger();
         private static int ItemClientId = 1;
         private static int GroupClientId = 1;
@@ -71,7 +71,7 @@ namespace plcdb_lib_opc
             {
                 Model.TagsDataTable Table = new Model.TagsDataTable();
 
-                if (Server == null || TagGroup == null)
+                if (Server == null)
                     return Table;
 
                 ServerAddressSpaceBrowser Browser = Server.GetAddressSpaceBrowser();
@@ -91,16 +91,14 @@ namespace plcdb_lib_opc
             }
         }
 
-        public OPC(Model.ControllersRow ControllerInfo)
+        public OPC(Model.ControllersRow controllerInfo)
         {
             try
             {
-                this.ControllerInfo = ControllerInfo;
+                ControllerInfo = controllerInfo;
                 String OpcName = "plcdb-" + ControllerInfo.PK;
                 Server = new DAServer(ControllerInfo.opc_server, ControllerInfo.Address);
-
                 TagGroup = Server.AddGroup(Interlocked.Increment(ref GroupClientId), OpcName, true, 100, (float)0.0);
-                Model.TagsRow[] TagRows = ControllerInfo.GetTagsRows();
             }
             catch (Exception ex)
             {
@@ -122,6 +120,11 @@ namespace plcdb_lib_opc
         {
             try
             {
+                if (TagGroup == null)
+                {
+                    String OpcName = "plcdb-" + ControllerInfo.PK;
+                    TagGroup = Server.AddGroup(Interlocked.Increment(ref GroupClientId), OpcName, true, 100, (float)0.0);
+                }
                 OpcTag NewTag = new OpcTag();
                 NewTag.TagRow = tag;
                 NewTag.Item = new Item()
@@ -149,6 +152,11 @@ namespace plcdb_lib_opc
                 throw new Exception("Error adding tag '" + tag + "' to group on OPC server: " + ControllerInfo.Address + "\\" + ControllerInfo.opc_server, ex);
             }
 
+        }
+
+        public override bool ValidateTag(string address)
+        {
+            return false;
         }
     }
 }

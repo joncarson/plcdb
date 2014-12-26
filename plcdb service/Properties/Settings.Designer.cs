@@ -38,12 +38,24 @@ namespace plcdb_service.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string License {
+        public string LicenseKey {
             get {
-                return ((string)(this["License"]));
+                return ((string)(this["LicenseKey"]));
             }
             set {
-                this["License"] = value;
+                this["LicenseKey"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string PurchaseKey {
+            get {
+                return ((string)(this["PurchaseKey"]));
+            }
+            set {
+                this["PurchaseKey"] = value;
             }
         }
     }

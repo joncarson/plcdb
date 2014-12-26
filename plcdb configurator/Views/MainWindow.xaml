@@ -8,7 +8,7 @@
         WindowStartupLocation="CenterScreen"
         Loaded="Window_Loaded_1"
         x:Class="plcdb.Views.MainWindow" 
-        Icon="/plcdb;component/Resources/Images/sql-full-to-sql-compact.png"
+        Icon="/plcdb;component/Resources/Icons/p2s.ico"
         xmlns:r="clr-namespace:Fluent;assembly=Fluent"
     Background="Silver"
         >

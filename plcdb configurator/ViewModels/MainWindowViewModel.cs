@@ -15,6 +15,9 @@ using System.Data;
 using plcdb_lib.Logging;
 using NLog;
 using System.Windows.Data;
+using plcdb_lib.constants;
+using System.Net;
+using plcdb_lib.HelperFunctions;
 
 namespace plcdb.ViewModels
 {
@@ -24,6 +27,7 @@ namespace plcdb.ViewModels
         private readonly BackgroundWorker bgQueryStatus = new BackgroundWorker();
         private readonly BackgroundWorker bgLogChecker = new BackgroundWorker();
         private readonly BackgroundWorker bgLicenseChecker = new BackgroundWorker();
+        private List<WcfEvent> eventLog = new List<WcfEvent>();
         
         private object _serviceLogLock = new object();
         private Uri ServicePath
@@ -74,6 +78,46 @@ namespace plcdb.ViewModels
             }
         }
         #endregion
+
+        #region LicenseKey
+        public String LicenseKey
+        {
+            get
+            {
+                return Properties.Settings.Default.LicenseKey;
+
+            }
+            set
+            {
+                if (Properties.Settings.Default.LicenseKey != value)
+                {
+                    Properties.Settings.Default.LicenseKey = value;
+                    Properties.Settings.Default.Save();
+                    RaisePropertyChanged(() => LicenseKey);
+                }
+            }
+        }
+        #endregion
+
+        #region PurchaseKey
+        public String PurchaseKey
+        {
+            get
+            {
+                return Properties.Settings.Default.PurchaseKey;
+
+            }
+            set
+            {
+                if (Properties.Settings.Default.PurchaseKey != value)
+                {
+                    Properties.Settings.Default.PurchaseKey = value;
+                    Properties.Settings.Default.Save();
+                    RaisePropertyChanged(() => PurchaseKey);
+                }
+            }
+        }
+        #endregion
  
         #region ServiceRunning
         private bool _serviceRunning;
@@ -89,6 +133,25 @@ namespace plcdb.ViewModels
                 {
                     _serviceRunning = value;
                     RaisePropertyChanged(() => ServiceRunning);
+                }
+            }
+        }
+        #endregion
+
+        #region IsDemo
+        private bool _isDemo;
+        public bool IsDemo
+        {
+            get
+            {
+                return _isDemo;
+            }
+            set
+            {
+                if (_isDemo != value)
+                {
+                    _isDemo = value;
+                    RaisePropertyChanged(() => IsDemo);
                 }
             }
         }
@@ -240,6 +303,7 @@ namespace plcdb.ViewModels
         public ICommand CopyDatabaseCommand { get { return new DelegateCommand(OnCopyDatabase); } }
         public ICommand CopyControllerCommand { get { return new DelegateCommand(OnCopyController); } }
         public ICommand CopyQueryCommand { get { return new DelegateCommand(OnCopyQuery); } }
+        public ICommand ValidateLicenseFromUrlCommand { get { return new DelegateCommand(OnValidateLicenseFromUrl); } }
         
 
         #endregion
@@ -265,6 +329,11 @@ namespace plcdb.ViewModels
             CanExecute.Tick += (s, e) => { CommandManager.InvalidateRequerySuggested(); };
             CanExecute.Start();
 
+            DispatcherTimer CheckLogsThread = new DispatcherTimer();
+            CheckLogsThread.Interval = new TimeSpan(0, 0, 3);
+            CheckLogsThread.Tick += CheckLogs_Tick;
+            CheckLogsThread.Start();
+
             //BindingOperations.EnableCollectionSynchronization(ServiceLogs, _serviceLogLock);
 
             ActiveModel.DatasetChanged += ActiveModel_DatasetChanged;
@@ -274,6 +343,28 @@ namespace plcdb.ViewModels
             LogFilterWarn = true;
             LogFilterError = true;
             LogFilterFatal = true;
+        }
+
+        private void CheckLogs_Tick(object sender, EventArgs e)
+        {
+            DateTime LatestDate = DateTime.MinValue;
+            if (ServiceLogs.Count > 0)
+                LatestDate = ServiceLogs.Max(p => p.Occurred);
+
+            foreach (WcfEvent Event in eventLog.Where(p => p.Occurred > LatestDate))
+            {
+                ServiceLogs.Insert(0, Event);
+            }
+            while (ServiceLogs.Count > MaxRowsInLog)
+            {
+                try
+                {
+                    ServiceLogs.RemoveAt(MaxRowsInLog - 1);
+                }
+                catch (ArgumentOutOfRangeException ex) //sometimes threadsafe invoke messes up and throws exception. Ignore this one type of exception
+                {
+                }
+            }
         }
         #endregion
 
@@ -287,26 +378,7 @@ namespace plcdb.ViewModels
         {
             if (e.Result != null)
             {
-                foreach (WcfEvent Event in (List<WcfEvent>)e.Result)
-                {
-                    if (App.Current != null)
-                    {
-                        App.Current.Dispatcher.Invoke((Action)delegate // <--- HERE
-                        {
-                            ServiceLogs.Insert(0, Event);
-                        });
-                    }
-                }
-                while (ServiceLogs.Count > MaxRowsInLog)
-                {
-                    if (App.Current != null)
-                    {
-                        App.Current.Dispatcher.Invoke((Action)delegate // <--- HERE
-                        {
-                            ServiceLogs.RemoveAt(MaxRowsInLog-1);
-                        });
-                    }
-                }
+                eventLog = (List<WcfEvent>)e.Result;
             }
         }
         private void CheckLogs(object sender, DoWorkEventArgs e)
@@ -393,6 +465,7 @@ namespace plcdb.ViewModels
             try
             {
                 LicenseStartTime = (DateTime)e.Result;
+                IsDemo = LicenseStartTime != DateTime.MaxValue;
             }
             catch (Exception ex)
             {
@@ -458,7 +531,9 @@ namespace plcdb.ViewModels
                 ChannelFactory<IServiceCommunicator> channelFactory = null;
                 try
                 {
-                    channelFactory = new ChannelFactory<IServiceCommunicator>(new NetTcpBinding(), new EndpointAddress(ServicePath));
+                    NetTcpBinding ServiceBinding = new NetTcpBinding();
+                    ServiceBinding.Security.Mode = SecurityMode.None;
+                    channelFactory = new ChannelFactory<IServiceCommunicator>(ServiceBinding, new EndpointAddress(ServicePath));
                     IServiceCommunicator Service =
                       channelFactory.CreateChannel();
 
@@ -480,22 +555,27 @@ namespace plcdb.ViewModels
         }
         private void OnStartService()
         {
-            ServiceController service = new ServiceController("plcdb");
-            try
-            {
-                TimeSpan timeout = TimeSpan.FromMilliseconds(5000);
+            BackgroundWorker bgStartThread = new BackgroundWorker();
+            bgStartThread.DoWork += (s, e) =>
+                {
+                    ServiceController service = new ServiceController(CONSTANTS.ServiceName);
+                    try
+                    {
+                        TimeSpan timeout = TimeSpan.FromMilliseconds(10000);
 
-                service.Start();
-                service.WaitForStatus(ServiceControllerStatus.Running, timeout);
-            }
-            catch (Exception e)
-            {
-                Log.Error(e.Message);
-            }
+                        service.Start();
+                        service.WaitForStatus(ServiceControllerStatus.Running, timeout);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex.Message);
+                    }
+                };
+            bgStartThread.RunWorkerAsync();
         }
         private void OnStopService()
         {
-            ServiceController service = new ServiceController("plcdb");
+            ServiceController service = new ServiceController(CONSTANTS.ServiceName);
             try
             {
                 TimeSpan timeout = TimeSpan.FromMilliseconds(5000);
@@ -573,29 +653,72 @@ namespace plcdb.ViewModels
             ActiveModel.QueryTagMappings.AcceptChanges();
             
         }
+
+        private void OnValidateLicenseFromUrl()
+        {
+            BackgroundWorker bgWorker = new BackgroundWorker();
+            bgWorker.DoWork += (s, e) =>
+            {
+                ChannelFactory<IServiceCommunicator> channelFactory = null;
+                try
+                {
+                    NetTcpBinding ServiceBinding = new NetTcpBinding();
+                    ServiceBinding.Security.Mode = SecurityMode.None;
+                    channelFactory = new ChannelFactory<IServiceCommunicator>(ServiceBinding, new EndpointAddress(ServicePath));
+                    IServiceCommunicator Service = channelFactory.CreateChannel();
+                    String UniqueHW = Service.GetUniqueHWID();
+                    
+                    using (WebClient client = new WebClient())
+                    {
+                        LicenseKey = client.DownloadString("http://joncarsondev.appspot.com/plc2sql?pk=" + PurchaseKey + "&hid=" + LicenseHelper.Unique_HW_ID());
+                        Service.SetLicense(PurchaseKey, LicenseKey);
+                        if (LicenseHelper.IsLicenseValid(LicenseKey, PurchaseKey, UniqueHW))
+                        {
+                            IsDemo = false;
+                        }
+                        else
+                        {
+                            IsDemo = true;
+                        }
+                    }
+                    channelFactory.Close();
+                }
+                catch (Exception ex)
+                {
+                    if (channelFactory != null)
+                    {
+                        channelFactory.Abort();
+                    }
+
+                }
+            };
+
+            bgWorker.RunWorkerAsync();
+            
+        }
         private bool ServiceLogFilter(object item)
         {
             try
             {
-                bool keepItem = true;
                 WcfEvent row = (WcfEvent)item;
                 if (row.LogLevel == "Trace" && !LogFilterTrace)
-                    keepItem = false;
+                    return false;
                 else if (row.LogLevel == "Debug" && !LogFilterDebug)
-                    keepItem = false;
+                    return false;
                 else if (row.LogLevel == "Info" && !LogFilterInfo)
-                    keepItem = false;
+                    return false;
                 else if (row.LogLevel == "Warn" && !LogFilterWarn)
-                    keepItem = false;
+                    return false;
                 else if (row.LogLevel == "Error" && !LogFilterError)
-                    keepItem = false;
+                    return false;
                 else if (row.LogLevel == "Fatal" && !LogFilterFatal)
-                    keepItem = false;
+                    return false;
 
-                if (!ActiveModel.Queries.First(p => p.PK == row.Query).Logged)
-                    keepItem = false;
-
-                return keepItem;
+                Model.QueriesRow Row = ActiveModel.Queries.FindByPK(row.Query);
+                if (Row != null && !Row.Logged)
+                    return false;
+                
+                return true;
             }
             catch
             {

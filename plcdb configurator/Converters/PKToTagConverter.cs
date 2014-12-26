@@ -57,11 +57,6 @@ namespace plcdb.Converters
 
             String TagName = input.Substring(input.LastIndexOf(']')+1);
             var MatchingTags = ActiveModel.Tags.Where(p => p.Controller == Controller.PK && (p.Address == TagName || p.Name == TagName));
-            if (MatchingTags.Count() == 0)
-            {
-                throw new Exception("Invalid tag address");
-            }
-
             return MatchingTags.First().PK;
         }
 

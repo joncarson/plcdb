@@ -633,7 +633,7 @@ namespace plcdb_lib.Models {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public ControllersRow AddControllersRow(string Name, System.Type Type, string Address, string opc_server, int modbus_port, int s7_rack, string s7_slot) {
+            public ControllersRow AddControllersRow(string Name, System.Type Type, string Address, string opc_server, int modbus_port, int s7_rack, int s7_slot) {
                 ControllersRow rowControllersRow = ((ControllersRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         Name,
@@ -700,7 +700,7 @@ namespace plcdb_lib.Models {
                 base.Columns.Add(this.columnmodbus_port);
                 this.columns7_rack = new global::System.Data.DataColumn("s7_rack", typeof(int), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columns7_rack);
-                this.columns7_slot = new global::System.Data.DataColumn("s7_slot", typeof(string), null, global::System.Data.MappingType.Element);
+                this.columns7_slot = new global::System.Data.DataColumn("s7_slot", typeof(int), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columns7_slot);
                 this.Constraints.Add(new global::System.Data.UniqueConstraint("Constraint1", new global::System.Data.DataColumn[] {
                                 this.columnPK}, true));
@@ -712,8 +712,8 @@ namespace plcdb_lib.Models {
                 this.columnPK.Unique = true;
                 this.columnopc_server.DefaultValue = ((string)(""));
                 this.columnmodbus_port.DefaultValue = ((int)(502));
-                this.columns7_rack.DefaultValue = ((int)(1));
-                this.columns7_slot.DefaultValue = ((string)("2"));
+                this.columns7_rack.DefaultValue = ((int)(0));
+                this.columns7_slot.DefaultValue = ((int)(2));
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -2314,7 +2314,7 @@ namespace plcdb_lib.Models {
             public int s7_rack {
                 get {
                     if (this.Iss7_rackNull()) {
-                        return 1;
+                        return 0;
                     }
                     else {
                         return ((int)(this[this.tableControllers.s7_rackColumn]));
@@ -2327,13 +2327,13 @@ namespace plcdb_lib.Models {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public string s7_slot {
+            public int s7_slot {
                 get {
                     if (this.Iss7_slotNull()) {
-                        return "2";
+                        return 2;
                     }
                     else {
-                        return ((string)(this[this.tableControllers.s7_slotColumn]));
+                        return ((int)(this[this.tableControllers.s7_slotColumn]));
                     }
                 }
                 set {

@@ -41,9 +41,20 @@ namespace plcdb.Converters
 
             String TagName = input.Substring(input.LastIndexOf(']')+1);
             var MatchingTags = ActiveModel.Tags.Where(p => p.Controller == Controller.PK && (p.Address == TagName || p.Name == TagName));
-            if (MatchingTags.Count() == 0)
+
+            bool ValidNewTag = Controller.Controller.ValidateTag(TagName);
+            if (MatchingTags.Count() == 0 && !ValidNewTag)
             {
                 return new ValidationResult(false, "Invalid tag address");
+            }
+            else if (MatchingTags.Count() == 0 && ValidNewTag)
+            {
+                Model.TagsRow NewRow = ActiveModel.Tags.NewTagsRow();
+                NewRow.Address = TagName;
+                NewRow.Name = TagName;
+                NewRow.Controller = Controller.PK;
+                ActiveModel.Tags.AddTagsRow(NewRow);
+                return new ValidationResult(true, null); ;
             }
 
             return new ValidationResult(true, null);

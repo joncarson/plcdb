@@ -25,7 +25,10 @@ namespace plcdb_lib.WCF
         DateTime GetStartTime();
 
         [OperationContract]
-        void SetLicense(String license);
+        String GetUniqueHWID();
+
+        [OperationContract]
+        void SetLicense(String PurchaseKey, String LicenseKey);
 
         
     }

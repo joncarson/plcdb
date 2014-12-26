@@ -53,57 +53,57 @@ namespace plcdb_lib
             throw new NotImplementedException();
         }
 
-        private Model.TagsDataTable _browseTags;
+        private Model.TagsDataTable Tags;
         public override Model.TagsDataTable BrowseTags()
         {
-            if (_browseTags == null)
+            if (Tags == null)
             {
-                _browseTags = new Model.TagsDataTable();
-                Model.TagsRow Sine = _browseTags.NewTagsRow();
+                Tags = new Model.TagsDataTable();
+                Model.TagsRow Sine = Tags.NewTagsRow();
                 Sine.Address = "Doubles\\Sine";
                 Sine.Name = Sine.Address;
                 Sine.DataType = typeof(Double);
                 Sine.Controller = ControllerInfo.PK;
 
-                Model.TagsRow Rand = _browseTags.NewTagsRow();
+                Model.TagsRow Rand = Tags.NewTagsRow();
                 Rand.Address = "Doubles\\Rand";
                 Rand.Name = Rand.Address;
                 Rand.DataType = typeof(Double);
                 Rand.Controller = ControllerInfo.PK;
 
-                Model.TagsRow AlwaysOn = _browseTags.NewTagsRow();
+                Model.TagsRow AlwaysOn = Tags.NewTagsRow();
                 AlwaysOn.Address = "Bools\\AlwaysOn";
                 AlwaysOn.Name = AlwaysOn.Address;
                 AlwaysOn.DataType = typeof(Boolean);
                 AlwaysOn.Controller = ControllerInfo.PK;
 
-                Model.TagsRow AlwaysOff = _browseTags.NewTagsRow();
+                Model.TagsRow AlwaysOff = Tags.NewTagsRow();
                 AlwaysOff.Address = "Bools\\AlwaysOff";
                 AlwaysOff.Name = AlwaysOff.Address;
                 AlwaysOff.DataType = typeof(Boolean);
                 AlwaysOff.Controller = ControllerInfo.PK;
 
 
-                Model.TagsRow RandBool = _browseTags.NewTagsRow();
+                Model.TagsRow RandBool = Tags.NewTagsRow();
                 RandBool.Address = "Bools\\RandBool";
                 RandBool.Name = RandBool.Address;
                 RandBool.DataType = typeof(Boolean);
                 RandBool.Controller = ControllerInfo.PK;
 
-                Model.TagsRow Now = _browseTags.NewTagsRow();
+                Model.TagsRow Now = Tags.NewTagsRow();
                 Now.Address = "DateTimes\\Now";
                 Now.Name = Now.Address;
                 Now.DataType = typeof(DateTime);
                 Now.Controller = ControllerInfo.PK;
 
-                _browseTags.AddTagsRow(Sine);
-                _browseTags.AddTagsRow(Rand);
-                _browseTags.AddTagsRow(AlwaysOn);
-                _browseTags.AddTagsRow(AlwaysOff);
-                _browseTags.AddTagsRow(RandBool);
-                _browseTags.AddTagsRow(Now);
+                Tags.AddTagsRow(Sine);
+                Tags.AddTagsRow(Rand);
+                Tags.AddTagsRow(AlwaysOn);
+                Tags.AddTagsRow(AlwaysOff);
+                Tags.AddTagsRow(RandBool);
+                Tags.AddTagsRow(Now);
             }
-            return _browseTags;
+            return Tags;
         }
 
         public  Simulator(Model.ControllersRow row)
@@ -113,5 +113,13 @@ namespace plcdb_lib
 
 
         private Model.ControllersRow ControllerInfo { get; set; }
+
+        public override bool ValidateTag(string address)
+        {
+            if (Tags == null)
+                return false;
+
+            return Tags.Select(p => p.Address).Contains(address);
+        }
     }
 }

@@ -38,7 +38,7 @@ namespace plcdb_lib.Logging
                         Query = Query,
                         StackTrace = logEvent.StackTrace == null ? null : logEvent.StackTrace.ToString()
                     });
-                if (_latestLogs.Count > 5000)
+                while (_latestLogs.Count > 500)
                     _latestLogs.RemoveAt(0);
             }
         }

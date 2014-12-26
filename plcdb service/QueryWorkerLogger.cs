@@ -97,12 +97,12 @@ namespace plcdb_service
             return LogEvent;
         }
 
-        public void TraceEnterFunction(QueryWorker worker, [CallerMemberName]string memberName = "")
+        public void TraceEnterFunction(QueryWorker worker, string memberName = "")
         {
             base.Log(typeof(QueryWorkerLogger), GetLogEventInfo(LogLevel.Trace, worker.QueryPK, "Entering function: " + memberName));
         }
 
-        public void TraceExitFunction(QueryWorker worker, [CallerMemberName]string memberName = "")
+        public void TraceExitFunction(QueryWorker worker, string memberName = "")
         {
             base.Log(typeof(QueryWorkerLogger), GetLogEventInfo(LogLevel.Trace, worker.QueryPK, "Exiting function: " + memberName));
         }

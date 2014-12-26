@@ -97,7 +97,7 @@ namespace plcdb_lib.Models
         public static List<Type> GetAllControllerTypes()
         {
             //find some dlls at runtime 
-            string[] dlls = Directory.GetFiles(Environment.CurrentDirectory, "*.dll");
+            string[] dlls = Directory.GetFiles(Environment.CurrentDirectory, "*plcdb*.dll");
 
             List<Type> types = new List<Type>();
             //loop through the found dlls and load them 

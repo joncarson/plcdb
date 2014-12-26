@@ -385,7 +385,14 @@ namespace Snap7
         
         public int ConnectTo(string Address, int Rack, int Slot)
         {
-            return Cli_ConnectTo(Client, Address, Rack, Slot);
+            try
+            {
+                return Cli_ConnectTo(Client, Address, Rack, Slot);
+            }
+            catch (Exception ex)
+            {
+                return -1;
+            }
         }
 
         [DllImport(S7Consts.Snap7LibName)]
@@ -519,14 +526,32 @@ namespace Snap7
         protected static extern int Cli_ReadArea(IntPtr Client, int Area, int DBNumber, int Start, int Amount, int WordLen, byte[] Buffer);
         public int ReadArea(int Area, int DBNumber, int Start, int Amount, int WordLen, byte[] Buffer)
         {
-            return Cli_ReadArea(Client, Area, DBNumber, Start, Amount, WordLen, Buffer);
+            int returnval = -1;
+            try
+            {
+                returnval = Cli_ReadArea(Client, Area, DBNumber, Start, Amount, WordLen, Buffer);
+            }
+            catch (AccessViolationException ex)
+            {
+                return -1;
+            }
+            return returnval;
         }
 
         [DllImport(S7Consts.Snap7LibName)]
         protected static extern int Cli_WriteArea(IntPtr Client, int Area, int DBNumber, int Start, int Amount, int WordLen, byte[] Buffer);
         public int WriteArea(int Area, int DBNumber, int Start, int Amount, int WordLen, byte[] Buffer)
         {
-            return Cli_WriteArea(Client, Area, DBNumber, Start, Amount, WordLen, Buffer);
+            int returnval = -1;
+            try
+            {
+                returnval = Cli_WriteArea(Client, Area, DBNumber, Start, Amount, WordLen, Buffer);
+            }
+            catch (Exception ex)
+            {
+                return -1;
+            }
+            return returnval;
         }
 
         [DllImport(S7Consts.Snap7LibName)]

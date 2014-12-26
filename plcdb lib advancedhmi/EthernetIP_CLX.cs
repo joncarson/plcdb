@@ -29,5 +29,10 @@ namespace plcdb_lib_advancedhmi
             throw new NotImplementedException();
         }
 
+
+        public override bool ValidateTag(string address)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

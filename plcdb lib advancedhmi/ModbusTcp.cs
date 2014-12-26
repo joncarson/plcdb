@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using AdvancedHMIDrivers;
 using plcdb_lib.Models;
+using System.Text.RegularExpressions;
+using System.ComponentModel;
 
 namespace plcdb_lib_advancedhmi
 {
@@ -20,8 +22,12 @@ namespace plcdb_lib_advancedhmi
 
         public ModbusTcp(Model.ControllersRow ControllerInfo)
         {
-            Comm.IPAddress = ControllerInfo.Address;
-            Comm.TcpipPort = 502;
+            
+            if (ControllerInfo.Address == "localhost")
+                Comm.IPAddress = "127.0.0.1";
+            else
+                Comm.IPAddress = ControllerInfo.Address;
+            Comm.TcpipPort = (ushort)ControllerInfo.modbus_port;
         }
 
         public override object Read(Model.TagsRow t)
@@ -41,5 +47,10 @@ namespace plcdb_lib_advancedhmi
             return new Model.TagsDataTable();
         }
 
+
+        public override bool ValidateTag(string address)
+        {
+            return Regex.IsMatch(address, @"[0|1|3|4][0-9][0-9][0-9][0-9]");
+        }
     }
 }

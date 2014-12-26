@@ -9,9 +9,9 @@ namespace plcdb_lib.Models.Controllers
 {
     public abstract class ControllerBase
     {
-        protected static Logger Log = LogManager.GetCurrentClassLogger();
         public abstract object Read(Model.TagsRow t);
-        public abstract bool Write(Model.TagsRow t, object val);
+        public abstract bool   Write(Model.TagsRow t, object val);
+        public abstract bool ValidateTag(String address);
         public abstract Model.TagsDataTable BrowseTags();
         
 

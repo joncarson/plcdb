@@ -31,7 +31,7 @@ namespace plcdb_lib.SQL
             if (address.ToLower() == "localhost" || address == "127.0.0.1")
                 return true;
 
-            int timeout = 500;
+            int timeout = 1500;
            
             var result = false;
             try

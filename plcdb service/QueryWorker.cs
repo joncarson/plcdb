@@ -112,7 +112,7 @@ namespace plcdb_service
                 }
                 catch (Exception e)
                 {
-                    Log.Error(this, "Error during query execution or trigger tag read"); 
+                    Log.Error(this, "Error during loop execution: " + e.Message); 
                     Status = StatusEnum.Error;
                     Log.Error(this, e);
                 }
@@ -178,6 +178,10 @@ namespace plcdb_service
             if (dataResults.Rows.Count > 100)
             {
                 Log.Warn("Warning! Query returned many results (" + dataResults.Rows.Count + " rows)!");
+            }
+            else if (dataResults.Rows.Count == 0)
+            {
+                Log.Warn("Warning! Query returned zero results!");
             }
             foreach (DataRow row in dataResults.Rows)
             {

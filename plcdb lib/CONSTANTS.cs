@@ -8,5 +8,6 @@ namespace plcdb_lib.constants
     public static class CONSTANTS
     {
         public readonly static TimeSpan DemoTimeout = new TimeSpan(2, 0, 0);
+        public readonly static string ServiceName = "PLC 2 SQL";
     }
 }
